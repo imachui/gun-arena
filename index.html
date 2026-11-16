@@ -55,7 +55,8 @@
         <label class="text-sm">Your name <input id="guestName" class="inp mt-1" maxlength="12" placeholder="Player"></label>
         <div class="flex gap-2"><button class="btn ghost" data-gender="male">Male</button><button class="btn ghost" data-gender="female">Female</button></div>
       </div>
-      <p class="mb-3 text-sm">No account needed. Practice against bots:</p>
+      <p class="mb-2 text-sm">No account needed. Practice against bots. Difficulty:</p>
+      <div class="flex justify-center gap-2 mb-3"><button class="btn ghost" data-level="easy">Easy</button><button class="btn ghost" data-level="normal">Normal</button><button class="btn ghost" data-level="hard">Hard</button></div>
       <div class="flex flex-wrap justify-center gap-2">
         <button class="btn" data-demo="duel">Practice 1v1</button>
         <button class="btn" data-demo="tag">Practice 2v2</button>
@@ -68,7 +69,7 @@
   <section id="lobby" class="hidden space-y-4">
     <div id="dash" class="card flex flex-wrap items-center gap-4">
       <img id="dAvatar" class="w-16 h-16 border-4 border-[#3b3560] bg-[#14121f]" alt="" referrerpolicy="no-referrer">
-      <div class="flex-1 min-w-[9rem]"><div id="dName" class="px text-lg mb-1 break-all"></div><div id="dEmail" class="text-sm opacity-70 break-all"></div></div>
+      <div class="flex-1 min-w-[9rem]"><div id="dName" class="px text-lg mb-1 break-all"></div><div id="dEmail" class="text-sm opacity-70 break-all"></div><div id="dRank" class="text-sm text-[#ffd23f] mt-1"></div></div>
       <div class="text-center"><div class="text-sm">Balance</div><div class="px text-2xl text-[#ffd23f]">🪙 <span id="dCoins">0</span></div><div id="dPending" class="text-xs opacity-80"></div></div>
       <div class="grid grid-cols-4 gap-4 text-center text-sm w-full sm:w-auto">
         <div><div class="px text-sm" id="dMatches">0</div>Matches</div><div><div class="px text-sm" id="dWins">0</div>Wins</div><div><div class="px text-sm" id="dRate">0%</div>Win rate</div><div><div class="px text-sm text-[#ffd23f]" id="dWon">0</div>Coins won</div>
@@ -76,6 +77,19 @@
     </div>
     <div class="card flex flex-wrap items-center gap-2"><span class="text-sm">Your character:</span>
       <button class="btn ghost" data-gender="male">Male</button><button class="btn ghost" data-gender="female">Female</button></div>
+    <div class="card space-y-3">
+      <h2 class="text-base">Practice vs AI (free, no coins)</h2>
+      <p class="text-sm opacity-80">Learn the controls against bots first. Pick a difficulty, then a mode.</p>
+      <div class="flex flex-wrap gap-2"><button class="btn ghost" data-level="easy">Easy</button><button class="btn ghost" data-level="normal">Normal</button><button class="btn ghost" data-level="hard">Hard</button></div>
+      <div class="flex flex-wrap gap-2"><button class="btn" data-demo="duel">1v1 vs AI</button><button class="btn" data-demo="tag">2v2 vs AI</button><button class="btn" data-demo="blitz">4v4 vs AI</button></div>
+    </div>
+    <div class="card space-y-2">
+      <h2 class="text-base">Online matches</h2>
+      <div class="text-sm">Bet per player (coins):</div>
+      <div class="flex flex-wrap gap-2" id="bets"></div>
+      <p id="betInfo" class="text-sm text-[#ffd23f]"></p>
+      <p class="text-xs opacity-80">Find match (ranked) pairs you with other players automatically and earns rank points. Create room is for friends and gives no rank points.</p>
+    </div>
     <div class="grid sm:grid-cols-3 gap-3" id="modes"></div>
     <div class="card flex flex-wrap gap-2 items-center">
       <input id="joinCode" class="inp w-40" inputmode="numeric" maxlength="4" placeholder="Room code">
@@ -171,12 +185,19 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {getFirestore,doc,getDoc,setDoc,updateDoc,addDoc,collection,query,where,orderBy,onSnapshot,runTransaction,writeBatch,increment,serverTimestamp}
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import {getDatabase,ref,get,set as rtSet,update as rtUpdate,remove,push,onValue,onChildAdded,onDisconnect,runTransaction as rtTx}
+import {getDatabase,ref,get,set as rtSet,update as rtUpdate,remove,push,onValue,onChildAdded,onDisconnect,runTransaction as rtTx,query as rtQuery,orderByChild,equalTo}
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 /* ================= CONFIG: edit these ================= */
 const {firebaseConfig,ADMIN_UIDS,GCASH_NUMBER}=window.GA_CONFIG,GCASH_NAME=window.GA_CONFIG.GCASH_NAME||"NE**S V."; // edit config.js, not this file
-const FEE=20, PRIZE=40, COIN_PHP_OUT=0.5;               // winners get 40 each in every mode
+const FEE=20, COIN_PHP_OUT=0.5;
+const BETS=[5,10,20,50,100];   // coins each player stakes; every winner gets 2x the stake (pool is split evenly, no house cut)
+const AI={easy:{spd:4,cd:1.4,spr:.7,dodge:.012,taken:34,dmg:6,range:18},
+          normal:{spd:5.5,cd:.75,spr:.35,dodge:.05,taken:25,dmg:10,range:26},
+          hard:{spd:6.8,cd:.5,spr:.15,dodge:.09,taken:20,dmg:14,range:30}};
+var aiLevel=(()=>{try{return localStorage.getItem("ga_level")||"easy"}catch{return "easy"}})();
+var bet=(()=>{try{const v=+localStorage.getItem("ga_bet");return BETS.includes(v)?v:20}catch{return 20}})();
+const rankOf=rp=>rp>=1000?"Diamond":rp>=600?"Platinum":rp>=300?"Gold":rp>=100?"Silver":"Bronze";
 const TIERS=[{php:30,coins:20},{php:100,coins:75},{php:200,coins:170},{php:500,coins:450},{php:900000,coins:1000000}]; // bigger = cheaper per coin
 const MODES={duel:{label:"1v1 Duel",size:2},tag:{label:"2v2 Tag Team",size:4},blitz:{label:"4v4 Arena Blitz",size:8}};
 /* ====================================================== */
@@ -265,7 +286,7 @@ const toast=t=>{const e=$("toast");e.textContent=t;e.classList.remove("hidden");
 const open=id=>$(id).classList.remove("hidden"), close=id=>$(id).classList.add("hidden");
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>b.closest(".modal").classList.add("hidden"));
 
-let me=null,isAdmin=false,coins=0,code=null,room=null,started=false,finished=false,game=null,stopShots=null,stopRoom=null,stopTx=null,stopChat=null;
+let myRP=0,autoTimer=null,me=null,isAdmin=false,coins=0,code=null,room=null,started=false,finished=false,game=null,stopShots=null,stopRoom=null,stopTx=null,stopChat=null;
 const uref=()=>doc(db,"users",me.uid);
 const rref=()=>ref(rdb,`rooms/${code}`);
 const pref=()=>ref(rdb,`rooms/${code}/players/${me.uid}`);
@@ -285,7 +306,7 @@ onAuthStateChanged(auth,async u=>{
   if(!u){$("bar").classList.add("hidden");if(!demo)show("login");return}
   const r=uref();
   if(!(await getDoc(r)).exists()) await setDoc(r,{name:u.displayName||"Player",email:u.email,coins:0,matches:0,wins:0,createdAt:serverTimestamp()});
-  onSnapshot(r,s=>{const D=s.data()||{};coins=D.coins||0;$("coins").textContent=coins;$("dCoins").textContent=coins.toLocaleString();$("dMatches").textContent=D.matches||0;$("dWon").textContent=(D.won||0).toLocaleString();$("dWins").textContent=D.wins||0;$("dRate").textContent=(D.matches?Math.round((D.wins||0)/D.matches*100):0)+"%";const g=s.data()?.gender;if(g&&g!==gender){gender=g;paintGender()}else if(!g)updateDoc(r,{gender}).catch(()=>{})});
+  onSnapshot(r,s=>{const D=s.data()||{};coins=D.coins||0;$("coins").textContent=coins;$("dCoins").textContent=coins.toLocaleString();$("dMatches").textContent=D.matches||0;myRP=D.rp||0;$("dRank").textContent="🏅 "+rankOf(myRP)+" · "+myRP+" RP";$("dWon").textContent=(D.won||0).toLocaleString();$("dWins").textContent=D.wins||0;$("dRate").textContent=(D.matches?Math.round((D.wins||0)/D.matches*100):0)+"%";const g=s.data()?.gender;if(g&&g!==gender){gender=g;paintGender()}else if(!g)updateDoc(r,{gender}).catch(()=>{})});
   isAdmin=ADMIN_UIDS.includes(u.uid);
   $("who").textContent=u.displayName;$("dName").textContent=u.displayName+(ADMIN_UIDS.includes(u.uid)?" (Admin)":"");$("dEmail").textContent=u.email;$("dAvatar").src=u.photoURL||"";$("role").textContent=isAdmin?"Admin":"Player";
   $("btnAdmin").classList.toggle("hidden",!isAdmin);
@@ -305,47 +326,80 @@ function watchMyTx(){
 
 /* ---------- Lobby: modes, create, join ---------- */
 $("modes").innerHTML=Object.entries(MODES).map(([k,m])=>
-  `<div class="card"><h2 class="text-base mb-2">${m.label}</h2><p class="text-sm mb-3">${m.size} players · 20 coins</p><button class="btn w-full" data-mode="${k}">Create room</button></div>`).join("");
-document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>createRoom(b.dataset.mode));
+  `<div class="card"><h2 class="text-base mb-1">${m.label}</h2><p class="text-sm mb-3">${m.size} players</p>
+   <button class="btn w-full mb-2" data-find="${k}">Find match (ranked)</button>
+   <button class="btn ghost w-full" data-mode="${k}">Create room (friends)</button></div>`).join("");
+document.querySelectorAll("[data-find]").forEach(b=>b.onclick=()=>findMatch(b.dataset.find));
+document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>createRoom(b.dataset.mode,false));
+$("bets").innerHTML=BETS.map(v=>`<button class="btn ghost" data-bet="${v}">${v} coins</button>`).join("");
+function paintBet(){document.querySelectorAll("[data-bet]").forEach(b=>b.classList.toggle("yellow",+b.dataset.bet===bet));$("betInfo").textContent=`Each player pays ${bet} coins. Winners get ${bet*2} coins each.`}
+document.querySelectorAll("[data-bet]").forEach(b=>b.onclick=()=>{bet=+b.dataset.bet;try{localStorage.setItem("ga_bet",bet)}catch{}paintBet()});paintBet();
+function paintLevel(){document.querySelectorAll("[data-level]").forEach(b=>b.classList.toggle("yellow",b.dataset.level===aiLevel))}
+document.querySelectorAll("[data-level]").forEach(b=>b.onclick=()=>{aiLevel=b.dataset.level;try{localStorage.setItem("ga_level",aiLevel)}catch{}paintLevel()});paintLevel();
 $("btnJoin").onclick=()=>enter($("joinCode").value.trim());
 
-async function createRoom(mode){
-  if(coins<FEE)return toast("You need 20 coins to play. Buy coins first.");
+async function createRoom(mode,ranked){
+  if(coins<bet)return toast(`You need ${bet} coins for this bet. Open the Coin Store or pick a smaller bet.`);
   for(let i=0;i<10;i++){
     const c=String(Math.floor(1000+Math.random()*9000));
-    const res=await rtTx(ref(rdb,"rooms/"+c),cur=>cur?undefined:{mode,size:MODES[mode].size,host:me.uid,status:"lobby",createdAt:Date.now()});
+    const res=await rtTx(ref(rdb,"rooms/"+c),cur=>cur?undefined:{mode,size:MODES[mode].size,host:me.uid,status:"lobby",bet,ranked:!!ranked,auto:!!ranked,
+      matchKey:ranked?mode+"_"+bet:null,createdAt:Date.now()});
     if(res.committed)return enter(c);
   }
   toast("Could not create a room. Try again.");
 }
 
-async function enter(c){
-  if(!/^\d{4}$/.test(c))return toast("Room code is 4 digits.");
-  if(coins<FEE)return toast("You need 20 coins to play. Buy coins first.");
+async function findMatch(mode){
+  if(coins<bet)return toast(`You need ${bet} coins for this bet. Open the Coin Store or pick a smaller bet.`);
+  toast("Searching for players...");
+  try{
+    const snap=await get(rtQuery(ref(rdb,"rooms"),orderByChild("matchKey"),equalTo(mode+"_"+bet)));
+    const cands=[];
+    snap.forEach(ch=>{const r=ch.val();if(r.status==="lobby"&&Object.keys(r.players||{}).length<r.size)cands.push([ch.key,r.createdAt||0])});
+    cands.sort((a,b)=>a[1]-b[1]);
+    for(const [c] of cands){await enter(c,true);if(code)return}
+  }catch(e){console.warn(e)}
+  await createRoom(mode,true);   // nobody waiting: open a ranked room and wait for others
+}
+
+async function enter(c,quiet){
+  const say=m=>{if(!quiet)toast(m)};
+  if(!/^\d{4}$/.test(c))return say("Room code is 4 digits.");
   const snap=await get(ref(rdb,"rooms/"+c));
-  if(!snap.exists())return toast("Room not found.");
-  const r=snap.val(),ps=r.players||{};
-  if(r.status!=="lobby")return toast("That match already started.");
-  if(!ps[me.uid]&&Object.keys(ps).length>=r.size)return toast("Room is full.");
-  const t0=Object.values(ps).filter(p=>p.team===0).length,t1=Object.keys(ps).length-t0;
-  code=c;started=finished=false;
-  await rtSet(pref(),{name:me.displayName||"Player",gender,team:t0<=t1?0:1,alive:true,hp:100,x:-1,y:-1,connected:true});
+  if(!snap.exists())return say("Room not found.");
+  const r0=snap.val(),need=r0.bet||FEE;
+  if(coins<need)return say(`You need ${need} coins to join this room. Open the Coin Store.`);
+  await rtTx(ref(rdb,"rooms/"+c),cur=>{
+    if(cur===null)return cur;                       // first local pass: server value is fetched and retried
+    if(cur.status!=="lobby")return;
+    const ps=cur.players||{};
+    if(ps[me.uid])return cur;
+    if(Object.keys(ps).length>=cur.size)return;
+    const t0=Object.values(ps).filter(p=>p.team===0).length,t1=Object.keys(ps).length-t0;
+    ps[me.uid]={name:me.displayName||"Player",gender,team:t0<=t1?0:1,alive:true,hp:100,x:-1,y:-1,connected:true};
+    cur.players=ps;return cur;
+  });
+  const chk=await get(pref0(c));
+  if(!chk.exists())return say("Could not join: the room is full or already started.");
+  code=c;started=finished=false;autoTimer=null;
   onDisconnect(pref()).remove();
-  if(r.host===me.uid)onDisconnect(rref()).remove();
+  if(r0.host===me.uid)onDisconnect(rref()).remove();
   stopRoom=onValue(rref(),onRoom);
   show("room");
 }
+const pref0=c=>ref(rdb,`rooms/${c}/players/${me.uid}`);
 
 function onRoom(s){
   if(!s.exists()){if(code){toast("The host closed the room.");cleanup();show("lobby")}return}
   room=s.val();
   const ps=room.players||{},n=Object.keys(ps).length;
   if(room.status==="lobby"){
-    $("roomCode").textContent=code;$("roomMode").textContent=`${MODES[room.mode].label} · ${n}/${room.size} players`;
+    $("roomCode").textContent=code;$("roomMode").textContent=`${MODES[room.mode].label}${room.ranked?" (ranked)":""} · ${n}/${room.size} players · Bet ${room.bet||FEE} coins, winners get ${(room.bet||FEE)*2} each`+(room.auto?(n<room.size?" · Searching for players...":" · Match found! Starting..."):"");
     $("roomPlayers").innerHTML=[0,1].map(t=>`<div class="card"><div class="px text-sm mb-2" style="color:${t?"#ff3d81":"#35e0d0"}">Team ${t?"Pink":"Cyan"}</div>${
       Object.entries(ps).filter(([,p])=>p.team===t).map(([u,p])=>`<div>${esc(p.name)}${u===room.host?" ★":""}</div>`).join("")}</div>`).join("");
-    $("btnStart").classList.toggle("hidden",room.host!==me.uid);
+    $("btnStart").classList.toggle("hidden",room.host!==me.uid||!!room.auto);
     $("btnStart").disabled=n<room.size;
+    if(room.auto&&n>=room.size&&!autoTimer&&Object.keys(ps).sort()[0]===me.uid)autoTimer=setTimeout(()=>rtUpdate(rref(),{status:"playing",startedAt:Date.now()}),2500);
   }
   if(room.status==="playing"){
     if(!started)startMatch();
@@ -368,7 +422,7 @@ async function leaveRoom(){
   cleanup();show("lobby");
 }
 function cleanup(){
-  stopDemo&&stopDemo();stopDemo=null;musicStop();
+  clearTimeout(autoTimer);autoTimer=null;stopDemo&&stopDemo();stopDemo=null;musicStop();
   stopRoom&&stopRoom();stopShots&&stopShots();stopRoom=stopShots=null;
   if(game){game.destroy(true);game=null}
   code=null;room=null;started=false;
@@ -382,8 +436,9 @@ async function startMatch(){
   try{
     await runTransaction(db,async t=>{
       const s=await t.get(uref());
-      if((s.data().coins||0)<FEE)throw new Error("coins");
-      t.update(uref(),{coins:increment(-FEE)});
+      const stake=room.bet||FEE;
+      if((s.data().coins||0)<stake)throw new Error("coins");
+      t.update(uref(),{coins:increment(-stake)});
     });
   }catch{toast("Not enough coins. You forfeited the match.");await leaveRoom();return}
   show("game");launch3D({online:true});
@@ -392,17 +447,18 @@ async function startMatch(){
 async function finish(){
   finished=true;
   const w=room.winner,myTeam=room.players[me.uid].team,win=w===myTeam,draw=w===-1;
-  const pay=win?PRIZE:draw?FEE:0,inc={matches:increment(1)};
+  const stake=room.bet||FEE,pay=win?stake*2:draw?stake:0,inc={matches:increment(1)};
+  if(room.ranked&&!draw)inc.rp=increment(win?25:-Math.min(15,myRP));
   if(win)inc.wins=increment(1);
   if(pay){
     const res=await rtTx(ref(rdb,`rooms/${code}/paid/${me.uid}`),c=>c?undefined:true);
-    if(res.committed){inc.coins=increment(pay);if(win)inc.won=increment(PRIZE)}
+    if(res.committed){inc.coins=increment(pay);if(win)inc.won=increment(pay)}
   }
   await updateDoc(uref(),inc);
   const bal=(await getDoc(uref())).data().coins;
   $("resTitle").textContent=draw?"Draw":win?"Victory":"Defeat";
   $("resTitle").style.color=win?"#35e0d0":"#ff3d81";
-  $("resText").textContent=draw?"Entry fee refunded.":win?`You won ${PRIZE} coins.`:"Better luck next round. Entry fee lost.";
+  $("resText").textContent=draw?"Bet refunded.":win?`You won ${pay} coins`+(room.ranked?" and 25 rank points.":"."):"Better luck next round. Your bet is lost"+(room.ranked?" (-15 rank points).":".");
   $("resBal").textContent=bal;open("mRes");
 }
 $("btnResOk").onclick=async()=>{
@@ -412,8 +468,8 @@ $("btnResOk").onclick=async()=>{
   cleanup();show("lobby");
 };
 
-/* ---------- Offline practice (no sign-in, bots, fake coins) ---------- */
-var demo=false,demoCoins=100;
+/* ---------- Practice vs AI (free, works without sign-in) ---------- */
+var demo=false;
 $("vol").value=Math.round(vol*100);
 $("mvol").value=Math.round(musicVol*100);
 $("vol").oninput=e=>{vol=e.target.value/100;try{localStorage.setItem("ga_vol",vol)}catch{}musicLevel()};
@@ -423,10 +479,10 @@ document.querySelectorAll("[data-demo]").forEach(b=>b.onclick=()=>launchDemo(b.d
 $("btnQuit").onclick=()=>demo?endDemo():leaveRoom();
 var stopDemo=null;
 function endDemo(){stopDemo&&stopDemo();stopDemo=null;demo=false;show(me?"lobby":"login")}
-function launchDemo(mode){demo=true;if(demoCoins<FEE)demoCoins=100;show("game");launch3D({online:false,mode})}
+function launchDemo(mode){demo=true;show("game");launch3D({online:false,mode})}
 
 function launch3D(opts){
-  const online=!!opts.online,touchUI=matchMedia("(pointer:coarse)").matches;
+  const online=!!opts.online,touchUI=matchMedia("(pointer:coarse)").matches,L=AI[aiLevel]||AI.normal;
   ac();musicStart();
   const wrap=$("gameWrap"),box=$("gamebox");
   box.innerHTML="";box.style.overflow="hidden";box.style.position="relative";
@@ -555,9 +611,9 @@ function launch3D(opts){
     bullets.push({x,z,vx,vz,team:owner.team,owner,t:1.4,mesh});
   }
   function fire(p,fx,fz){
-    let a=Math.atan2(fz,fx);if(p.bot)a+=(Math.random()-.5)*.35;
+    let a=Math.atan2(fz,fx);if(p.bot)a+=(Math.random()-.5)*L.spr;
     const dx=Math.cos(a),dz=Math.sin(a),sp=p.bot?20:26,x=p.x+dx,z=p.z+dz;
-    spawnBullet(x,z,dx*sp,dz*sp,p);p.last=p.bot?.75:.28;
+    spawnBullet(x,z,dx*sp,dz*sp,p);p.last=p.bot?L.cd:.28;
     if(online&&p.local)push(ref(rdb,`rooms/${code}/shots`),{uid:me.uid,x,z,vx:dx*sp,vz:dz*sp}).then(r=>setTimeout(()=>remove(r),3000)).catch(()=>{});
   }
   function startRoll(p,dx,dz){
@@ -566,7 +622,7 @@ function launch3D(opts){
     if(online&&p.local)lastSend=0;
   }
   function hit(p,by){
-    p.hp-=p.bot?25:10;p.flash=.15;
+    p.hp-=p.bot?L.taken:(by&&by.bot?L.dmg:10);p.flash=.15;
     if(p.hp<=0){
       p.hp=0;p.alive=false;p.bar.fg.visible=p.bar.bg.visible=false;
       speak(p,pick(DEAD_LINES),3.6);if(by&&by.alive)speak(by,pick(KILL_LINES),2.8);
@@ -687,13 +743,13 @@ function launch3D(opts){
         p.ai.t-=dt;if(p.ai.t<=0){p.ai.s=Math.random()<.5?-1:1;p.ai.t=1+Math.random()*2}
         const f=d>11?1:d<5?-1:0;
         mx=ux*f-uz*p.ai.s*.8;mz=uz*f+ux*p.ai.s*.8;
-        const m=Math.hypot(mx,mz)||1;mx=mx/m*5.5;mz=mz/m*5.5;
-        fx=dx;fz=dz;shoot=d<26;
+        const m=Math.hypot(mx,mz)||1;mx=mx/m*L.spd;mz=mz/m*L.spd;
+        fx=dx;fz=dz;shoot=d<L.range;
         if(p.rollCd<=0&&p.roll<=0){ // dodge incoming bullets with a somersault
           for(const b of bullets){
             if(b.team===p.team)continue;
             const rx=b.x-p.x,rz=b.z-p.z,vv=b.vx*b.vx+b.vz*b.vz,t=-(rx*b.vx+rz*b.vz)/vv;
-            if(t>0&&t<.45&&Math.hypot(rx+b.vx*t,rz+b.vz*t)<1.5&&Math.random()<.05){
+            if(t>0&&t<.45&&Math.hypot(rx+b.vx*t,rz+b.vz*t)<1.5&&Math.random()<L.dodge){
               const s=Math.random()<.5?-1:1;startRoll(p,-b.vz*s,b.vx*s);break}
           }
         }
@@ -761,11 +817,9 @@ function launch3D(opts){
 }
 
 function finishDemo(win){
-  win?(tone("square",440,880,.35,.2),setTimeout(()=>tone("square",660,1320,.4,.2),250)):tone("sawtooth",300,70,.8,.22);
-  demoCoins+=win?PRIZE-FEE:-FEE;
   $("resTitle").textContent=win?"Victory":"Defeat";$("resTitle").style.color=win?"#35e0d0":"#ff3d81";
-  $("resText").textContent=win?`Practice match: you won ${PRIZE} coins (entry ${FEE}).`:"Practice match: entry fee lost. These coins are not real.";
-  $("resBal").textContent=demoCoins;open("mRes");
+  $("resText").textContent=(win?"You beat the AI! ":"The AI won this time. Try again or lower the difficulty. ")+"Practice is free, so no coins were used.";
+  $("resBal").textContent=me?coins.toLocaleString():"-";open("mRes");
 }
 
 /* ---------- Buy coins ---------- */
