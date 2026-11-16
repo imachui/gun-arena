@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin()  { return signedIn() && request.auth.uid in ['PASTE_ADMIN_UID_HERE']; } // same UID as ADMIN_UIDS in index.html
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid) && request.resource.data.coins == 0;
+      // Players may spend coins freely but gain at most 40 per write (match prize).
+      // DEMO ONLY: move prize payouts to a Cloud Function before taking real money.
+      allow update: if isAdmin() || (isOwner(uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['coins','gender','matches','wins'])
+        && request.resource.data.coins >= 0
+        && request.resource.data.coins - resource.data.coins <= 40);
+    }
+
+    match /transactions/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow create: if isOwner(request.resource.data.uid)
+        && request.resource.data.status == 'pending'
+        && request.resource.data.type in ['deposit', 'withdrawal'];
+      allow update: if isAdmin();
+    }
+
+    match /chats/{uid} {
+      allow read, write: if isOwner(uid) || isAdmin();
+      match /messages/{m} {
+        allow read: if isOwner(uid) || isAdmin();
+        allow create: if (isOwner(uid) && request.resource.data.from == 'player') || isAdmin();
+      }
+    }
+    // The admin's chat-thread list reads /chats as a collection.
+    match /chats/{uid} { allow list: if isAdmin(); }
+  }
+}
