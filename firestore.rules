@@ -8,12 +8,12 @@ service cloud.firestore {
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
       allow create: if isOwner(uid) && request.resource.data.coins == 0;
-      // Players may spend coins freely but gain at most 40 per write (match prize).
+      // Players may spend coins freely but gain at most 200 per write (largest prize: 100-coin bet x2).
       // DEMO ONLY: move prize payouts to a Cloud Function before taking real money.
       allow update: if isAdmin() || (isOwner(uid)
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['coins','gender','matches','wins','won'])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['coins','gender','matches','wins','won','rp'])
         && request.resource.data.coins >= 0
-        && request.resource.data.coins - resource.data.coins <= 40);
+        && request.resource.data.coins - resource.data.coins <= 200);
     }
 
     match /transactions/{id} {
