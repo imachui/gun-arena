@@ -31,3 +31,6 @@ Your game: `https://YOURNAME.github.io/REPO/`
 ## Security note
 Prize payouts and match results are decided in the players' browsers. Fine for friends and testing.
 Before real money, move payouts and room settlement to a Cloud Function.
+
+## Matchmaking
+Ranked "Find match" uses a queue stored under `rooms/Q<bet>` in the Realtime Database, so the existing `database.rules.json` already works. Players with the same bet wait together. The longest-waiting player acts as the matchmaker: once two players are found a 15-second countdown starts, and then 2-3 players start a 1v1, 4-7 start a 2v2 and 8 start a 4v4 (leftover players keep waiting). Friends rooms are created separately with a 4-digit code.
