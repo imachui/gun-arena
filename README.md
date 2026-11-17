@@ -1,6 +1,6 @@
 # Gun Arena
 
-3D top-down arena shooter. Practice vs bots (no sign-in) or online rooms (Google sign-in, Firebase).
+3D top-down arena shooter plus 1v1 Tetris Battle (both play to earn). Practice vs bots (no sign-in) or online rooms (Google sign-in, Firebase).
 
 ## Files
 - `index.html`: the whole game (put it at the repo root)
@@ -34,3 +34,9 @@ Before real money, move payouts and room settlement to a Cloud Function.
 
 ## Matchmaking
 Ranked "Find match" uses a queue stored under `rooms/Q<bet>` in the Realtime Database, so the existing `database.rules.json` already works. Players with the same bet wait together. The longest-waiting player acts as the matchmaker: once two players are found a 15-second countdown starts, and then 2-3 players start a 1v1, 4-7 start a 2v2 and 8 start a 4v4 (leftover players keep waiting). Friends rooms are created separately with a 4-digit code.
+
+## Tetris Battle
+Added inside `index.html` (search for `TETRIS BATTLE`). Players choose Gun Arena or Tetris Battle at the top of the lobby. It uses the same coins, bets, 2x payout and RP as Gun Arena, so **no rules files need to change**.
+- Rooms live in the same Realtime Database `rooms/` path: friends rooms are `rooms/T####`, ranked queues are `rooms/QT<bet>`, and matches are `rooms/TM######`.
+- Both players get the same piece sequence (shared seed). Boards, scores and garbage are synced through the room; the lowest connected player acts as referee (top-out, disconnect, or higher score at 5:00).
+- Same security note as Gun Arena: results are decided in the browsers, so move payouts to a Cloud Function before taking real money.
