@@ -100,12 +100,21 @@
       <div class="text-sm">Bet per player (coins):</div>
       <div class="flex flex-wrap gap-2" id="bets"></div>
       <p id="betInfo" class="text-sm text-[#ffd23f]"></p>
-      <p class="text-xs opacity-80">Find match (ranked) pairs you with other players automatically and earns rank points. Create room is for friends and gives no rank points.</p>
+      <p class="text-xs opacity-80">Every player in a match, ranked or friends, needs the bet in coins. The winners double it.</p>
     </div>
-    <div class="grid sm:grid-cols-3 gap-3" id="modes"></div>
-    <div class="card flex flex-wrap gap-2 items-center">
-      <input id="joinCode" class="inp w-40" inputmode="numeric" maxlength="4" placeholder="Room code">
-      <button id="btnJoin" class="btn">Join room</button>
+    <div class="card space-y-2">
+      <h2 class="text-base">Ranked match</h2>
+      <p class="text-sm opacity-80">Press Find match and we search for players online. A countdown starts as soon as two players are found. With only a few players you go straight into a 1v1 or 2v2, and with 8 players it becomes a 4v4. You earn rank points.</p>
+      <button id="btnFind" class="btn w-full">Find match (ranked)</button>
+    </div>
+    <div class="card space-y-3">
+      <h2 class="text-base">Friends room</h2>
+      <p class="text-sm opacity-80">Create a private room and share the 4-digit code. Everyone in the room puts in the same bet, and the winners take double. No rank points.</p>
+      <div class="grid sm:grid-cols-3 gap-2" id="modes"></div>
+      <div class="flex flex-wrap gap-2 items-center">
+        <input id="joinCode" class="inp w-40" inputmode="numeric" maxlength="4" placeholder="Room code">
+        <button id="btnJoin" class="btn">Join room</button>
+      </div>
     </div>
     <div class="flex flex-wrap gap-2">
       <button id="btnBuy" class="btn yellow">Coin Store</button>
@@ -126,7 +135,7 @@
       <button id="btnSwitch" class="btn pink">Switch team</button>
       <button id="btnLeave" class="btn ghost">Leave</button>
     </div>
-    <p class="text-xs opacity-70">Your team is picked at random. Use Switch team if the other side has a free slot. The bet is deducted from every player when the match starts.</p>
+    <p class="text-xs opacity-70">Every player needs the bet in coins (a green check means ready). Your team is picked at random. Use Switch team if the other side has a free slot. The bet is deducted from every player when the match starts.</p>
   </section>
 
   <!-- Game -->
@@ -167,17 +176,29 @@
   <div><b class="text-[#35e0d0]">1. The game</b><br>There are two teams: <b style="color:#35e0d0">Cyan</b> and <b style="color:#ff3d81">Pink</b>. Your team is random. The <b>last team standing</b> wins. Modes: 1v1, 2v2 and 4v4.<br>You have <b>100 HP</b>, and every bullet that hits you takes <b>10 HP</b>. When your HP reaches zero, a <b>cross and a box</b> mark the spot where you fell, and you can keep watching the match.</div>
   <div><b class="text-[#35e0d0]">2. Controls</b><br><b>Phone:</b> touch anywhere on the <b>left half</b> of the screen to move. Touch anywhere on the <b>right half</b> to aim and shoot: drag in the direction you want to shoot (the aim is exact), or simply hold to auto-aim at the nearest enemy. Tap <b>ROLL</b> to dodge; you cannot be hit while rolling.<br><b>PC:</b> WASD to move, mouse to aim, hold the left button to shoot, Space or Shift to roll.<br>The camera is fixed and shows the whole arena, so you can always see every teammate and enemy and dodge in time. The see-through sticks never hide your hero.</div>
   <div><b class="text-[#35e0d0]">3. Practice (free)</b><br>No sign-in and no coins are needed. Fight bots on Easy, Normal or Hard to learn the game before you bet.</div>
-  <div><b class="text-[#35e0d0]">4. Online matches and bets</b><br>Sign in with Google and choose your bet per player: <b>5, 10, 20, 50 or 100 coins</b>.<br>• <b>Find match (ranked):</b> you are matched with other players automatically and earn rank points.<br>• <b>Create room (friends):</b> creates a 4-digit room code that you can share with friends. No rank points are earned.<br>If the other team has a free slot, you can tap <b>Switch team</b>.</div>
+  <div><b class="text-[#35e0d0]">4. Online matches and bets</b><br>Sign in with Google and choose your bet per player: <b>5, 10, 20, 50 or 100 coins</b>. Everyone in a match needs the bet in coins.<br>• <b>Find match (ranked):</b> we search for players online and a countdown starts once two players are found. With only a few players you go straight into a 1v1 or 2v2, and with 8 players it becomes a 4v4. You earn rank points.<br>• <b>Friends room:</b> create a room with a 4-digit code and share it with your friends. The same bet applies and the winners double it. No rank points.<br>If the other team has a free slot, you can tap <b>Switch team</b>.</div>
   <div><b class="text-[#ffd23f]">5. How to earn</b><br>• <b>Win:</b> you receive <b>2x your bet</b>. For example, with a bet of 20 coins you win 40 coins (a profit of 20).<br>• <b>Draw:</b> your bet is returned.<br>• <b>Loss:</b> you lose your bet.<br>• In 2v2 and 4v4, every winner receives 2x their own bet.<br>• <b>Ranked:</b> +25 RP for a win and -15 RP for a loss. Ranks: Bronze, Silver (100 RP), Gold (300 RP), Platinum (600 RP) and Diamond (1000 RP).<br>• If you quit or disconnect during a match, you lose it.</div>
   <div id="helpEco"></div>
   <div class="text-xs opacity-80">Winnings are not guaranteed. Only bet what you can afford to lose. For players aged 18 and over.</div>
   <button class="btn" data-close>Let's play!</button>
 </div></div>
 
+<!-- Searching for a match -->
+<div id="mSearch" class="modal hidden"><div class="card space-y-3 text-center">
+  <h2 class="text-sm">Finding a match</h2>
+  <div id="srchLabel" class="text-sm opacity-80">Searching for players...</div>
+  <div id="srchTime" class="px text-4xl text-[#ffd23f]">0:00</div>
+  <div class="text-sm">Players found: <b id="srchCount">1</b> · Bet: <b><span id="srchBet"></span> coins</b></div>
+  <p id="srchMode" class="text-sm"></p>
+  <p class="text-xs opacity-80">2 to 3 players start a 1v1, 4 to 7 players start a 2v2, and 8 players start a 4v4.</p>
+  <button id="btnSrchCancel" class="btn ghost">Cancel</button>
+</div></div>
+
 <!-- Buy coins -->
 <div id="mBuy" class="modal hidden"><div class="card space-y-3">
   <h2 class="text-sm">Coin Store</h2><p class="text-sm">Pick a package, pay via GCash, then submit your reference number. Coins are added after the admin verifies it.</p>
   <div id="tiers" class="grid grid-cols-2 gap-2"></div>
+  <div id="buySum" class="card text-sm"></div>
   <div class="card text-sm"><b id="gNum" class="text-[#ffd23f] text-2xl"></b><br>Account name: <b id="gName" class="text-lg"></b></div>
   <label class="block text-sm">Enter your GCash Reference No.
     <input id="refNo" class="inp mt-1" inputmode="numeric" maxlength="13" placeholder="13 digits"></label>
@@ -326,7 +347,7 @@ const toast=t=>{const e=$("toast");e.textContent=t;e.classList.remove("hidden");
 const open=id=>$(id).classList.remove("hidden"), close=id=>$(id).classList.add("hidden");
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>b.closest(".modal").classList.add("hidden"));
 
-let myRP=0,autoTimer=null,me=null,isAdmin=false,coins=0,code=null,room=null,started=false,finished=false,game=null,stopShots=null,stopRoom=null,stopTx=null,stopChat=null;
+let myRP=0,autoTimer=null,me=null,isAdmin=false,coins=0,code=null,room=null,started=false,finished=false,game=null,stopShots=null,stopRoom=null,stopTx=null,stopChat=null,fillTimer=null;
 const uref=()=>doc(db,"users",me.uid);
 const rref=()=>ref(rdb,`rooms/${code}`);
 const pref=()=>ref(rdb,`rooms/${code}/players/${me.uid}`);
@@ -360,16 +381,13 @@ function watchMyTx(){
     const rows=s.docs.map(d=>d.data()).sort((a,b)=>(b.timestamp?.seconds||0)-(a.timestamp?.seconds||0));
     const pend=rows.filter(t=>t.status==="pending"),pd=pend.filter(t=>t.type==="deposit").reduce((a,t)=>a+t.coinsRequested,0),pw=pend.filter(t=>t.type==="withdrawal").reduce((a,t)=>a+t.coinsRequested,0);
     $("dPending").textContent=[pd?`+${pd.toLocaleString()} pending`:"",pw?`-${pw.toLocaleString()} withdrawing`:""].filter(Boolean).join(" · ");
-    $("myTx").innerHTML=rows.map(t=>`<div>${esc(t.type)} · ₱${t.amountPHP} · ${t.coinsRequested} coins · <b>${esc(t.status)}</b></div>`).join("")||"No transactions yet.";
+    $("myTx").innerHTML=rows.map(t=>`<div>${esc(t.type)} · ₱${t.amountPHP} · ${t.coinsRequested} coins${t.bonusCoins?` (incl. ${t.bonusCoins} bonus)`:""} · <b>${esc(t.status)}</b></div>`).join("")||"No transactions yet.";
   });
 }
 
 /* ---------- Lobby: modes, create, join ---------- */
-$("modes").innerHTML=Object.entries(MODES).map(([k,m])=>
-  `<div class="card"><h2 class="text-base mb-1">${m.label}</h2><p class="text-sm mb-3">${m.size} players</p>
-   <button class="btn w-full mb-2" data-find="${k}">Find match (ranked)</button>
-   <button class="btn ghost w-full" data-mode="${k}">Create room (friends)</button></div>`).join("");
-document.querySelectorAll("[data-find]").forEach(b=>b.onclick=()=>findMatch(b.dataset.find));
+$("modes").innerHTML=Object.entries(MODES).map(([k,m])=>`<button class="btn ghost w-full" data-mode="${k}">Create ${m.label}</button>`).join("");
+$("btnFind").onclick=()=>findMatch();
 document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>createRoom(b.dataset.mode,false));
 $("bets").innerHTML=BETS.map(v=>`<button class="btn ghost" data-bet="${v}">${v} coins</button>`).join("");
 function paintBet(){document.querySelectorAll("[data-bet]").forEach(b=>b.classList.toggle("yellow",+b.dataset.bet===bet));$("betInfo").textContent=`Each player pays ${bet} coins. Winners get ${bet*2} coins each.`}
@@ -389,35 +407,114 @@ async function createRoom(mode,ranked){
   toast("Could not create a room. Try again.");
 }
 
-async function findMatch(mode){
+/* ---------- Ranked matchmaking: one queue per bet. Few players = 1v1 or 2v2, more players = bigger match ---------- */
+const SEARCH_SECS=15,STALE=15000,MODE_BY_SIZE={2:"duel",4:"tag",8:"blitz"};
+let srvOff=0;onValue(ref(rdb,".info/serverTimeOffset"),s=>{srvOff=s.val()||0});
+const srvNow=()=>Date.now()+srvOff;
+let qBet=null,qUnsub=null,qTick=null,qBeat=null,qData=null,qBusy=false,qSince=0,qEntering=false;
+const qRef=b=>ref(rdb,`rooms/Q${b}`),qMine=b=>ref(rdb,`rooms/Q${b}/queue/${me.uid}`);
+const byJoin=(a,b)=>(a[1].joined-b[1].joined)||(a[0]<b[0]?-1:1);
+
+async function findMatch(){
+  if(qBet!==null||!me)return;
   if(coins<bet)return toast(`You need ${bet} coins for this bet. Open the Coin Store or pick a smaller bet.`);
-  toast("Searching for players...");
+  qBet=bet;qSince=srvNow();qData=null;qEntering=false;qBusy=false;
   try{
-    const snap=await get(rtQuery(ref(rdb,"rooms"),orderByChild("matchKey"),equalTo(mode+"_"+bet)));
-    const cands=[];
-    snap.forEach(ch=>{const r=ch.val();if(r.status==="lobby"&&Object.keys(r.players||{}).length<r.size)cands.push([ch.key,r.createdAt||0])});
-    cands.sort((a,b)=>a[1]-b[1]);
-    for(const [c] of cands){await enter(c,true);if(code)return}
-  }catch(e){console.warn(e)}
-  await createRoom(mode,true);   // nobody waiting: open a ranked room and wait for others
+    await rtTx(qRef(qBet),cur=>{
+      cur=cur||{};cur.status="lobby";cur.pool=true;cur.queue=cur.queue||{};
+      const now=srvNow();
+      Object.keys(cur.queue).forEach(u=>{if(now-cur.queue[u].ts>STALE*2)delete cur.queue[u]});
+      cur.queue[me.uid]={name:me.displayName||"Player",gender,joined:now,ts:now};
+      return cur;
+    });
+    onDisconnect(qMine(qBet)).remove();
+  }catch(e){console.warn(e);qBet=null;return toast("Matchmaking is not available right now. Please try again.")}
+  $("srchBet").textContent=bet;open("mSearch");
+  const b=qBet;
+  qUnsub=onValue(qRef(b),s=>{qData=s.val()});
+  qBeat=setInterval(()=>rtUpdate(qMine(b),{ts:srvNow()}).catch(()=>{}),4000);
+  qTick=setInterval(qStep,500);qStep();
+}
+function qStop(removeEntry){
+  clearInterval(qTick);clearInterval(qBeat);qTick=qBeat=null;qUnsub&&qUnsub();qUnsub=null;
+  if(qBet!==null&&me&&removeEntry){const r=qMine(qBet);onDisconnect(r).cancel().catch(()=>{});remove(r).catch(()=>{})}
+  qBet=null;qBusy=false;qData=null;
+}
+function qCancel(){qStop(true);close("mSearch")}
+$("btnSrchCancel").onclick=qCancel;
+
+function qStep(){
+  if(qBet===null)return;
+  if(!me)return qCancel();
+  const d=qData||{},q=d.queue||{},now=srvNow(),mine=q[me.uid];
+  if(mine&&mine.match&&!qEntering){qEntering=true;qJoinMatch(mine.match);return}
+  const fresh=Object.entries(q).filter(([,e])=>!e.match&&now-e.ts<STALE).sort(byJoin),n=fresh.length;
+  const size=n>=8?8:n>=4?4:2;
+  $("srchCount").textContent=Math.max(1,n);
+  if(n>=2&&d.deadline){
+    const left=Math.max(0,Math.ceil((d.deadline-now)/1000));
+    $("srchLabel").textContent="Match starts in";$("srchTime").textContent=left;
+    $("srchMode").textContent=`Mode: ${MODES[MODE_BY_SIZE[size]].label} (${size} players${n>size?`, ${n-size} will wait for the next match`:""})`;
+  }else{
+    const s=Math.max(0,Math.floor((now-qSince)/1000));
+    $("srchLabel").textContent=n>=2?"Players found! Starting the countdown...":"Searching for players...";
+    $("srchTime").textContent=n>=2?"...":`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
+    $("srchMode").textContent=n>=2?"":(s>40?"Few players are online right now. Keep waiting, or play Practice vs AI for free.":"Waiting for another player to join.");
+  }
+  // The longest-waiting player acts as the matchmaker (starts the countdown and forms the match).
+  const leader=fresh[0]&&fresh[0][0]===me.uid;
+  const need=(n>=2&&!d.deadline)||(n<2&&d.deadline)||(n>=2&&d.deadline&&now>=d.deadline)||(n>=8&&d.deadline&&d.deadline>now+500);
+  if(leader&&need&&!qBusy){
+    qBusy=true;const b=qBet;
+    rtTx(qRef(b),cur=>{
+      if(!cur||!cur.queue)return cur;
+      const t=srvNow(),qq=cur.queue;
+      Object.keys(qq).forEach(u=>{if(t-qq[u].ts>STALE*2||(qq[u].match&&t-qq[u].ts>60000))delete qq[u]});
+      const fr=Object.entries(qq).filter(([,e])=>!e.match&&t-e.ts<STALE).sort(byJoin),c=fr.length;
+      if(c<2){cur.deadline=null;return cur}
+      if(!cur.deadline){cur.deadline=c>=8?t:t+SEARCH_SECS*1000;return cur}
+      if(c>=8&&cur.deadline>t)cur.deadline=t;
+      if(t<cur.deadline)return cur;
+      const sz=c>=8?8:c>=4?4:2,order=fr.slice(0,sz).map(([u])=>u).sort(()=>Math.random()-.5);
+      const mcode="M"+String(Math.floor(100000+Math.random()*900000));
+      order.forEach((u,i)=>{qq[u].match={code:mcode,mode:MODE_BY_SIZE[sz],size:sz,team:i%2,host:order[0],bet:b}});
+      cur.deadline=c-sz>=2?t+SEARCH_SECS*1000:null;
+      return cur;
+    }).catch(e=>console.warn(e)).finally(()=>setTimeout(()=>{qBusy=false},700));
+  }
+}
+async function qJoinMatch(m){
+  const b=qBet;qStop(false);close("mSearch");
+  const mine=ref(rdb,`rooms/Q${b}/queue/${me.uid}`);
+  await enter(m.code,true,{team:m.team,create:{mode:m.mode,size:m.size,host:m.host,bet:m.bet}});
+  onDisconnect(mine).cancel().catch(()=>{});remove(mine).catch(()=>{});
+  if(!code)toast("Could not join the match. Please search again.");
 }
 
-async function enter(c,quiet){
+async function enter(c,quiet,assign){
   const say=m=>{if(!quiet)toast(m)};
-  if(!/^\d{4}$/.test(c))return say("Room code is 4 digits.");
+  if(!assign&&!/^\d{4}$/.test(c))return say("Room code is 4 digits.");
   const snap=await get(ref(rdb,"rooms/"+c));
-  if(!snap.exists())return say("Room not found.");
-  const r0=snap.val(),need=r0.bet||FEE;
+  if(!snap.exists()&&!assign)return say("Room not found.");
+  const r0=snap.exists()?snap.val():assign.create,need=r0.bet||FEE;
   if(coins<need)return say(`You need ${need} coins to join this room. Open the Coin Store.`);
   await rtTx(ref(rdb,"rooms/"+c),cur=>{
-    if(cur===null)return cur;                       // first local pass: server value is fetched and retried
+    if(cur===null){
+      if(!assign)return cur;                        // first local pass: server value is fetched and retried
+      cur={mode:assign.create.mode,size:assign.create.size,host:assign.create.host,status:"lobby",bet:assign.create.bet,ranked:true,auto:true,createdAt:Date.now(),players:{}};
+    }
     if(cur.status!=="lobby")return;
     const ps=cur.players||{};
     if(ps[me.uid])return cur;
     if(Object.keys(ps).length>=cur.size)return;
-    const half=cur.size/2,c0=Object.values(ps).filter(p=>p.team===0).length,c1=Object.keys(ps).length-c0,free=[];
-    if(c0<half)free.push(0);if(c1<half)free.push(1);if(!free.length)return;
-    ps[me.uid]={name:me.displayName||"Player",gender,team:free[Math.floor(Math.random()*free.length)],alive:true,hp:100,x:-1,y:-1,connected:true};   // random side
+    let team;
+    if(assign)team=assign.team;                     // matchmaking already balanced the teams
+    else{
+      const half=cur.size/2,c0=Object.values(ps).filter(p=>p.team===0).length,c1=Object.keys(ps).length-c0,free=[];
+      if(c0<half)free.push(0);if(c1<half)free.push(1);if(!free.length)return;
+      team=free[Math.floor(Math.random()*free.length)];   // random side
+    }
+    ps[me.uid]={name:me.displayName||"Player",gender,team,coins,alive:true,hp:100,x:-1,y:-1,connected:true};
     cur.players=ps;return cur;
   });
   const chk=await get(pref0(c));
@@ -427,6 +524,10 @@ async function enter(c,quiet){
   if(r0.host===me.uid)onDisconnect(rref()).remove();
   stopRoom=onValue(rref(),onRoom);
   show("room");
+  if(assign){   // if a matched player never connects, do not wait forever
+    clearTimeout(fillTimer);
+    fillTimer=setTimeout(()=>{if(code===c&&room&&room.status==="lobby"&&Object.keys(room.players||{}).length<room.size){toast("A player did not connect. Please search again.");leaveRoom()}},25000);
+  }
 }
 const pref0=c=>ref(rdb,`rooms/${c}/players/${me.uid}`);
 
@@ -435,11 +536,11 @@ function onRoom(s){
   room=s.val();
   const ps=room.players||{},n=Object.keys(ps).length;
   if(room.status==="lobby"){
-    $("roomCode").textContent=code;$("roomMode").textContent=`${MODES[room.mode].label}${room.ranked?" (ranked)":""} · ${n}/${room.size} players · Bet ${room.bet||FEE} coins, winners get ${(room.bet||FEE)*2} each`+(room.auto?(n<room.size?" · Searching for players...":" · Match found! Starting..."):"");
+    $("roomCode").textContent=room.auto?"RANKED":code;$("roomMode").textContent=`${MODES[room.mode].label}${room.ranked?" (ranked)":""} · ${n}/${room.size} players · Bet ${room.bet||FEE} coins, winners get ${(room.bet||FEE)*2} each`+(room.auto?(n<room.size?" · Match found! Waiting for everyone to connect...":" · Everyone is here! Starting..."):"");
     $("roomPlayers").innerHTML=[0,1].map(t=>`<div class="card"><div class="px text-sm mb-2" style="color:${t?"#ff3d81":"#35e0d0"}">Team ${t?"Pink":"Cyan"}</div>${
-      Object.entries(ps).filter(([,p])=>p.team===t).map(([u,p])=>`<div>${esc(p.name)}${u===room.host?" ★":""}${u===me.uid?" (you)":""}</div>`).join("")}</div>`).join("");
+      Object.entries(ps).filter(([,p])=>p.team===t).map(([u,p])=>`<div>${esc(p.name)}${u===room.host?" ★":""}${u===me.uid?" (you)":""} ${(p.coins||0)>=(room.bet||FEE)?'<span style="color:#7cfc00" title="Has enough coins">✔</span>':'<span style="color:#ff3d81">✖ needs coins</span>'}</div>`).join("")}</div>`).join("");
     $("btnStart").classList.toggle("hidden",room.host!==me.uid||!!room.auto);
-    $("btnStart").disabled=n<room.size;
+    $("btnStart").disabled=n<room.size||Object.values(ps).some(p=>(p.coins||0)<(room.bet||FEE));
     if(room.auto&&n>=room.size&&!autoTimer&&Object.keys(ps).sort()[0]===me.uid)autoTimer=setTimeout(()=>rtUpdate(rref(),{status:"playing",startedAt:Date.now()}),2500);
   }
   if(room.status==="playing"){
@@ -469,7 +570,7 @@ async function leaveRoom(){
   cleanup();show("lobby");
 }
 function cleanup(){
-  clearTimeout(autoTimer);autoTimer=null;stopDemo&&stopDemo();stopDemo=null;musicStop();
+  clearTimeout(autoTimer);autoTimer=null;clearTimeout(fillTimer);fillTimer=null;stopDemo&&stopDemo();stopDemo=null;musicStop();
   stopRoom&&stopRoom();stopShots&&stopShots();stopRoom=stopShots=null;
   if(game){game.destroy(true);game=null}
   code=null;room=null;started=false;
@@ -998,18 +1099,21 @@ $("gNum").textContent=GCASH_NUMBER||"0976 141 5950";$("gName").textContent=GCASH
 let TIERS=[],tier=null,tierIdx=0;
 function buildTiers(){
   TIERS=PACKS.map(k=>({php:k.php,bonus:k.bonus,coins:Math.max(1,Math.floor(k.php*storeRate*(1+k.bonus/100)))}));
-  $("tiers").innerHTML=TIERS.map((t,i)=>`<button class="btn ghost text-left" data-t="${i}">₱${t.php.toLocaleString()}<br><b>${t.coins.toLocaleString()} coins</b><br><span class="text-xs">${t.bonus?`+${t.bonus}% bonus`:"Base price"}</span></button>`).join("");
+  $("tiers").innerHTML=TIERS.map((t,i)=>`<button class="btn ghost text-left" data-t="${i}">₱${t.php.toLocaleString()}<br><b>${t.coins.toLocaleString()} coins</b><br><span class="text-xs">${t.bonus?`+${t.bonus}% bonus (${t.coins-Math.floor(t.php*storeRate)} coins)`:"Base price"}</span></button>`).join("");
   document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>pickTier(+b.dataset.t));
   pickTier(Math.min(tierIdx,TIERS.length-1));
 }
-const pickTier=i=>{tierIdx=i;tier=TIERS[i];document.querySelectorAll("[data-t]").forEach(b=>b.classList.toggle("yellow",+b.dataset.t===i))};
+const pickTier=i=>{tierIdx=i;tier=TIERS[i];
+  const base=Math.floor(tier.php*storeRate),bonus=tier.coins-base;
+  $("buySum").innerHTML=`You will receive <b class="text-[#ffd23f]">${tier.coins.toLocaleString()} coins</b>`+(bonus>0?` (${base.toLocaleString()} + <b>${bonus.toLocaleString()} bonus coins</b>). The bonus is added automatically.`:".");
+  document.querySelectorAll("[data-t]").forEach(b=>b.classList.toggle("yellow",+b.dataset.t===i))};
 $("btnBuy").onclick=()=>open("mBuy");
 $("btnStoreChat").onclick=()=>{close("mBuy");openChat(me.uid,false)};
 $("btnPaid").onclick=async()=>{
   const ref_=$("refNo").value.trim();
   const ok=/^\d{13}$/.test(ref_);$("refErr").classList.toggle("hidden",ok);if(!ok)return;
   const d=doc(collection(db,"transactions"));
-  await setDoc(d,{uid:me.uid,userName:me.displayName,type:"deposit",amountPHP:tier.php,coinsRequested:tier.coins,referenceNo:ref_,status:"pending",timestamp:serverTimestamp()});
+  await setDoc(d,{uid:me.uid,userName:me.displayName,type:"deposit",amountPHP:tier.php,coinsRequested:tier.coins,bonusCoins:tier.coins-Math.floor(tier.php*storeRate),referenceNo:ref_,status:"pending",timestamp:serverTimestamp()});
   $("refNo").value="";close("mBuy");toast("Payment submitted. The admin will verify your reference number.");
 };
 
@@ -1173,7 +1277,7 @@ function applyEconomy(){
   $("rate").textContent=COIN_PHP;
   buildTiers();paintValue();paintMarket();convCoins();$("wdCoins").oninput();
   const ex=n=>`• ${n} coins = <b>${peso(wdAmt(n))}</b>`;
-  $("helpEco").innerHTML=`<div><b class="text-[#ffd23f]">6. Buying coins</b><br>Open the Coin Store and choose a package: ${TIERS.map(t=>`₱${t.php} = ${t.coins} coins`).join(", ")}. The bigger packages include a bonus. Pay through GCash, enter the 13-digit reference number and tap <b>I Have Paid</b>. The admin adds your coins after verifying the payment.</div>
+  $("helpEco").innerHTML=`<div><b class="text-[#ffd23f]">6. Buying coins</b><br>Open the Coin Store and choose a package: ${TIERS.map(t=>`₱${t.php} = ${t.coins} coins`).join(", ")}. The bigger packages include bonus coins, and the bonus is added automatically. Pay through GCash, enter the 13-digit reference number and tap <b>I Have Paid</b>. The admin adds your coins after verifying the payment.</div>
   <div class="mt-3"><b class="text-[#ffd23f]">7. Coin Market and withdrawing to GCash</b><br>The <b>Coin Market</b> chart in the lobby shows what one coin is worth when you withdraw. Right now, <b>1 coin = ${peso(COIN_PHP)}</b>, and the price goes up and down over time. The minimum withdrawal is <b>20 coins</b>. For example, at the current price:<br>${ex(50)}<br>${ex(100)}<br>${ex(500)}<br>Your coins are held until the admin approves the request, and they are returned if the request is rejected.</div>`;
   if(document.activeElement!==$("ecoRate"))$("ecoRate").value=COIN_PHP;
   if(document.activeElement!==$("ecoStore"))$("ecoStore").value=storeRate;
