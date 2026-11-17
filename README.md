@@ -4,16 +4,24 @@
 
 ## Files
 - `index.html`: the whole game (put it at the repo root)
+- `logo.png`: the logo (header, login screen, browser tab icon, and painted on the arena floor). Keep it next to `index.html`
+- `config.js`: your Firebase config, `ADMIN_UIDS`, GCash number and name
+- `MECHANICS.md`: how to play and earn, ready to post on social media (Filipino)
 - `firestore.rules`: paste into Firebase Console > Firestore > Rules
 - `database.rules.json`: paste into Firebase Console > Realtime Database > Rules
 
 ## Setup (once)
-1. Firebase Console: create a project, add a Web app, copy `firebaseConfig` into `index.html`.
+1. Firebase Console: create a project, add a Web app, copy `firebaseConfig` into `config.js`.
 2. Authentication > Sign-in method > enable Google.
 3. Create Firestore and Realtime Database (Singapore).
-4. Publish both rules files. In `firestore.rules`, replace `PASTE_ADMIN_UID_HERE` with your admin UID.
-5. In `index.html`, set `ADMIN_UIDS`, `GCASH_NUMBER`, and review `TIERS`.
+4. Publish both rules files. In `firestore.rules`, replace the admin UID with yours.
+5. In `config.js`, set `ADMIN_UIDS`, `GCASH_NUMBER`, `GCASH_NAME`. In `index.html`, review `TIERS` and `BETS`.
 6. Authentication > Settings > Authorized domains > add `YOURNAME.github.io`.
+
+## Economy
+- The admin changes the coin value (₱ per coin) and the withdrawal fee (%) in the Admin screen. They are saved in Firestore at `settings/economy`, so you must republish `firestore.rules`.
+- Defaults if nothing is saved: 1 coin = ₱1, 30% fee. Store packages are the peso amounts in `PACKS` in `index.html`.
+- Matches: winners get 2x their bet, no house cut.
 
 ## Deploy on GitHub Pages
 Repo > Settings > Pages > Source: Deploy from a branch > `main` / `(root)` > Save.
