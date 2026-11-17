@@ -4,7 +4,7 @@
 
 ## Files
 - `index.html`: the whole game (put it at the repo root)
-- `logo.png`: the logo (header, login screen, browser tab icon, and painted on the arena floor). Keep it next to `index.html`
+- `logo.png`: the original logo file (optional). A copy is already embedded inside `index.html`
 - `config.js`: your Firebase config, `ADMIN_UIDS`, GCash number and name
 - `MECHANICS.md`: how to play and earn, ready to post on social media (Filipino)
 - `firestore.rules`: paste into Firebase Console > Firestore > Rules
@@ -19,8 +19,9 @@
 6. Authentication > Settings > Authorized domains > add `YOURNAME.github.io`.
 
 ## Economy
-- The admin changes the coin value (₱ per coin) and the withdrawal fee (%) in the Admin screen. They are saved in Firestore at `settings/economy`, so you must republish `firestore.rules`.
-- Defaults if nothing is saved: 1 coin = ₱1, 30% fee. Store packages are the peso amounts in `PACKS` in `index.html`.
+- The admin sets the value of 1 coin (in pesos) on the Admin screen. The same value is used for the Coin Store and for withdrawals, and every change is recorded on the Coin Market chart in the lobby.
+- It is saved in Firestore at `settings/economy`, so you must republish `firestore.rules`.
+- Default if nothing is saved: 1 coin = ₱1. Store packages are the peso amounts in `PACKS` in `index.html`.
 - Matches: winners get 2x their bet, no house cut.
 
 ## Deploy on GitHub Pages
