@@ -33,5 +33,11 @@ service cloud.firestore {
     }
     // The admin's chat-thread list reads /chats as a collection.
     match /chats/{uid} { allow list: if isAdmin(); }
+
+    // Coin value and withdrawal fee. Anyone can read it (the How to play window shows it), only the admin can change it.
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }
