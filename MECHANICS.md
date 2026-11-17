@@ -18,6 +18,16 @@
 **PC**
 - **WASD** to move · **Mouse** to aim · **Hold click** to shoot · **Space / Shift** to roll
 
+## 🧱 NEW: Tetris Battle (1v1)
+Pick **Tetris Battle** in the lobby. Same coins, same bets, same payout as Gun Arena.
+- **5-minute match.** The game gets faster every 30 seconds.
+- **Clear lines to attack.** 2 lines send 1 garbage row, 3 lines send 2, a **Tetris (4 lines) sends 4**. Combos, back-to-back Tetrises and perfect clears send extra.
+- **Top out = you lose.** If time runs out, the **higher score wins**. Same score = draw.
+- **Win = 2x your bet. Draw = bet returned. Quit or disconnect = loss.**
+- **Trash talk:** tap the taunt buttons ("GG EZ", "Sit down!") and your opponent sees and hears it.
+- **Controls:** drag on the board to move (smooth), drag down to soft drop, tap to rotate, flick down to hard drop. Buttons for rotate, hold and drop. PC: arrows or WASD, Space to drop, C to hold.
+- Practice vs bot is free (Easy, Normal, Hard). Ranked uses the same RP (+25 / -15). Friends room uses a 4-digit code.
+
 ## 🆓 Practice (free)
 No sign-in and no coins needed. Fight bots on Easy, Normal or Hard to learn the game before you bet.
 
@@ -73,6 +83,7 @@ The bonus coins are added automatically. You do not need to claim anything.
 ## 📣 Short caption
 🔫 **GUN ARENA** 🔫
 Last team standing wins! 1v1, 2v2 and 4v4.
+🧱 NEW: Tetris Battle 1v1! Send garbage, trash talk, winner takes 2x!
 ✅ Practice against bots: FREE
 ✅ Bet 5 to 100 coins, and a win pays **2x**
 ✅ Buy coins with GCash: bigger packages give bonus coins
