@@ -19,9 +19,9 @@
 6. Authentication > Settings > Authorized domains > add `YOURNAME.github.io`.
 
 ## Economy
-- The admin sets the value of 1 coin (in pesos) on the Admin screen. The same value is used for the Coin Store and for withdrawals, and every change is recorded on the Coin Market chart in the lobby.
-- It is saved in Firestore at `settings/economy`, so you must republish `firestore.rules`.
-- Default if nothing is saved: 1 coin = ₱1. Store packages are the peso amounts in `PACKS` in `index.html`.
+- **Coin Store** (buying): packages are `PACKS` in `index.html` (peso amount + bonus %). The base price is `STORE_BASE` (0.6 coins per ₱1, so ₱50 = 30 coins). The admin can change it on the Admin screen ("Coins per ₱1").
+- **Coin Market** (withdrawing): the admin sets the value of 1 coin in pesos on the Admin screen. It is used for withdrawals and the lobby chart, and every change is recorded on the chart.
+- Both are saved in Firestore at `settings/economy`, so you must republish `firestore.rules`.
 - Matches: winners get 2x their bet, no house cut.
 
 ## Deploy on GitHub Pages
