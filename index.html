@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gun Arena</title>
 <meta name="theme-color" content="#14121f">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔫</text></svg>">
+<link rel="icon" href="logo.png">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <style type="text/tailwindcss">
@@ -33,22 +33,24 @@
 <body class="min-h-screen">
 
 <header class="flex items-center justify-between gap-3 p-3 border-b-4 border-[#3b3560]">
-  <h1 class="text-lg sm:text-2xl tracking-wide text-[#ffd23f]">GUN ARENA</h1>
+  <div class="flex items-center gap-2"><img src="logo.png" alt="" class="w-10 h-10"><h1 class="text-lg sm:text-2xl tracking-wide text-[#ffd23f]">GUN ARENA</h1></div>
+  <div class="flex items-center gap-2"><button id="btnHelp" class="btn yellow">How to play &amp; earn</button>
   <div id="bar" class="hidden items-center gap-2 text-sm">
     <span id="who" class="hidden sm:inline"></span>
     <span id="role" class="px text-xs px-2 py-1 bg-[#ff3d81]"></span>
     <span class="px text-base text-[#ffd23f]">🪙 <b id="coins">0</b></span>
     <button id="btnAdmin" class="btn pink hidden">Admin</button>
     <button id="btnOut" class="btn ghost">Sign out</button>
-  </div>
+  </div></div>
 </header>
 
 <main class="max-w-4xl mx-auto p-3">
 
   <!-- Login -->
   <section id="login" class="text-center py-16">
+    <img src="logo.png" alt="Gun Arena" class="w-44 h-44 mx-auto mb-4">
     <h2 class="text-xl sm:text-3xl mb-4">Last team standing wins.</h2>
-    <p class="mb-8 max-w-md mx-auto">Duel, tag team or 8-player blitz. 20 coins to enter, 40 coins to the winners.</p>
+    <p class="mb-8 max-w-md mx-auto">Duel, tag team or 8-player blitz. Pick your bet (5 to 100 coins). Winners double it.</p>
     <button id="btnLogin" class="btn yellow">Sign in with Google</button>
     <div class="mt-10">
       <div class="card max-w-md mx-auto text-left space-y-2 mb-4">
@@ -111,22 +113,23 @@
     <div id="roomPlayers" class="grid grid-cols-2 gap-3 text-left"></div>
     <div class="flex justify-center gap-2">
       <button id="btnStart" class="btn">Start match</button>
+      <button id="btnSwitch" class="btn pink">Switch team</button>
       <button id="btnLeave" class="btn ghost">Leave</button>
     </div>
-    <p class="text-xs opacity-70">20 coins are deducted from every player when the match starts.</p>
+    <p class="text-xs opacity-70">Your team is picked at random. Use Switch team if the other side has a free slot. The bet is deducted from every player when the match starts.</p>
   </section>
 
   <!-- Game -->
   <section id="game" class="hidden">
     <div id="gameWrap">
-      <div id="gamebox" class="w-full mx-auto" style="aspect-ratio:4/3;max-height:80vh"></div>
+      <div id="gamebox" class="w-full mx-auto" style="aspect-ratio:16/9;max-height:82vh"></div>
       <div id="gameCtl" class="flex flex-wrap items-center justify-center gap-2 mt-2 text-sm">
         <button id="btnQuit" class="btn ghost">Quit</button><button id="btnMute" class="btn ghost">Sound: On</button>
         <label>Volume <input id="vol" type="range" min="0" max="100" value="70"></label>
         <label>Music <input id="mvol" type="range" min="0" max="100" value="50"></label>
       </div>
     </div>
-    <p id="hint" class="text-sm text-center mt-2 opacity-80">PC: WASD move · mouse aim · hold click to shoot · Space or Shift to dodge-roll. Phone: left stick moves, right stick aims and fires (hold = rapid fire, drag to aim any direction), ROLL dodges.</p>
+    <p id="hint" class="text-sm text-center mt-2 opacity-80">PC: WASD move · mouse aim · hold click to shoot · Space or Shift to dodge-roll. Phone: touch anywhere on the LEFT half to move, anywhere on the RIGHT half to aim and fire (drag = exact direction, just hold = auto-aim), ROLL dodges. Arrows on the screen edge point to enemies you cannot see.</p>
   </section>
 
   <!-- Admin -->
@@ -139,6 +142,21 @@
     <div class="card"><h2 class="text-base mb-3">Player chats</h2><div id="threads" class="flex flex-wrap gap-2"></div></div>
   </section>
 </main>
+
+
+<!-- How to play & earn -->
+<div id="mHelp" class="modal hidden"><div class="card space-y-3 text-sm">
+  <h2 class="text-base text-[#ffd23f]">GUN ARENA: Paano maglaro at kumita</h2>
+  <div><b class="text-[#35e0d0]">1. Ang laro</b><br>Dalawang team: <b style="color:#35e0d0">Cyan</b> at <b style="color:#ff3d81">Pink</b>. Random ang team mo. Ang <b>huling team na buhay</b> ang panalo. 1v1, 2v2 o 4v4.<br>May <b>100 HP</b> ka. Bawat tama ng bala ay <b>-10 HP</b>. Pag naubos ang HP, may <b>krus at kahon</b> na maiiwan kung saan ka nalaglag, at mapapanood mo pa ang laban.</div>
+  <div><b class="text-[#35e0d0]">2. Controls</b><br><b>Phone:</b> hawakan kahit saan sa <b>kaliwang kalahati</b> ng screen para gumalaw. Hawakan kahit saan sa <b>kanang kalahati</b> para tumutok at bumaril: i-drag papunta sa gusto mong direksyon (eksakto ang tutok), o hawakan lang para auto-aim sa pinakamalapit na kalaban. Pindutin ang <b>ROLL</b> para umiwas: hindi ka tatamaan habang gumugulong.<br><b>PC:</b> WASD = galaw, mouse = tutok, hold click = bumaril, Space/Shift = roll.<br>Sumusunod ang camera sa bida mo. Ang <b>arrow sa gilid ng screen</b> ay nagtuturo kung nasaan ang kalaban na hindi pa kita. May <b>minimap</b> sa kaliwang taas.</div>
+  <div><b class="text-[#35e0d0]">3. Practice (LIBRE)</b><br>Walang sign-in at walang coins. Lumaban sa bots (Easy, Normal, Hard) para matuto bago mag-bet.</div>
+  <div><b class="text-[#35e0d0]">4. Online match at bet</b><br>Mag-sign in gamit ang Google. Pumili ng bet bawat player: <b>5, 10, 20, 50 o 100 coins</b>.<br>• <b>Find match (ranked)</b>: automatic na hahanapan ka ng kalaban at may rank points.<br>• <b>Create room (friends)</b>: gagawa ng 4-digit code, ibigay sa kaibigan para mag-join. Walang rank points.<br>Puwede mong i-<b>Switch team</b> kung may bakante sa kabila.</div>
+  <div><b class="text-[#ffd23f]">5. Paano kumita</b><br>• <b>Panalo = 2x ng bet mo.</b> Halimbawa, bet 20 → panalo ka ng 40 coins (tubo +20).<br>• <b>Draw</b> = ibabalik ang bet mo.<br>• <b>Talo</b> = mawawala ang bet mo.<br>• Sa 2v2 at 4v4, bawat nanalo ay 2x ng sarili niyang bet.<br>• <b>Ranked:</b> +25 RP kapag panalo, -15 RP kapag talo. Ranks: Bronze → Silver (100) → Gold (300) → Platinum (600) → Diamond (1000).<br>• Pag nag-quit o na-disconnect ka sa gitna ng match, <b>talo</b> ka.</div>
+  <div><b class="text-[#ffd23f]">6. Bumili ng coins</b><br>Coin Store → pumili ng package (<b>₱1 = 1 coin</b>) → magbayad sa GCash → ilagay ang <b>13-digit reference number</b> → pindutin ang I Have Paid. Idadagdag ng admin ang coins pagkatapos i-verify.</div>
+  <div><b class="text-[#ffd23f]">7. Mag-withdraw sa GCash</b><br>Withdraw coins → minimum <b>20 coins</b>. <b>1 coin = ₱1</b>, may <b>30% fee</b> lang, kaya <b>70% ang matatanggap mo</b>. Halimbawa: 100 coins = ₱100 − ₱30 = <b>₱70</b>. Hold muna ang coins hanggang aprubahan ng admin, at ibabalik kapag na-reject.</div>
+  <div class="text-xs opacity-80">Walang garantiya ng kita. Mag-bet lang ng kaya mong mawala. Para sa 18 taong gulang pataas. Refund lang kapag na-cancel ang laro dahil sa masamang panahon o emergency; kausapin ang admin.</div>
+  <button class="btn" data-close>Sige, laro na!</button>
+</div></div>
 
 <!-- Buy coins -->
 <div id="mBuy" class="modal hidden"><div class="card space-y-3">
@@ -155,10 +173,11 @@
 <!-- Withdraw -->
 <div id="mWd" class="modal hidden"><div class="card space-y-3">
   <h2 class="text-sm">Withdraw to GCash</h2>
-  <p class="text-sm">1 coin = ₱<span id="rate"></span>. Coins are held until the admin approves or rejects.</p>
+  <p class="text-sm">1 coin = ₱<span id="rate"></span>. A <b><span id="feePct"></span>%</b> service fee is taken, so you receive <b>70%</b>. Coins are held until the admin approves or rejects.</p>
   <input id="wdCoins" class="inp" type="number" min="20" placeholder="Coins (min 20)">
   <input id="wdNo" class="inp" inputmode="numeric" placeholder="Your GCash number">
   <input id="wdName" class="inp" placeholder="GCash account name">
+  <div id="wdSum" class="card text-sm">Enter coins to see how much you receive.</div>
   <div class="flex gap-2"><button id="btnWdGo" class="btn">Request withdrawal</button><button class="btn ghost" data-close>Close</button></div>
 </div></div>
 
@@ -190,16 +209,16 @@ import {getDatabase,ref,get,set as rtSet,update as rtUpdate,remove,push,onValue,
 
 /* ================= CONFIG: edit these ================= */
 const {firebaseConfig,ADMIN_UIDS,GCASH_NUMBER}=window.GA_CONFIG,GCASH_NAME=window.GA_CONFIG.GCASH_NAME||"NE**S V."; // edit config.js, not this file
-const FEE=20, COIN_PHP_OUT=0.5;
+const FEE=20, COIN_PHP=1, WD_FEE=0.30;   // withdraw: 1 coin = P1, the house keeps 30%, the player receives 70%
 const BETS=[5,10,20,50,100];   // coins each player stakes; every winner gets 2x the stake (pool is split evenly, no house cut)
-const AI={easy:{spd:4,cd:1.4,spr:.7,dodge:.012,taken:34,dmg:6,range:18},
-          normal:{spd:5.5,cd:.75,spr:.35,dodge:.05,taken:25,dmg:10,range:26},
-          hard:{spd:6.8,cd:.5,spr:.15,dodge:.09,taken:20,dmg:14,range:30}};
+const AI={easy:{spd:4.7,cd:1.4,spr:.7,dodge:.012,taken:34,dmg:6,range:18},
+          normal:{spd:6.5,cd:.75,spr:.35,dodge:.05,taken:25,dmg:10,range:26},
+          hard:{spd:8,cd:.5,spr:.15,dodge:.09,taken:20,dmg:14,range:30}};
 var aiLevel=(()=>{try{return localStorage.getItem("ga_level")||"easy"}catch{return "easy"}})();
 var bet=(()=>{try{const v=+localStorage.getItem("ga_bet");return BETS.includes(v)?v:20}catch{return 20}})();
-const ROLL_T=.4,ROLL_V=24;   // dodge-roll duration (s) and speed (units/s)
+const ROLL_T=.4,ROLL_V=28;   // dodge-roll duration (s) and speed (units/s)
 const rankOf=rp=>rp>=1000?"Diamond":rp>=600?"Platinum":rp>=300?"Gold":rp>=100?"Silver":"Bronze";
-const TIERS=[{php:30,coins:20},{php:100,coins:75},{php:200,coins:170},{php:500,coins:450},{php:900000,coins:1000000}]; // bigger = cheaper per coin
+const TIERS=[{php:20,coins:20},{php:50,coins:50},{php:100,coins:100},{php:200,coins:200},{php:500,coins:500}]; // 1 coin = P1 so a player who withdraws only pays the 30% fee
 const MODES={duel:{label:"1v1 Duel",size:2},tag:{label:"2v2 Tag Team",size:4},blitz:{label:"4v4 Arena Blitz",size:8}};
 /* ====================================================== */
 const pick=a=>a[Math.floor(Math.random()*a.length)];
@@ -376,8 +395,9 @@ async function enter(c,quiet){
     const ps=cur.players||{};
     if(ps[me.uid])return cur;
     if(Object.keys(ps).length>=cur.size)return;
-    const t0=Object.values(ps).filter(p=>p.team===0).length,t1=Object.keys(ps).length-t0;
-    ps[me.uid]={name:me.displayName||"Player",gender,team:t0<=t1?0:1,alive:true,hp:100,x:-1,y:-1,connected:true};
+    const half=cur.size/2,c0=Object.values(ps).filter(p=>p.team===0).length,c1=Object.keys(ps).length-c0,free=[];
+    if(c0<half)free.push(0);if(c1<half)free.push(1);if(!free.length)return;
+    ps[me.uid]={name:me.displayName||"Player",gender,team:free[Math.floor(Math.random()*free.length)],alive:true,hp:100,x:-1,y:-1,connected:true};   // random side
     cur.players=ps;return cur;
   });
   const chk=await get(pref0(c));
@@ -397,7 +417,7 @@ function onRoom(s){
   if(room.status==="lobby"){
     $("roomCode").textContent=code;$("roomMode").textContent=`${MODES[room.mode].label}${room.ranked?" (ranked)":""} · ${n}/${room.size} players · Bet ${room.bet||FEE} coins, winners get ${(room.bet||FEE)*2} each`+(room.auto?(n<room.size?" · Searching for players...":" · Match found! Starting..."):"");
     $("roomPlayers").innerHTML=[0,1].map(t=>`<div class="card"><div class="px text-sm mb-2" style="color:${t?"#ff3d81":"#35e0d0"}">Team ${t?"Pink":"Cyan"}</div>${
-      Object.entries(ps).filter(([,p])=>p.team===t).map(([u,p])=>`<div>${esc(p.name)}${u===room.host?" ★":""}</div>`).join("")}</div>`).join("");
+      Object.entries(ps).filter(([,p])=>p.team===t).map(([u,p])=>`<div>${esc(p.name)}${u===room.host?" ★":""}${u===me.uid?" (you)":""}</div>`).join("")}</div>`).join("");
     $("btnStart").classList.toggle("hidden",room.host!==me.uid||!!room.auto);
     $("btnStart").disabled=n<room.size;
     if(room.auto&&n>=room.size&&!autoTimer&&Object.keys(ps).sort()[0]===me.uid)autoTimer=setTimeout(()=>rtUpdate(rref(),{status:"playing",startedAt:Date.now()}),2500);
@@ -416,6 +436,12 @@ function onRoom(s){
 
 $("btnStart").onclick=()=>rtUpdate(rref(),{status:"playing",startedAt:Date.now()});
 $("btnLeave").onclick=leaveRoom;
+$("btnHelp").onclick=()=>open("mHelp");
+$("btnSwitch").onclick=()=>rtTx(rref(),cur=>{
+  if(!cur||cur.status!=="lobby")return;const mp=cur.players&&cur.players[me.uid];if(!mp)return;
+  const to=mp.team?0:1,cnt=Object.values(cur.players).filter(p=>p.team===to).length;
+  if(cnt>=cur.size/2)return;mp.team=to;return cur;
+}).then(r=>{if(!r.committed)toast("The other team is full.")}).catch(()=>{});
 async function leaveRoom(){
   if(!code)return;
   if(room?.status==="lobby"){room.host===me.uid?await remove(rref()):await remove(pref())}
@@ -487,8 +513,8 @@ function launch3D(opts){
   ac();musicStart();
   const wrap=$("gameWrap"),box=$("gamebox");
   box.innerHTML="";box.style.overflow="hidden";box.style.position="relative";
-  const W=40,H=30,R=.7;
-  let stopped=false,raf=0,over=false,mouseDown=false,lastSend=0,tNow=0;
+  const W=72,H=48,R=1.0,CS=1.7,SPEED=10,BY=2.3;   // arena size, body radius, character scale, run speed, bullet height
+  let stopped=false,raf=0,over=false,mouseDown=false,lastSend=0,tNow=0,frame=0,camH=14,camB=9.5;
   const k={},joy={x:0,z:0},aimS={x:0,z:0,mag:0,on:false},ndc=new THREE.Vector2(),aim=new THREE.Vector3(),ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
 
   /* phones: full screen + landscape */
@@ -498,13 +524,13 @@ function launch3D(opts){
     try{const pr=screen.orientation&&screen.orientation.lock&&screen.orientation.lock("landscape");pr&&pr.catch&&pr.catch(()=>{})}catch{}
   }
 
-  /* chat feed (top-left) */
+  /* chat feed (top-left, under the minimap) */
   const feed=document.createElement("div");
-  feed.style.cssText="position:absolute;left:8px;top:8px;max-width:60%;pointer-events:none;font:600 15px system-ui,Arial,sans-serif;display:flex;flex-direction:column;gap:4px;z-index:5";
+  feed.style.cssText="position:absolute;left:8px;top:100px;max-width:55%;pointer-events:none;font:600 14px system-ui,Arial,sans-serif;display:flex;flex-direction:column;gap:4px;z-index:5";
   function addFeed(p,text){
     const d=document.createElement("div");
-    d.style.cssText="background:#000c;padding:4px 10px;color:#f4efe0;border-left:5px solid "+(p.team?"#ff3d81":"#35e0d0");
-    d.textContent=p.name+": "+text;feed.appendChild(d);while(feed.children.length>4)feed.removeChild(feed.firstChild);setTimeout(()=>d.remove(),4500);
+    d.style.cssText="background:#000c;padding:3px 9px;color:#f4efe0;border-left:5px solid "+(p.team?"#ff3d81":"#35e0d0");
+    d.textContent=p.name+": "+text;feed.appendChild(d);while(feed.children.length>3)feed.removeChild(feed.firstChild);setTimeout(()=>d.remove(),4000);
   }
 
   /* renderer, camera, lights */
@@ -517,33 +543,41 @@ function launch3D(opts){
   rot.textContent="Rotate your phone to landscape for the best view";
   rot.style.cssText="position:absolute;top:48px;left:50%;transform:translateX(-50%);background:#000b;padding:6px 12px;font:600 13px system-ui,Arial;z-index:55;pointer-events:none;color:#ffd23f;display:none;text-align:center";
   box.appendChild(rot);
-  const scene=new THREE.Scene();scene.background=new THREE.Color(0x14121f);scene.fog=new THREE.Fog(0x14121f,50,90);
-  const cam=new THREE.PerspectiveCamera(50,4/3,.1,200);
+  const scene=new THREE.Scene();scene.background=new THREE.Color(0x14121f);scene.fog=new THREE.Fog(0x14121f,45,120);
+  const cam=new THREE.PerspectiveCamera(50,16/9,.1,250);
   const resize=()=>{
     const w=box.clientWidth,h=box.clientHeight;if(!w||!h)return;
     renderer.setSize(w,h);cam.aspect=w/h;
-    const kk=Math.max(1,1.33/cam.aspect);cam.position.set(0,30*kk,22*kk);cam.lookAt(0,0,1);cam.updateProjectionMatrix();
+    const kk=Math.max(1,1.9/cam.aspect);camH=14*kk;camB=9.5*kk;   // portrait/narrow screens pull back a little so enemies stay visible
+    cam.updateProjectionMatrix();
     rot.style.display=touchUI&&h>w?"block":"none";
   };
   resize();["resize","orientationchange"].forEach(ev=>window.addEventListener(ev,resize));document.addEventListener("fullscreenchange",resize);
   scene.add(new THREE.HemisphereLight(0xcfd8ff,0x2a2640,.95));
   const sun=new THREE.DirectionalLight(0xffffff,.9);sun.position.set(-12,25,10);sun.castShadow=!touchUI;sun.shadow.mapSize.set(1024,1024);
-  Object.assign(sun.shadow.camera,{left:-25,right:25,top:20,bottom:-20,near:1,far:70});scene.add(sun);
+  Object.assign(sun.shadow.camera,{left:-30,right:30,top:26,bottom:-26,near:1,far:80});scene.add(sun,sun.target);
 
   /* arena */
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(W,H),new THREE.MeshStandardMaterial({color:0x1d1a33,roughness:.9}));
   floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
-  const grid=new THREE.GridHelper(W,W,0x3b3560,0x2a2640);grid.scale.z=H/W;grid.position.y=.01;scene.add(grid);
+  const grid=new THREE.GridHelper(W,W/2,0x3b3560,0x2a2640);grid.scale.z=H/W;grid.position.y=.01;scene.add(grid);
+  /* the Gun Arena logo painted on the middle of the floor */
+  new THREE.TextureLoader().load("logo.png",t=>{
+    if(stopped)return;t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;
+    const lg=new THREE.Mesh(new THREE.PlaneGeometry(24,24),new THREE.MeshBasicMaterial({map:t,transparent:true,opacity:.9,depthWrite:false}));
+    lg.rotation.x=-Math.PI/2;lg.position.y=.04;scene.add(lg);
+  },undefined,()=>{});
   const wallMat=new THREE.MeshStandardMaterial({color:0x4a4280,roughness:.5});
-  const walls=[[0,0,2.5,9],[-7.5,-8,6,1.5],[7.5,8,6,1.5],[-7.5,8,1.5,5.5],[7.5,-8,1.5,5.5]].map(([x,z,w,d])=>{
-    const m=new THREE.Mesh(new THREE.BoxGeometry(w,2.2,d),wallMat);m.position.set(x,1.1,z);m.castShadow=m.receiveShadow=true;scene.add(m);return{x,z,w,d}});
-  [[0,-H/2,W,.5],[0,H/2,W,.5],[-W/2,0,.5,H],[W/2,0,.5,H]].forEach(([x,z,w,d])=>{
-    const m=new THREE.Mesh(new THREE.BoxGeometry(w,.6,d),new THREE.MeshStandardMaterial({color:0x6b5fb0}));m.position.set(x,.3,z);scene.add(m)});
+  const walls=[[-18,0,2.5,10],[18,0,2.5,10],[0,-17,14,2],[0,17,14,2],[-14,-9,2,8],[14,9,2,8],[-14,9,2,8],[14,-9,2,8],
+    [-29,-16,8,2],[29,16,8,2],[29,-16,8,2],[-29,16,8,2]].map(([x,z,w,d])=>{
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,3.2,d),wallMat);m.position.set(x,1.6,z);m.castShadow=m.receiveShadow=true;scene.add(m);return{x,z,w,d}});
+  [[0,-H/2,W+1,1],[0,H/2,W+1,1],[-W/2,0,1,H],[W/2,0,1,H]].forEach(([x,z,w,d])=>{
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,1,d),new THREE.MeshStandardMaterial({color:0x6b5fb0}));m.position.set(x,.5,z);scene.add(m)});
 
-  /* humanoid character */
+  /* humanoid character (CS x bigger than before) */
   const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.6});
   function makeChar(team,bot,female){
-    const root=new THREE.Group(),body=new THREE.Group();body.position.y=1.3;root.add(body);
+    const root=new THREE.Group(),body=new THREE.Group();body.position.y=1.3;root.add(body);root.scale.setScalar(CS);
     const tm=mat(team?0xff3d81:0x35e0d0),skin=0xf1c8a0,hair=female?0x3b1f14:0x2a2a2a,tw=female?.74:.92,lc=female?0x4a2b5a:0x2b2b4a;
     const part=(geo,m,x,y,z,parent)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.castShadow=true;parent.add(o);return o};
     part(new THREE.BoxGeometry(tw,1,.55),tm,0,0,0,body);
@@ -573,8 +607,8 @@ function launch3D(opts){
     x.font="bold 38px system-ui,Arial,sans-serif";x.textAlign="center";x.textBaseline="middle";x.lineWidth=6;x.strokeStyle="#000";x.strokeText(name,128,34);
     x.fillStyle=isYou?"#ffd23f":"#f4efe0";x.fillText(name,128,34);nm.material.map.needsUpdate=true;g.add(nm);
     const say=makeSprite(1024,200,10,1.95,1.95);say.visible=false;g.add(say);
-    if(isYou){const c=new THREE.Mesh(new THREE.ConeGeometry(.22,.45,8),new THREE.MeshBasicMaterial({color:0xffd23f}));c.rotation.x=Math.PI;c.position.y=3.5;g.add(c)}
-    scene.add(g);return{g,fg,bg,say};
+    if(isYou){const c=new THREE.Mesh(new THREE.ConeGeometry(.22,.45,8),new THREE.MeshBasicMaterial({color:0xffd23f}));c.rotation.x=Math.PI;c.position.y=1.5;g.add(c)}
+    g.scale.setScalar(1.35);scene.add(g);return{g,fg,bg,say};
   }
   function speak(p,text,dur=2.6){
     const s=p.bar.say,c=s.userData.c,x=c.getContext("2d"),col=p.team?"#ff3d81":"#35e0d0";x.clearRect(0,0,c.width,c.height);
@@ -585,6 +619,16 @@ function launch3D(opts){
     addFeed(p,text);duckOn();setTimeout(duckOff,3200);if(p.local||!online||p.bot)voice(text,p.female);
   }
 
+  /* grave marker: a stone box with a cross in the player's team colour appears where someone falls */
+  const graves=[];
+  function makeGrave(p){
+    const g=new THREE.Group(),stone=mat(0x8d8aa8),tcol=new THREE.MeshStandardMaterial({color:p.team?0xff3d81:0x35e0d0,roughness:.5,emissive:p.team?0x551030:0x0a4a44});
+    const base=new THREE.Mesh(new THREE.BoxGeometry(2.6,.8,1.6),stone);base.position.y=.4;
+    const v=new THREE.Mesh(new THREE.BoxGeometry(.5,3.2,.5),tcol);v.position.y=2.2;
+    const h=new THREE.Mesh(new THREE.BoxGeometry(2,.5,.5),tcol);h.position.y=2.8;
+    g.add(base,v,h);g.traverse(o=>{o.castShadow=true});g.position.set(p.x,0,p.z);g.scale.setScalar(.01);scene.add(g);graves.push({g,t:0});
+  }
+
   /* players: bots (practice) or the room's real players (online) */
   const BOT_NAMES=["Blaze","Nova","Rex","Luna","Ace","Viper","Zoe","Max","Storm","Jinx","Ryder","Echo"].sort(()=>Math.random()-.5);
   let list=[];
@@ -593,27 +637,28 @@ function launch3D(opts){
     ents.forEach(([,p])=>tot[p.team]++);
     list=ents.map(([uid,p])=>({uid,name:String(p.name||"Player").slice(0,12),team:p.team,female:p.gender==="female",bot:false,local:uid===me.uid,idx:cnt[p.team]++,n:tot[p.team]}));
   }else{
-    const per=MODES[opts.mode].size/2,myName=(me?.displayName||$("guestName").value.trim()||"Player").slice(0,12);
+    const per=MODES[opts.mode].size/2,myName=(me?.displayName||$("guestName").value.trim()||"Player").slice(0,12),myTeam=Math.random()<.5?0:1;   // random side in practice too
     for(let t=0;t<2;t++)for(let i=0;i<per;i++){
-      const you=t===0&&i===0;
+      const you=t===myTeam&&i===0;
       list.push({uid:you?"you":"bot"+t+i,name:you?myName:BOT_NAMES.pop(),team:t,female:you?gender==="female":Math.random()<.5,bot:!you,local:you,idx:i,n:per});
     }
   }
-  const P=list.map(o=>({...o,hp:100,alive:true,last:0,roll:0,rollCd:0,rollDir:[0,1],flash:0,phase:0,speed:0,sayT:0,
-    x:o.team?17:-17,z:o.n===1?0:(o.idx-(o.n-1)/2)*6,yaw:o.team?-Math.PI/2:Math.PI/2,in:{mx:0,mz:0},ai:{s:1,t:0},
+  const SX=list.length===2?24:27;
+  const P=list.map(o=>({...o,hp:100,alive:true,last:0,roll:0,rollCd:0,rollDir:[0,1],flash:0,phase:0,speed:0,sayT:0,deadT:0,
+    x:o.team?SX:-SX,z:o.n===1?0:(o.idx-(o.n-1)/2)*7,yaw:o.team?-Math.PI/2:Math.PI/2,in:{mx:0,mz:0},ai:{s:1,t:0},
     m:makeChar(o.team,o.bot,o.female),bar:makeBar(o.local,o.name)}));
   const LP=P.find(p=>p.local);
-  const bullets=[],bGeo=new THREE.SphereGeometry(.2,10,8),bMat=[0x35e0d0,0xff3d81].map(c=>new THREE.MeshBasicMaterial({color:c}));
+  const bullets=[],bGeo=new THREE.SphereGeometry(.3,10,8),bMat=[0x35e0d0,0xff3d81].map(c=>new THREE.MeshBasicMaterial({color:c}));
 
   const enemiesOf=p=>P.filter(q=>q.alive&&q.team!==p.team);
   function nearest(p){let b=null,bd=1e9;enemiesOf(p).forEach(q=>{const d=Math.hypot(q.x-p.x,q.z-p.z);if(d<bd){bd=d;b=q}});return[b,bd]}
   function spawnBullet(x,z,vx,vz,owner){
     const mesh=new THREE.Mesh(bGeo,bMat[owner.team]);scene.add(mesh);
-    bullets.push({x,z,vx,vz,team:owner.team,owner,t:1.4,mesh});
+    bullets.push({x,z,vx,vz,team:owner.team,owner,t:owner.bot?1.25:1.15,mesh});
   }
   function fire(p,fx,fz){
     let a=Math.atan2(fz,fx);if(p.bot)a+=(Math.random()-.5)*L.spr;
-    const dx=Math.cos(a),dz=Math.sin(a),sp=p.bot?20:26,x=p.x+dx,z=p.z+dz;
+    const dx=Math.cos(a),dz=Math.sin(a),sp=p.bot?20:26,x=p.x+dx*1.4,z=p.z+dz*1.4;
     spawnBullet(x,z,dx*sp,dz*sp,p);p.last=p.bot?L.cd:.28;
     if(online&&p.local)push(ref(rdb,`rooms/${code}/shots`),{uid:me.uid,x,z,vx:dx*sp,vz:dz*sp}).then(r=>setTimeout(()=>remove(r),3000)).catch(()=>{});
   }
@@ -631,7 +676,7 @@ function launch3D(opts){
     if(online){if(p.local)rtUpdate(pref(),{hp:p.hp,alive:p.hp>0})}   // the room referee decides the winner
     else{
       const alive=new Set(P.filter(q=>q.alive).map(q=>q.team));
-      if(alive.size<=1&&!over){over=true;setTimeout(()=>!stopped&&finishDemo(alive.has(0)),900)}
+      if(alive.size<=1&&!over){over=true;setTimeout(()=>!stopped&&finishDemo(alive.has(LP.team)),1100)}
     }
   }
   function pushOut(p){
@@ -661,37 +706,95 @@ function launch3D(opts){
     ["pointerup","pointerleave","pointercancel"].forEach(ev=>cv.addEventListener(ev,()=>mouseDown=false));
   }
 
-  /* input: on-screen controls on phones (move stick, FIRE hold = rapid fire, ROLL = dodge) */
+  /* input: phones. FLOATING sticks: touch anywhere on the left half to move, anywhere on the right half to aim + fire.
+     The stick appears exactly under your thumb, so direction is 1:1 with no drift and no delay. */
   let tc=null;
   if(touchUI){
     tc=document.createElement("div");
     tc.style.cssText="position:absolute;inset:0;z-index:50;pointer-events:none;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none";
-    const mk=(css,txt)=>{const e=document.createElement("div");
-      e.style.cssText="position:absolute;pointer-events:auto;touch-action:none;display:flex;align-items:center;justify-content:center;border-radius:50%;font:800 16px system-ui,Arial,sans-serif;color:#fff;"+css;
-      e.textContent=txt||"";tc.appendChild(e);return e};
-    const base=mk("left:calc(24px + env(safe-area-inset-left));bottom:28px;width:150px;height:150px;background:#ffffff22;border:3px solid #ffffff77");
-    const knob=document.createElement("div");knob.style.cssText="width:64px;height:64px;border-radius:50%;background:#35e0d0dd;pointer-events:none";base.appendChild(knob);
-    const aimB=mk("right:calc(24px + env(safe-area-inset-right));bottom:28px;width:160px;height:160px;background:#ff3d8133;border:3px solid #ff3d81cc");
-    const aknob=document.createElement("div");aknob.textContent="AIM / FIRE";
-    aknob.style.cssText="width:76px;height:76px;border-radius:50%;background:#ff3d81ee;pointer-events:none;display:flex;align-items:center;justify-content:center;text-align:center;font:800 12px system-ui,Arial,sans-serif;color:#fff";aimB.appendChild(aknob);
-    const rollB=mk("right:calc(206px + env(safe-area-inset-right));bottom:56px;width:92px;height:92px;background:#ffd23fdd;color:#14121f;border:3px solid #fff","ROLL");
-    let jid=null;const JR=75;
-    const mv=e=>{const r=base.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),m=Math.hypot(dx,dy),kk=m>JR?JR/m:1;
-      joy.x=dx*kk/JR;joy.z=dy*kk/JR;knob.style.transform=`translate(${dx*kk}px,${dy*kk}px)`};
-    base.addEventListener("pointerdown",e=>{jid=e.pointerId;base.setPointerCapture(e.pointerId);mv(e)});
-    base.addEventListener("pointermove",e=>{if(e.pointerId===jid)mv(e)});
-    const jup=e=>{if(e.pointerId===jid){jid=null;joy.x=joy.z=0;knob.style.transform=""}};
-    base.addEventListener("pointerup",jup);base.addEventListener("pointercancel",jup);
-    let aid=null;const AR=80;
-    const am=e=>{const r=aimB.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),m=Math.hypot(dx,dy),kk=m>AR?AR/m:1;
-      aimS.x=dx/(m||1);aimS.z=dy/(m||1);aimS.mag=Math.min(1,m/AR);aknob.style.transform=`translate(${dx*kk}px,${dy*kk}px)`};
-    aimB.addEventListener("pointerdown",e=>{aid=e.pointerId;aimB.setPointerCapture(e.pointerId);aimS.on=true;am(e)});
-    aimB.addEventListener("pointermove",e=>{if(e.pointerId===aid)am(e)});
-    const aup=e=>{if(e.pointerId===aid){aid=null;aimS.on=false;aimS.mag=0;aknob.style.transform=""}};
-    aimB.addEventListener("pointerup",aup);aimB.addEventListener("pointercancel",aup);
-    rollB.addEventListener("pointerdown",()=>rollPlayer());
+    const BS=132,KS=54,SR=BS/2;
+    const mkZone=css=>{const z=document.createElement("div");z.style.cssText="position:absolute;top:56px;bottom:0;pointer-events:auto;touch-action:none;"+css;tc.appendChild(z);return z};
+    const zl=mkZone("left:0;width:50%"),zr=mkZone("right:0;width:50%");
+    const mkStick=(col,label)=>{
+      const b=document.createElement("div");b.style.cssText=`position:absolute;width:${BS}px;height:${BS}px;margin:${-SR}px 0 0 ${-SR}px;border-radius:50%;pointer-events:none;border:3px solid ${col}99;background:${col}1f;opacity:.4;will-change:transform`;
+      const n=document.createElement("div");n.style.cssText=`position:absolute;left:50%;top:50%;width:${KS}px;height:${KS}px;margin:${-KS/2}px 0 0 ${-KS/2}px;border-radius:50%;background:${col}dd;display:flex;align-items:center;justify-content:center;font:800 11px system-ui,Arial,sans-serif;color:#fff;pointer-events:none;will-change:transform`;
+      n.textContent=label||"";b.appendChild(n);tc.appendChild(b);return{b,n};
+    };
+    const sl=mkStick("#35e0d0",""),sr=mkStick("#ff3d81","FIRE");
+    const home=()=>{   // resting position of the guide circles
+      sl.b.style.left=`calc(${SR+28}px + env(safe-area-inset-left))`;sl.b.style.top=`calc(100% - ${SR+28}px)`;
+      sr.b.style.left=`calc(100% - ${SR+28}px - env(safe-area-inset-right))`;sr.b.style.top=`calc(100% - ${SR+28}px)`;
+    };home();
+    function bindStick(zone,s,onMove,onEnd){
+      let id=null,cx=0,cy=0;
+      const upd=e=>{
+        const dx=e.clientX-cx,dy=e.clientY-cy,m=Math.hypot(dx,dy),kk=m>SR?SR/m:1;
+        s.n.style.transform=`translate3d(${dx*kk}px,${dy*kk}px,0)`;onMove(dx,dy,m);
+      };
+      zone.addEventListener("pointerdown",e=>{
+        if(id!==null)return;e.preventDefault();id=e.pointerId;try{zone.setPointerCapture(id)}catch{}
+        const r=wrap.getBoundingClientRect();cx=e.clientX;cy=e.clientY;
+        s.b.style.left=(cx-r.left)+"px";s.b.style.top=(cy-r.top)+"px";s.b.style.opacity="1";upd(e);
+      });
+      zone.addEventListener("pointermove",e=>{if(e.pointerId===id){e.preventDefault();upd(e)}});
+      const end=e=>{if(e.pointerId!==id)return;id=null;s.n.style.transform="";s.b.style.opacity=".4";home();onEnd()};
+      ["pointerup","pointercancel","lostpointercapture"].forEach(ev=>zone.addEventListener(ev,end));
+    }
+    bindStick(zl,sl,(dx,dy,m)=>{joy.x=dx/Math.max(m,1);joy.z=dy/Math.max(m,1);joy.m=Math.min(1,m/SR)},()=>{joy.x=joy.z=0;joy.m=0});
+    bindStick(zr,sr,(dx,dy,m)=>{aimS.x=dx/(m||1);aimS.z=dy/(m||1);aimS.mag=Math.min(1,m/SR);aimS.on=true},()=>{aimS.on=false;aimS.mag=0});
+    const rollB=document.createElement("div");
+    rollB.style.cssText="position:absolute;right:calc(190px + env(safe-area-inset-right));bottom:36px;width:88px;height:88px;border-radius:50%;background:#ffd23fdd;color:#14121f;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font:800 16px system-ui,Arial,sans-serif;pointer-events:auto;touch-action:none;z-index:2";
+    rollB.textContent="ROLL";rollB.addEventListener("pointerdown",e=>{e.preventDefault();e.stopPropagation();rollPlayer()});tc.appendChild(rollB);
     tc.addEventListener("contextmenu",e=>e.preventDefault());
     wrap.appendChild(tc);
+  }
+
+  /* HUD: my health, minimap, off-screen enemy arrows */
+  const hud=document.createElement("div");
+  hud.style.cssText="position:absolute;left:50%;top:10px;transform:translateX(-50%);width:170px;height:14px;background:#000a;border:2px solid #f4efe0;z-index:6;pointer-events:none";
+  const hf=document.createElement("div");hf.style.cssText="height:100%;width:100%;background:#7cfc00";hud.appendChild(hf);box.appendChild(hud);
+  const mm=document.createElement("canvas");mm.width=120;mm.height=Math.round(120*H/W);
+  mm.style.cssText="position:absolute;left:8px;top:8px;z-index:6;pointer-events:none;background:#14121fcc;border:2px solid #3b3560;width:120px;height:"+mm.height+"px";box.appendChild(mm);
+  const mx_=mm.getContext("2d"),msx=mm.width/W,msz=mm.height/H;
+  function drawMini(){
+    mx_.clearRect(0,0,mm.width,mm.height);mx_.fillStyle="#6b5fb0";
+    walls.forEach(w=>mx_.fillRect((w.x-w.w/2+W/2)*msx,(w.z-w.d/2+H/2)*msz,w.w*msx,w.d*msz));
+    P.forEach(p=>{
+      mx_.fillStyle=p.alive?(p.team?"#ff3d81":"#35e0d0"):"#777";
+      mx_.beginPath();mx_.arc((p.x+W/2)*msx,(p.z+H/2)*msz,p.local?3.5:2.5,0,7);mx_.fill();
+      if(p.local&&p.alive){mx_.strokeStyle="#ffd23f";mx_.lineWidth=1.5;mx_.stroke()}
+    });
+  }
+  const arrows=P.map(p=>{
+    if(p.team===LP.team)return null;
+    const a=document.createElement("div");
+    a.style.cssText="position:absolute;left:0;top:0;width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:24px solid "+(p.team?"#ff3d81":"#35e0d0")+";transform-origin:12px 12px;z-index:7;pointer-events:none;display:none;filter:drop-shadow(0 0 3px #000)";
+    box.appendChild(a);return a;
+  });
+  const pv=new THREE.Vector3();
+  function updateArrows(){
+    const w=box.clientWidth,h=box.clientHeight,pad=30;
+    P.forEach((p,i)=>{
+      const a=arrows[i];if(!a)return;
+      if(!p.alive){a.style.display="none";return}
+      pv.set(p.x,2,p.z).project(cam);
+      const sx=(pv.x*.5+.5)*w,sy=(-pv.y*.5+.5)*h;
+      if(pv.z<1&&sx>pad&&sx<w-pad&&sy>pad&&sy<h-pad){a.style.display="none";return}
+      const dx=sx-w/2,dy=sy-h/2,s=Math.min((w/2-pad)/Math.abs(dx||1e-6),(h/2-pad)/Math.abs(dy||1e-6));
+      a.style.display="block";
+      a.style.transform=`translate(${w/2+dx*s-12}px,${h/2+dy*s-12}px) rotate(${Math.atan2(dy,dx)*180/Math.PI+90}deg)`;
+    });
+  }
+
+  /* camera follows the hero (or a living teammate / enemy once you are down) */
+  const camT=new THREE.Vector3();let camInit=false;
+  function updateCam(dt){
+    let t=LP;if(!t.alive)t=P.find(q=>q.alive&&q.team===LP.team)||P.find(q=>q.alive)||LP;
+    const f=camInit?1-Math.exp(-dt*16):1;camInit=true;
+    camT.x+=(t.x-camT.x)*f;camT.z+=(t.z-camT.z)*f;
+    cam.position.set(camT.x,camH,camT.z+camB);
+    cam.lookAt(camT.x,0,camT.z+2.8);   // looks slightly below the hero so the hero sits above the thumb controls
+    sun.position.set(camT.x-12,25,camT.z+10);sun.target.position.set(camT.x,0,camT.z);sun.target.updateMatrixWorld();
   }
 
   /* online: remote bullets */
@@ -717,7 +820,7 @@ function launch3D(opts){
       p.rlOn=!!d.rl;
     }
     if(!p.alive)return;
-    const ox=p.x,oz=p.z,f=Math.min(1,dt*14);
+    const ox=p.x,oz=p.z,f=1-Math.exp(-dt*18);
     if(p.tx!==undefined){p.x+=(p.tx-p.x)*f;p.z+=(p.tz-p.z)*f}
     if(p.tyaw!==undefined){const dy=Math.atan2(Math.sin(p.tyaw-p.yaw),Math.cos(p.tyaw-p.yaw));p.yaw+=dy*f}
     if(p.roll>0)p.roll-=dt;
@@ -736,31 +839,24 @@ function launch3D(opts){
       const[e,d]=nearest(p);
       if(p.local){
         if(touchUI){
-          if(Math.hypot(joy.x,joy.z)>.12){mx=joy.x*8.5;mz=joy.z*8.5}
+          const jm=joy.m||0;
+          if(jm>.08){const s=Math.min(1,(jm-.08)/.72);mx=joy.x*SPEED*s;mz=joy.z*SPEED*s}   // small dead zone, full speed at ~80% push
           if(aimS.on){
-            let ax=aimS.x,az=aimS.z;
-            if(aimS.mag>.25){   // dragging: aim where the stick points, with a small snap to an enemy within ~15 degrees
-              const a0=Math.atan2(az,ax);let best=null,ba=.26;
-              enemiesOf(p).forEach(q=>{
-                if(Math.hypot(q.x-p.x,q.z-p.z)>32)return;
-                const df=Math.abs(Math.atan2(Math.sin(Math.atan2(q.z-p.z,q.x-p.x)-a0),Math.cos(Math.atan2(q.z-p.z,q.x-p.x)-a0)));
-                if(df<ba){ba=df;best=q}
-              });
-              if(best){ax=best.x-p.x;az=best.z-p.z}
-            }else if(e){ax=e.x-p.x;az=e.z-p.z}      // just holding the stick: auto-aim at the nearest enemy
-            else{ax=Math.sin(p.yaw);az=Math.cos(p.yaw)}
-            fx=ax;fz=az;shoot=true;
+            if(aimS.mag>.2){fx=aimS.x;fz=aimS.z}                            // dragging: shoots EXACTLY where the stick points
+            else if(e&&d<28){fx=e.x-p.x;fz=e.z-p.z}                          // just holding: auto-aim the nearest enemy
+            else{fx=Math.sin(p.yaw);fz=Math.cos(p.yaw)}
+            shoot=true;
           }
         }else{
           mx=(k.d||k.arrowright?1:0)-(k.a||k.arrowleft?1:0);mz=(k.s||k.arrowdown?1:0)-(k.w||k.arrowup?1:0);
-          const m=Math.hypot(mx,mz);if(m>0){mx=mx/m*8.5;mz=mz/m*8.5}
+          const m=Math.hypot(mx,mz);if(m>0){mx=mx/m*SPEED;mz=mz/m*SPEED}
           fx=aim.x-p.x;fz=aim.z-p.z;shoot=mouseDown;
         }
         p.in={mx,mz};
       }else if(e){
         const dx=e.x-p.x,dz=e.z-p.z,ux=dx/d,uz=dz/d;
         p.ai.t-=dt;if(p.ai.t<=0){p.ai.s=Math.random()<.5?-1:1;p.ai.t=1+Math.random()*2}
-        const f=d>11?1:d<5?-1:0;
+        const f=d>14?1:d<6?-1:0;
         mx=ux*f-uz*p.ai.s*.8;mz=uz*f+ux*p.ai.s*.8;
         const m=Math.hypot(mx,mz)||1;mx=mx/m*L.spd;mz=mz/m*L.spd;
         fx=dx;fz=dz;shoot=d<L.range;
@@ -768,7 +864,7 @@ function launch3D(opts){
           for(const b of bullets){
             if(b.team===p.team)continue;
             const rx=b.x-p.x,rz=b.z-p.z,vv=b.vx*b.vx+b.vz*b.vz,t=-(rx*b.vx+rz*b.vz)/vv;
-            if(t>0&&t<.45&&Math.hypot(rx+b.vx*t,rz+b.vz*t)<1.5&&Math.random()<L.dodge){
+            if(t>0&&t<.45&&Math.hypot(rx+b.vx*t,rz+b.vz*t)<2&&Math.random()<L.dodge){
               const s=Math.random()<.5?-1:1;startRoll(p,-b.vz*s,b.vx*s);break}
           }
         }
@@ -780,15 +876,15 @@ function launch3D(opts){
         if(shoot&&p.last<=0)fire(p,fx,fz);
       }
       p.x+=vx*dt;p.z+=vz*dt;pushOut(p);p.speed=Math.hypot(vx,vz);
-      if(online&&p.local&&tNow-lastSend>50){
+      if(online&&p.local&&tNow-lastSend>40){
         lastSend=tNow;rtUpdate(pref(),{x:+p.x.toFixed(2),z:+p.z.toFixed(2),yaw:+p.yaw.toFixed(2),hp:p.hp,rl:p.roll>0?1:0});
       }
     });
     for(let i=bullets.length-1;i>=0;i--){
-      const b=bullets[i];b.x+=b.vx*dt;b.z+=b.vz*dt;b.t-=dt;b.mesh.position.set(b.x,1.6,b.z);
+      const b=bullets[i];b.x+=b.vx*dt;b.z+=b.vz*dt;b.t-=dt;b.mesh.position.set(b.x,BY,b.z);
       let dead=b.t<=0||Math.abs(b.x)>W/2||Math.abs(b.z)>H/2||walls.some(w=>Math.abs(b.x-w.x)<w.w/2+.15&&Math.abs(b.z-w.z)<w.d/2+.15);
       if(!dead)for(const p of P){
-        if(p.alive&&p.team!==b.team&&p.roll<=0&&Math.hypot(p.x-b.x,p.z-b.z)<.85){
+        if(p.alive&&p.team!==b.team&&p.roll<=0&&Math.hypot(p.x-b.x,p.z-b.z)<1.25){
           if(p.bot||p.local)hit(p,b.owner);   // each player's own device applies damage to itself
           dead=true;break;
         }
@@ -798,30 +894,37 @@ function launch3D(opts){
   }
 
   /* animation */
-  function animate(){
+  function animate(dt){
     P.forEach(p=>{
       const m=p.m,rolling=p.roll>0&&p.alive;
       m.root.position.set(p.x,0,p.z);m.root.rotation.y=p.yaw;
       m.tm.emissive.setHex(p.flash>0?0xff2222:0);
-      if(!p.alive){m.body.rotation.x+=(-1.5-m.body.rotation.x)*.15;m.body.position.y+=(.5-m.body.position.y)*.15;return}
+      if(!p.alive){
+        m.body.rotation.x+=(-1.5-m.body.rotation.x)*.15;m.body.position.y+=(.5-m.body.position.y)*.15;
+        p.deadT+=dt;
+        if(p.deadT>.7&&!p.graved){p.graved=true;m.root.visible=false;makeGrave(p)}   // body falls, then a grave marker is left behind
+        return;
+      }
       if(rolling){
         const t=1-p.roll/p.rollDur,s=Math.sin(Math.PI*t);
-        m.body.rotation.x=t*Math.PI*2;m.root.position.y=1.3*s;m.body.position.y=1.3;
+        m.body.rotation.x=t*Math.PI*2;m.root.position.y=1.3*CS*s;m.body.position.y=1.3;
         m.legL.rotation.x=m.legR.rotation.x=-1.7*s;m.armL.rotation.x=-1.6*s;m.armR.rotation.x=-1.4-.2*s;
       }else{
-        p.phase+=.016*p.speed*1.1;const kk=Math.min(1,p.speed/6),sw=Math.sin(p.phase*6);
+        p.phase+=dt*p.speed*.07;const kk=Math.min(1,p.speed/6),sw=Math.sin(p.phase*6);
         m.body.rotation.x=0;m.body.position.y=1.3+Math.abs(sw)*.07*kk;
         m.legL.rotation.x=sw*.9*kk;m.legR.rotation.x=-sw*.9*kk;m.armL.rotation.x=-sw*.7*kk;m.armR.rotation.x=-1.4;
       }
-      p.bar.g.position.set(p.x,3.3,p.z);p.bar.g.quaternion.copy(cam.quaternion);p.bar.fg.scale.x=Math.max(.001,p.hp/100);
+      p.bar.g.position.set(p.x,5.1,p.z);p.bar.g.quaternion.copy(cam.quaternion);p.bar.fg.scale.x=Math.max(.001,p.hp/100);
     });
+    graves.forEach(o=>{o.t+=dt;const s=Math.min(1,o.t/.3);o.g.scale.setScalar(Math.max(.01,s*(2-s)))});
+    hf.style.width=Math.max(0,LP.hp)+"%";hf.style.background=LP.hp<35?"#ff3d81":"#7cfc00";
   }
 
   let prev=performance.now();
   function loop(now){
     if(stopped)return;raf=requestAnimationFrame(loop);   // runs at the screen's refresh rate (60/90/120 Hz)
-    tNow=now;const dt=Math.min(.05,(now-prev)/1000);prev=now;
-    step(dt);animate();renderer.render(scene,cam);
+    tNow=now;const dt=Math.min(.05,(now-prev)/1000);prev=now;frame++;
+    step(dt);updateCam(dt);animate(dt);updateArrows();if(frame%3===0)drawMini();renderer.render(scene,cam);
   }
   raf=requestAnimationFrame(loop);
   stopDemo=()=>{
@@ -858,7 +961,10 @@ $("btnPaid").onclick=async()=>{
 };
 
 /* ---------- Withdraw ---------- */
-$("rate").textContent=COIN_PHP_OUT;
+$("rate").textContent=COIN_PHP;$("feePct").textContent=Math.round(WD_FEE*100);
+const wdCalc=n=>{const g=n*COIN_PHP,f=Math.round(g*WD_FEE*100)/100;return{g,f,net:Math.round((g-f)*100)/100}};
+$("wdCoins").oninput=()=>{const n=Math.floor(+$("wdCoins").value);if(!(n>=1)){$("wdSum").textContent="Enter coins to see how much you receive.";return}
+  const c=wdCalc(n);$("wdSum").innerHTML=`₱${c.g.toFixed(2)} − ${Math.round(WD_FEE*100)}% fee (₱${c.f.toFixed(2)}) = <b class="text-[#ffd23f]">You receive ₱${c.net.toFixed(2)}</b>`};
 $("btnWd").onclick=()=>open("mWd");
 $("btnWdGo").onclick=async()=>{
   const n=Math.floor(+$("wdCoins").value),no=$("wdNo").value.trim(),nm=$("wdName").value.trim();
@@ -867,8 +973,8 @@ $("btnWdGo").onclick=async()=>{
   if(!nm)return toast("Enter your GCash account name.");
   const b=writeBatch(db);
   b.update(uref(),{coins:increment(-n)});
-  b.set(doc(collection(db,"transactions")),{uid:me.uid,userName:me.displayName,type:"withdrawal",amountPHP:n*COIN_PHP_OUT,coinsRequested:n,gcashNo:no,gcashName:nm,status:"pending",timestamp:serverTimestamp()});
-  await b.commit();close("mWd");toast("Withdrawal requested.");
+  b.set(doc(collection(db,"transactions")),{uid:me.uid,userName:me.displayName,type:"withdrawal",amountPHP:wdCalc(n).net,grossPHP:wdCalc(n).g,feePHP:wdCalc(n).f,coinsRequested:n,gcashNo:no,gcashName:nm,status:"pending",timestamp:serverTimestamp()});
+  await b.commit();close("mWd");toast("Withdrawal requested. You will receive ₱"+wdCalc(n).net.toFixed(2)+" after the "+Math.round(WD_FEE*100)+"% fee.");
 };
 
 /* ---------- Chat (player <-> admin) ---------- */
