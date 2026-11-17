@@ -72,7 +72,7 @@
     <div id="dash" class="card flex flex-wrap items-center gap-4">
       <img id="dAvatar" class="w-16 h-16 border-4 border-[#3b3560] bg-[#14121f]" alt="" referrerpolicy="no-referrer">
       <div class="flex-1 min-w-[9rem]"><div id="dName" class="px text-lg mb-1 break-all"></div><div id="dEmail" class="text-sm opacity-70 break-all"></div><div id="dRank" class="text-sm text-[#ffd23f] mt-1"></div></div>
-      <div class="text-center"><div class="text-sm">Balance</div><div class="px text-2xl text-[#ffd23f]">🪙 <span id="dCoins">0</span></div><div id="dPending" class="text-xs opacity-80"></div></div>
+      <div class="text-center"><div class="text-sm">Balance</div><div class="px text-2xl text-[#ffd23f]">🪙 <span id="dCoins">0</span></div><div id="dValue" class="text-xs text-[#35e0d0]"></div><div id="dPending" class="text-xs opacity-80"></div></div>
       <div class="grid grid-cols-4 gap-4 text-center text-sm w-full sm:w-auto">
         <div><div class="px text-sm" id="dMatches">0</div>Matches</div><div><div class="px text-sm" id="dWins">0</div>Wins</div><div><div class="px text-sm" id="dRate">0%</div>Win rate</div><div><div class="px text-sm text-[#ffd23f]" id="dWon">0</div>Coins won</div>
       </div>
@@ -135,6 +135,13 @@
   <!-- Admin -->
   <section id="admin" class="hidden space-y-4">
     <button id="btnAdminBack" class="btn ghost">Back to lobby</button>
+    <div class="card space-y-2"><h2 class="text-base">Coin value and withdrawal fee</h2>
+      <p class="text-xs opacity-80">Players see these values everywhere (Coin Store, Withdraw window, How to play). Existing pending requests keep the amounts they were created with.</p>
+      <div class="flex flex-wrap gap-2 items-end">
+        <label class="text-sm">Value of 1 coin (₱)<input id="ecoRate" class="inp mt-1 w-36" type="number" step="0.01" min="0.01"></label>
+        <label class="text-sm">Withdrawal fee (%)<input id="ecoFee" class="inp mt-1 w-36" type="number" step="1" min="0" max="90"></label>
+        <button id="btnEco" class="btn">Save</button></div>
+      <p id="ecoNow" class="text-sm text-[#ffd23f]"></p></div>
     <div class="card"><h2 class="text-base mb-3">Pending deposits and withdrawals</h2><div id="pending" class="space-y-2 text-sm"></div></div>
     <div class="card"><h2 class="text-base mb-3">Players and coins</h2>
       <input id="pSearch" class="inp mb-3" placeholder="Search name or email">
@@ -146,16 +153,15 @@
 
 <!-- How to play & earn -->
 <div id="mHelp" class="modal hidden"><div class="card space-y-3 text-sm">
-  <h2 class="text-base text-[#ffd23f]">GUN ARENA: Paano maglaro at kumita</h2>
-  <div><b class="text-[#35e0d0]">1. Ang laro</b><br>Dalawang team: <b style="color:#35e0d0">Cyan</b> at <b style="color:#ff3d81">Pink</b>. Random ang team mo. Ang <b>huling team na buhay</b> ang panalo. 1v1, 2v2 o 4v4.<br>May <b>100 HP</b> ka. Bawat tama ng bala ay <b>-10 HP</b>. Pag naubos ang HP, may <b>krus at kahon</b> na maiiwan kung saan ka nalaglag, at mapapanood mo pa ang laban.</div>
-  <div><b class="text-[#35e0d0]">2. Controls</b><br><b>Phone:</b> hawakan kahit saan sa <b>kaliwang kalahati</b> ng screen para gumalaw. Hawakan kahit saan sa <b>kanang kalahati</b> para tumutok at bumaril: i-drag papunta sa gusto mong direksyon (eksakto ang tutok), o hawakan lang para auto-aim sa pinakamalapit na kalaban. Pindutin ang <b>ROLL</b> para umiwas: hindi ka tatamaan habang gumugulong.<br><b>PC:</b> WASD = galaw, mouse = tutok, hold click = bumaril, Space/Shift = roll.<br>Sumusunod ang camera sa bida mo. Ang <b>arrow sa gilid ng screen</b> ay nagtuturo kung nasaan ang kalaban na hindi pa kita. May <b>minimap</b> sa kaliwang taas.</div>
-  <div><b class="text-[#35e0d0]">3. Practice (LIBRE)</b><br>Walang sign-in at walang coins. Lumaban sa bots (Easy, Normal, Hard) para matuto bago mag-bet.</div>
-  <div><b class="text-[#35e0d0]">4. Online match at bet</b><br>Mag-sign in gamit ang Google. Pumili ng bet bawat player: <b>5, 10, 20, 50 o 100 coins</b>.<br>• <b>Find match (ranked)</b>: automatic na hahanapan ka ng kalaban at may rank points.<br>• <b>Create room (friends)</b>: gagawa ng 4-digit code, ibigay sa kaibigan para mag-join. Walang rank points.<br>Puwede mong i-<b>Switch team</b> kung may bakante sa kabila.</div>
-  <div><b class="text-[#ffd23f]">5. Paano kumita</b><br>• <b>Panalo = 2x ng bet mo.</b> Halimbawa, bet 20 → panalo ka ng 40 coins (tubo +20).<br>• <b>Draw</b> = ibabalik ang bet mo.<br>• <b>Talo</b> = mawawala ang bet mo.<br>• Sa 2v2 at 4v4, bawat nanalo ay 2x ng sarili niyang bet.<br>• <b>Ranked:</b> +25 RP kapag panalo, -15 RP kapag talo. Ranks: Bronze → Silver (100) → Gold (300) → Platinum (600) → Diamond (1000).<br>• Pag nag-quit o na-disconnect ka sa gitna ng match, <b>talo</b> ka.</div>
-  <div><b class="text-[#ffd23f]">6. Bumili ng coins</b><br>Coin Store → pumili ng package (<b>₱1 = 1 coin</b>) → magbayad sa GCash → ilagay ang <b>13-digit reference number</b> → pindutin ang I Have Paid. Idadagdag ng admin ang coins pagkatapos i-verify.</div>
-  <div><b class="text-[#ffd23f]">7. Mag-withdraw sa GCash</b><br>Withdraw coins → minimum <b>20 coins</b>. <b>1 coin = ₱1</b>, may <b>30% fee</b> lang, kaya <b>70% ang matatanggap mo</b>. Halimbawa: 100 coins = ₱100 − ₱30 = <b>₱70</b>. Hold muna ang coins hanggang aprubahan ng admin, at ibabalik kapag na-reject.</div>
-  <div class="text-xs opacity-80">Walang garantiya ng kita. Mag-bet lang ng kaya mong mawala. Para sa 18 taong gulang pataas. Refund lang kapag na-cancel ang laro dahil sa masamang panahon o emergency; kausapin ang admin.</div>
-  <button class="btn" data-close>Sige, laro na!</button>
+  <h2 class="text-base text-[#ffd23f]">GUN ARENA: How to play and earn</h2>
+  <div><b class="text-[#35e0d0]">1. The game</b><br>There are two teams: <b style="color:#35e0d0">Cyan</b> and <b style="color:#ff3d81">Pink</b>. Your team is random. The <b>last team standing</b> wins. Modes: 1v1, 2v2 and 4v4.<br>You have <b>100 HP</b>, and every bullet that hits you takes <b>10 HP</b>. When your HP reaches zero, a <b>cross and a box</b> mark the spot where you fell, and you can keep watching the match.</div>
+  <div><b class="text-[#35e0d0]">2. Controls</b><br><b>Phone:</b> touch anywhere on the <b>left half</b> of the screen to move. Touch anywhere on the <b>right half</b> to aim and shoot: drag in the direction you want to shoot (the aim is exact), or simply hold to auto-aim at the nearest enemy. Tap <b>ROLL</b> to dodge; you cannot be hit while rolling.<br><b>PC:</b> WASD to move, mouse to aim, hold the left button to shoot, Space or Shift to roll.<br>The camera follows your hero. An <b>arrow at the edge of the screen</b> points to an enemy who is off-screen, and the <b>minimap</b> in the top-left corner shows everyone on the map.</div>
+  <div><b class="text-[#35e0d0]">3. Practice (free)</b><br>No sign-in and no coins are needed. Fight bots on Easy, Normal or Hard to learn the game before you bet.</div>
+  <div><b class="text-[#35e0d0]">4. Online matches and bets</b><br>Sign in with Google and choose your bet per player: <b>5, 10, 20, 50 or 100 coins</b>.<br>• <b>Find match (ranked):</b> you are matched with other players automatically and earn rank points.<br>• <b>Create room (friends):</b> creates a 4-digit room code that you can share with friends. No rank points are earned.<br>If the other team has a free slot, you can tap <b>Switch team</b>.</div>
+  <div><b class="text-[#ffd23f]">5. How to earn</b><br>• <b>Win:</b> you receive <b>2x your bet</b>. For example, with a bet of 20 coins you win 40 coins (a profit of 20).<br>• <b>Draw:</b> your bet is returned.<br>• <b>Loss:</b> you lose your bet.<br>• In 2v2 and 4v4, every winner receives 2x their own bet.<br>• <b>Ranked:</b> +25 RP for a win and -15 RP for a loss. Ranks: Bronze, Silver (100 RP), Gold (300 RP), Platinum (600 RP) and Diamond (1000 RP).<br>• If you quit or disconnect during a match, you lose it.</div>
+  <div id="helpEco"></div>
+  <div class="text-xs opacity-80">Winnings are not guaranteed. Only bet what you can afford to lose. For players aged 18 and over.</div>
+  <button class="btn" data-close>Let's play!</button>
 </div></div>
 
 <!-- Buy coins -->
@@ -173,7 +179,7 @@
 <!-- Withdraw -->
 <div id="mWd" class="modal hidden"><div class="card space-y-3">
   <h2 class="text-sm">Withdraw to GCash</h2>
-  <p class="text-sm">1 coin = ₱<span id="rate"></span>. A <b><span id="feePct"></span>%</b> service fee is taken, so you receive <b>70%</b>. Coins are held until the admin approves or rejects.</p>
+  <p class="text-sm">1 coin = ₱<span id="rate"></span>. A <b><span id="feePct"></span>%</b> service fee is taken, so you receive <b><span id="recvPct">70</span>%</b> of the value. Coins are held until the admin approves or rejects.</p>
   <input id="wdCoins" class="inp" type="number" min="20" placeholder="Coins (min 20)">
   <input id="wdNo" class="inp" inputmode="numeric" placeholder="Your GCash number">
   <input id="wdName" class="inp" placeholder="GCash account name">
@@ -209,7 +215,7 @@ import {getDatabase,ref,get,set as rtSet,update as rtUpdate,remove,push,onValue,
 
 /* ================= CONFIG: edit these ================= */
 const {firebaseConfig,ADMIN_UIDS,GCASH_NUMBER}=window.GA_CONFIG,GCASH_NAME=window.GA_CONFIG.GCASH_NAME||"NE**S V."; // edit config.js, not this file
-const FEE=20, COIN_PHP=1, WD_FEE=0.30;   // withdraw: 1 coin = P1, the house keeps 30%, the player receives 70%
+const FEE=20; let COIN_PHP=1, WD_FEE=0.30;   // withdraw: 1 coin = P1, the house keeps 30%, the player receives 70%
 const BETS=[5,10,20,50,100];   // coins each player stakes; every winner gets 2x the stake (pool is split evenly, no house cut)
 const AI={easy:{spd:4.7,cd:1.4,spr:.7,dodge:.012,taken:34,dmg:6,range:18},
           normal:{spd:6.5,cd:.75,spr:.35,dodge:.05,taken:25,dmg:10,range:26},
@@ -218,7 +224,7 @@ var aiLevel=(()=>{try{return localStorage.getItem("ga_level")||"easy"}catch{retu
 var bet=(()=>{try{const v=+localStorage.getItem("ga_bet");return BETS.includes(v)?v:20}catch{return 20}})();
 const ROLL_T=.4,ROLL_V=28;   // dodge-roll duration (s) and speed (units/s)
 const rankOf=rp=>rp>=1000?"Diamond":rp>=600?"Platinum":rp>=300?"Gold":rp>=100?"Silver":"Bronze";
-const TIERS=[{php:20,coins:20},{php:50,coins:50},{php:100,coins:100},{php:200,coins:200},{php:500,coins:500}]; // 1 coin = P1 so a player who withdraws only pays the 30% fee
+const PACKS=[20,50,100,200,500];   // peso packages in the Coin Store; the coins you get = pesos / coin value
 const MODES={duel:{label:"1v1 Duel",size:2},tag:{label:"2v2 Tag Team",size:4},blitz:{label:"4v4 Arena Blitz",size:8}};
 /* ====================================================== */
 const pick=a=>a[Math.floor(Math.random()*a.length)];
@@ -301,7 +307,7 @@ const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),r
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const SCREENS=["login","lobby","room","game","admin"];
-const show=s=>SCREENS.forEach(x=>$(x).classList.toggle("hidden",x!==s));
+const show=s=>{SCREENS.forEach(x=>$(x).classList.toggle("hidden",x!==s));document.querySelector("main").style.maxWidth=s==="game"?"none":""};
 const toast=t=>{const e=$("toast");e.textContent=t;e.classList.remove("hidden");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add("hidden"),3200)};
 const open=id=>$(id).classList.remove("hidden"), close=id=>$(id).classList.add("hidden");
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>b.closest(".modal").classList.add("hidden"));
@@ -326,7 +332,7 @@ onAuthStateChanged(auth,async u=>{
   if(!u){$("bar").classList.add("hidden");if(!demo)show("login");return}
   const r=uref();
   if(!(await getDoc(r)).exists()) await setDoc(r,{name:u.displayName||"Player",email:u.email,coins:0,matches:0,wins:0,createdAt:serverTimestamp()});
-  onSnapshot(r,s=>{const D=s.data()||{};coins=D.coins||0;$("coins").textContent=coins;$("dCoins").textContent=coins.toLocaleString();$("dMatches").textContent=D.matches||0;myRP=D.rp||0;$("dRank").textContent="🏅 "+rankOf(myRP)+" · "+myRP+" RP";$("dWon").textContent=(D.won||0).toLocaleString();$("dWins").textContent=D.wins||0;$("dRate").textContent=(D.matches?Math.round((D.wins||0)/D.matches*100):0)+"%";const g=s.data()?.gender;if(g&&g!==gender){gender=g;paintGender()}else if(!g)updateDoc(r,{gender}).catch(()=>{})});
+  onSnapshot(r,s=>{const D=s.data()||{};coins=D.coins||0;$("coins").textContent=coins;$("dCoins").textContent=coins.toLocaleString();paintValue();$("dMatches").textContent=D.matches||0;myRP=D.rp||0;$("dRank").textContent="🏅 "+rankOf(myRP)+" · "+myRP+" RP";$("dWon").textContent=(D.won||0).toLocaleString();$("dWins").textContent=D.wins||0;$("dRate").textContent=(D.matches?Math.round((D.wins||0)/D.matches*100):0)+"%";const g=s.data()?.gender;if(g&&g!==gender){gender=g;paintGender()}else if(!g)updateDoc(r,{gender}).catch(()=>{})});
   isAdmin=ADMIN_UIDS.includes(u.uid);
   $("who").textContent=u.displayName;$("dName").textContent=u.displayName+(ADMIN_UIDS.includes(u.uid)?" (Admin)":"");$("dEmail").textContent=u.email;$("dAvatar").src=u.photoURL||"";$("role").textContent=isAdmin?"Admin":"Player";
   $("btnAdmin").classList.toggle("hidden",!isAdmin);
@@ -514,7 +520,7 @@ function launch3D(opts){
   const wrap=$("gameWrap"),box=$("gamebox");
   box.innerHTML="";box.style.overflow="hidden";box.style.position="relative";
   const W=72,H=48,R=1.0,CS=1.7,SPEED=10,BY=2.3;   // arena size, body radius, character scale, run speed, bullet height
-  let stopped=false,raf=0,over=false,mouseDown=false,lastSend=0,tNow=0,frame=0,camH=14,camB=9.5;
+  let stopped=false,raf=0,over=false,mouseDown=false,lastSend=0,tNow=0,frame=0,camH=20,camB=13.5;
   const k={},joy={x:0,z:0},aimS={x:0,z:0,mag:0,on:false},ndc=new THREE.Vector2(),aim=new THREE.Vector3(),ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
 
   /* phones: full screen + landscape */
@@ -548,10 +554,11 @@ function launch3D(opts){
   const resize=()=>{
     const w=box.clientWidth,h=box.clientHeight;if(!w||!h)return;
     renderer.setSize(w,h);cam.aspect=w/h;
-    const kk=Math.max(1,1.9/cam.aspect);camH=14*kk;camB=9.5*kk;   // portrait/narrow screens pull back a little so enemies stay visible
+    const kk=Math.max(1,1.9/cam.aspect);camH=20*kk;camB=13.5*kk;   // portrait/narrow screens pull back a little so enemies stay visible
     cam.updateProjectionMatrix();
     rot.style.display=touchUI&&h>w?"block":"none";
   };
+  const ro=window.ResizeObserver?new ResizeObserver(()=>resize()):null;ro&&ro.observe(box);
   resize();["resize","orientationchange"].forEach(ev=>window.addEventListener(ev,resize));document.addEventListener("fullscreenchange",resize);
   scene.add(new THREE.HemisphereLight(0xcfd8ff,0x2a2640,.95));
   const sun=new THREE.DirectionalLight(0xffffff,.9);sun.position.set(-12,25,10);sun.castShadow=!touchUI;sun.shadow.mapSize.set(1024,1024);
@@ -608,7 +615,7 @@ function launch3D(opts){
     x.fillStyle=isYou?"#ffd23f":"#f4efe0";x.fillText(name,128,34);nm.material.map.needsUpdate=true;g.add(nm);
     const say=makeSprite(1024,200,10,1.95,1.95);say.visible=false;g.add(say);
     if(isYou){const c=new THREE.Mesh(new THREE.ConeGeometry(.22,.45,8),new THREE.MeshBasicMaterial({color:0xffd23f}));c.rotation.x=Math.PI;c.position.y=1.5;g.add(c)}
-    g.scale.setScalar(1.35);scene.add(g);return{g,fg,bg,say};
+    g.scale.setScalar(1.7);scene.add(g);return{g,fg,bg,say};
   }
   function speak(p,text,dur=2.6){
     const s=p.bar.say,c=s.userData.c,x=c.getContext("2d"),col=p.team?"#ff3d81":"#35e0d0";x.clearRect(0,0,c.width,c.height);
@@ -648,7 +655,11 @@ function launch3D(opts){
     x:o.team?SX:-SX,z:o.n===1?0:(o.idx-(o.n-1)/2)*7,yaw:o.team?-Math.PI/2:Math.PI/2,in:{mx:0,mz:0},ai:{s:1,t:0},
     m:makeChar(o.team,o.bot,o.female),bar:makeBar(o.local,o.name)}));
   const LP=P.find(p=>p.local);
-  const bullets=[],bGeo=new THREE.SphereGeometry(.3,10,8),bMat=[0x35e0d0,0xff3d81].map(c=>new THREE.MeshBasicMaterial({color:c}));
+  P.forEach(p=>{   // coloured ring under every fighter so they are easy to spot from far away
+    const r=new THREE.Mesh(new THREE.RingGeometry(1.4,1.9,28),new THREE.MeshBasicMaterial({color:p.team?0xff3d81:0x35e0d0,transparent:true,opacity:.85,side:THREE.DoubleSide,depthWrite:false}));
+    r.rotation.x=-Math.PI/2;r.position.y=.07;scene.add(r);p.ring=r;
+  });
+  const bullets=[],bGeo=new THREE.SphereGeometry(.42,10,8),bMat=[0x35e0d0,0xff3d81].map(c=>new THREE.MeshBasicMaterial({color:c}));
 
   const enemiesOf=p=>P.filter(q=>q.alive&&q.team!==p.team);
   function nearest(p){let b=null,bd=1e9;enemiesOf(p).forEach(q=>{const d=Math.hypot(q.x-p.x,q.z-p.z);if(d<bd){bd=d;b=q}});return[b,bd]}
@@ -793,7 +804,7 @@ function launch3D(opts){
     const f=camInit?1-Math.exp(-dt*16):1;camInit=true;
     camT.x+=(t.x-camT.x)*f;camT.z+=(t.z-camT.z)*f;
     cam.position.set(camT.x,camH,camT.z+camB);
-    cam.lookAt(camT.x,0,camT.z+2.8);   // looks slightly below the hero so the hero sits above the thumb controls
+    cam.lookAt(camT.x,0,camT.z+3.5);   // looks slightly below the hero so the hero sits above the thumb controls
     sun.position.set(camT.x-12,25,camT.z+10);sun.target.position.set(camT.x,0,camT.z);sun.target.updateMatrixWorld();
   }
 
@@ -897,7 +908,7 @@ function launch3D(opts){
   function animate(dt){
     P.forEach(p=>{
       const m=p.m,rolling=p.roll>0&&p.alive;
-      m.root.position.set(p.x,0,p.z);m.root.rotation.y=p.yaw;
+      m.root.position.set(p.x,0,p.z);m.root.rotation.y=p.yaw;p.ring.position.set(p.x,.07,p.z);p.ring.visible=p.alive;
       m.tm.emissive.setHex(p.flash>0?0xff2222:0);
       if(!p.alive){
         m.body.rotation.x+=(-1.5-m.body.rotation.x)*.15;m.body.position.y+=(.5-m.body.position.y)*.15;
@@ -928,7 +939,7 @@ function launch3D(opts){
   }
   raf=requestAnimationFrame(loop);
   stopDemo=()=>{
-    stopped=true;cancelAnimationFrame(raf);
+    stopped=true;cancelAnimationFrame(raf);ro&&ro.disconnect();
     window.removeEventListener("keydown",onKey);window.removeEventListener("keyup",onKey);
     ["resize","orientationchange"].forEach(ev=>window.removeEventListener(ev,resize));document.removeEventListener("fullscreenchange",resize);
     renderer.dispose();box.innerHTML="";tc&&tc.remove();wrap.classList.remove("fs");
@@ -945,11 +956,14 @@ function finishDemo(win){
 }
 
 /* ---------- Buy coins ---------- */
-let tier=TIERS[0];
-$("gNum").textContent=GCASH_NUMBER;$("gName").textContent=GCASH_NAME;
-$("tiers").innerHTML=TIERS.map((t,i)=>`<button class="btn ghost text-left" data-t="${i}">₱${t.php.toLocaleString()}<br><b>${t.coins.toLocaleString()} coins</b><br><span class="text-xs">₱${(t.php/t.coins).toFixed(2)}/coin</span></button>`).join("");
-const pickTier=i=>{tier=TIERS[i];document.querySelectorAll("[data-t]").forEach(b=>b.classList.toggle("yellow",+b.dataset.t===i))};
-document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>pickTier(+b.dataset.t));pickTier(0);
+let TIERS=[],tier=null,tierIdx=0;
+function buildTiers(){
+  TIERS=PACKS.map(php=>({php,coins:Math.max(1,Math.floor(php/COIN_PHP))}));
+  $("tiers").innerHTML=TIERS.map((t,i)=>`<button class="btn ghost text-left" data-t="${i}">₱${t.php.toLocaleString()}<br><b>${t.coins.toLocaleString()} coins</b><br><span class="text-xs">1 coin = ₱${COIN_PHP}</span></button>`).join("");
+  document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>pickTier(+b.dataset.t));
+  pickTier(Math.min(tierIdx,TIERS.length-1));
+}
+const pickTier=i=>{tierIdx=i;tier=TIERS[i];document.querySelectorAll("[data-t]").forEach(b=>b.classList.toggle("yellow",+b.dataset.t===i))};
 $("btnBuy").onclick=()=>open("mBuy");
 $("btnStoreChat").onclick=()=>{close("mBuy");openChat(me.uid,false)};
 $("btnPaid").onclick=async()=>{
@@ -1060,6 +1074,35 @@ $("pending").onclick=async e=>{
     if(!ok&&t.type==="withdrawal")x.update(doc(db,"users",t.uid),{coins:increment(t.coinsRequested)}); // refund held coins
   });
 };
+
+/* ---------- Economy settings (coin value + withdrawal fee), editable by the admin ---------- */
+const peso=n=>"₱"+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+function paintValue(){$("dValue").textContent=`≈ ${peso(coins*COIN_PHP)} · 1 coin = ${peso(COIN_PHP)}`}
+function applyEconomy(){
+  const pct=Math.round(WD_FEE*1000)/10,recv=Math.round((1-WD_FEE)*1000)/10;
+  $("rate").textContent=COIN_PHP;$("feePct").textContent=pct;$("recvPct").textContent=recv;
+  buildTiers();paintValue();$("wdCoins").oninput();
+  const ex=n=>{const c=wdCalc(n);return `• ${n} coins = ${peso(c.g)} − ${peso(c.f)} fee = <b>${peso(c.net)}</b>`};
+  $("helpEco").innerHTML=`<div><b class="text-[#ffd23f]">6. Coin value and buying coins</b><br>The current value is <b>1 coin = ${peso(COIN_PHP)}</b>. This value can change, so always check the Coin Store before you pay. Open the Coin Store, choose a package, pay through GCash, enter the 13-digit reference number and tap <b>I Have Paid</b>. The admin adds your coins after verifying the payment.</div>
+  <div class="mt-3"><b class="text-[#ffd23f]">7. Withdrawing to GCash</b><br>The minimum is <b>20 coins</b>. A <b>${pct}% service fee</b> is deducted, so you receive <b>${recv}%</b> of your coins' value. Coins are held until the admin approves the request, and they are returned if it is rejected.<br>Examples at the current value:<br>${ex(50)}<br>${ex(100)}<br>${ex(500)}</div>`;
+  if(document.activeElement!==$("ecoRate"))$("ecoRate").value=COIN_PHP;
+  if(document.activeElement!==$("ecoFee"))$("ecoFee").value=pct;
+  $("ecoNow").textContent=`Now: 1 coin = ${peso(COIN_PHP)} · withdrawal fee ${pct}% · players receive ${recv}%`;
+}
+onSnapshot(doc(db,"settings","economy"),s=>{
+  const d=s.data()||{};
+  if(+d.coinValue>0)COIN_PHP=+d.coinValue;
+  if(d.withdrawFeePct!=null&&+d.withdrawFeePct>=0&&+d.withdrawFeePct<=90)WD_FEE=+d.withdrawFeePct/100;
+  applyEconomy();
+},()=>applyEconomy());
+$("btnEco").onclick=async()=>{
+  const v=Math.round(+$("ecoRate").value*100)/100,f=Math.round(+$("ecoFee").value*10)/10;
+  if(!(v>=.01&&v<=1000))return toast("Coin value must be between ₱0.01 and ₱1,000.");
+  if(!(f>=0&&f<=90))return toast("The fee must be between 0% and 90%.");
+  try{await setDoc(doc(db,"settings","economy"),{coinValue:v,withdrawFeePct:f,updatedAt:serverTimestamp(),by:me.uid});toast("Saved. Players now see the new value.")}
+  catch(e){toast(e.code==="permission-denied"?"Permission denied. Publish the new firestore.rules file first.":e.message)}
+};
+applyEconomy();
 </script>
 </body>
 </html>
