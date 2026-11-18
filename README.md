@@ -49,3 +49,6 @@ Search `BILLIARDS` in `index.html`. Rooms: friends `rooms/B####`, ranked queue `
 
 ## Sunday-only cash-out
 Withdrawals are only allowed on Sundays in Philippine time (UTC+8). The Withdraw window shows the next cash-out day and locks the button on other days. **Republish `firestore.rules`** too: it now rejects withdrawal requests created on any other day, so the rule cannot be bypassed from the browser.
+
+## Auto Coin Market
+The Coin Market price now updates itself every 30 minutes (no admin action needed). It moves smoothly up and down around the **base value** you set on the Admin screen, by up to the **swing %** you choose (default ±12%). Every phone computes the same price from the clock, so everyone sees the same number and the chart has a point for every 30 minutes. In Admin you can: change the base value, change the swing %, or turn **Auto market** off to use exactly the base value. Withdrawals use the live price at the moment the player requests them (it is saved on the request).
