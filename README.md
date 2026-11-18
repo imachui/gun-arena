@@ -19,8 +19,8 @@
 6. Authentication > Settings > Authorized domains > add `YOURNAME.github.io`.
 
 ## Economy
-- **Coin Store** (buying): packages are `PACKS` in `index.html` (peso amount + bonus %). The base price is `STORE_BASE` (0.6 coins per ₱1, so ₱50 = 30 coins). The admin can change it on the Admin screen ("Coins per ₱1").
-- **Coin Market** (withdrawing): the admin sets the value of 1 coin in pesos on the Admin screen. It is used for withdrawals and the lobby chart, and every change is recorded on the chart.
+- **GameGold (GGD) Store** (buying): packages are `PACKS` in `index.html` (peso amount + bonus %). The base price is `STORE_BASE` (0.6 GGD per ₱1, so ₱50 = 30 GGD). The admin can change it on the Admin screen ("Coins per ₱1").
+- **GameGold (GGD) Market** (withdrawing): the admin sets the value of 1 GGD in pesos on the Admin screen. It is used for withdrawals and the lobby chart, and every change is recorded on the chart.
 - Both are saved in Firestore at `settings/economy`, so you must republish `firestore.rules`.
 - Matches: winners get 2x their bet, no house cut.
 
@@ -50,5 +50,5 @@ Search `BILLIARDS` in `index.html`. Rooms: friends `rooms/B####`, ranked queue `
 ## Sunday-only cash-out
 Withdrawals are only allowed on Sundays in Philippine time (UTC+8). The Withdraw window shows the next cash-out day and locks the button on other days. **Republish `firestore.rules`** too: it now rejects withdrawal requests created on any other day, so the rule cannot be bypassed from the browser.
 
-## Auto Coin Market
-The Coin Market price now updates itself every 30 minutes (no admin action needed). It moves smoothly up and down around the **auto market center** you set on the Admin screen (default **₱0.50 per coin**), by up to the **swing %** you choose (default ±20%, so about ₱0.40 to ₱0.60). Every phone computes the same price from the clock, so everyone sees the same number and the chart has a point for every 30 minutes. In Admin you can: change the center price, change the swing %, or turn **Auto market** off to use the fixed value instead. Withdrawals use the live price at the moment the player requests them (it is saved on the request).
+## Auto GameGold (GGD) Market
+The GameGold (GGD) Market price now updates itself every 30 minutes (no admin action needed). It moves smoothly up and down around the **auto market center** you set on the Admin screen (default **₱0.50 per coin**), by up to the **swing %** you choose (default ±20%, so about ₱0.40 to ₱0.60). Every phone computes the same price from the clock, so everyone sees the same number and the chart has a point for every 30 minutes. In Admin you can: change the center price, change the swing %, or turn **Auto market** off to use the fixed value instead. Withdrawals use the live price at the moment the player requests them (it is saved on the request).
