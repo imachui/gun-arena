@@ -37,6 +37,14 @@ Pick **Chess** in the lobby. Same coins, same bets, same payout: **win = 2x**, d
 - Both player names and colors are always on screen. Tap a piece then a square, or drag the piece.
 - Practice vs bot is free (Easy, Normal, Hard). Ranked uses the same RP (+25 / -15). Friends room uses a 4-digit code.
 
+## 🎱 NEW: Billiards (8-ball 1v1, 3D)
+Pick **Billiards** in the lobby. Same coins, same bets, same payout: **win = 2x**.
+- Pot all balls of your group (solids or stripes), then the **8-ball** to win. Fouls give the opponent ball-in-hand.
+- **30 seconds per shot.** If time runs out, the opponent gets ball-in-hand. 3 timeouts in a row = forfeit.
+- **Phone controls:** drag on the table to aim, or use the **FINE AIM** bar for tiny adjustments. Pull the **POWER** bar down and release to shoot. Tap the round pad to add spin.
+- The buttons are see-through so you can always see the balls. A bright guide shows where your cue ball hits, where the target ball goes (yellow) and where your cue ball deflects.
+- Trash talk buttons (💬), practice vs bot (free), ranked and friends room, just like the other games.
+
 ## 🆓 Practice (free)
 No sign-in and no coins needed. Fight bots on Easy, Normal or Hard to learn the game before you bet.
 
@@ -75,6 +83,7 @@ The bonus coins are added automatically. You do not need to claim anything.
 
 ## 📈 Coin Market and withdrawing to GCash
 - The **Coin Market** chart in the lobby shows what one coin is worth when you withdraw. The price goes up and down over time, so you can choose the best moment to cash out.
+- **Cash-out is only open every Sunday (Philippine time).** On other days the Withdraw button is locked.
 - The minimum withdrawal is **20 coins**.
 - You receive your coins at the current Coin Market price. For example, at 1 coin = ₱1.00, **100 coins = ₱100.00**.
 - Your coins are held until the admin approves the request, and they are returned if the request is rejected.
@@ -94,6 +103,7 @@ The bonus coins are added automatically. You do not need to claim anything.
 Last team standing wins! 1v1, 2v2 and 4v4.
 🧱 NEW: Tetris Battle 1v1! Send garbage, trash talk, winner takes 2x!
 ♞ NEW: 3D Chess 1v1 with trash talk, winner takes 2x!
+🎱 NEW: 3D Billiards 1v1! Cash-out every Sunday!
 ✅ Practice against bots: FREE
 ✅ Bet 5 to 100 coins, and a win pays **2x**
 ✅ Buy coins with GCash: bigger packages give bonus coins
