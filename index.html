@@ -34,6 +34,12 @@
   .gtile{padding:1rem .5rem;font-size:1.05rem}
   #tPlay{position:fixed;inset:0;z-index:45;background:#14121f;display:flex;flex-direction:column;padding:6px 8px calc(6px + env(safe-area-inset-bottom));overflow:hidden}
   #tPlay.hidden{display:none}
+  #cPlay{position:fixed;inset:0;z-index:45;background:#14121f;display:flex;flex-direction:column;padding:6px 8px calc(6px + env(safe-area-inset-bottom));overflow:hidden}
+  #cPlay.hidden{display:none}
+  .cbar{display:flex;align-items:center;gap:8px;padding:6px 8px;background:#1d1a2e;border:3px solid #3b3560;margin:3px 0}
+  .cdot{width:14px;height:14px;border-radius:50%;border:2px solid #8d86ff;flex:none}
+  .cclk{margin-left:auto;font-family:ui-monospace,monospace;font-weight:700;font-size:1.6rem;padding:0 10px;background:#0c0a16;color:#9a96c8;border:2px solid #3b3560}
+  .cclk.on{color:#fff;border-color:#35e0d0}.cclk.low{color:#ff3d81;border-color:#ff3d81}
   body{overflow-x:hidden}
 </style>
 </head>
@@ -71,6 +77,7 @@
         <button class="btn" data-demo="tag">Practice 2v2</button>
         <button class="btn" data-demo="blitz">Practice 4v4</button>
         <button class="btn pink" id="btnTDemoL">Practice Tetris</button>
+        <button class="btn" id="btnCDemoL">Practice Chess</button>
       </div>
     </div>
   </section>
@@ -96,7 +103,7 @@
         <label class="text-xs">PHP<input id="cvPhp" class="inp mt-1" type="number" min="0" step="0.01"></label></div>
     </div>
     <div class="card space-y-2"><div class="text-sm">Choose your game:</div>
-      <div class="grid grid-cols-2 gap-2"><button class="btn ghost gtile" data-gsel="gun">🔫 Gun Arena</button><button class="btn ghost gtile" data-gsel="tetris">🧱 Tetris Battle</button></div></div>
+      <div class="grid grid-cols-2 gap-2"><button class="btn ghost gtile" data-gsel="gun">🔫 Gun Arena</button><button class="btn ghost gtile" data-gsel="tetris">🧱 Tetris Battle</button><button class="btn ghost gtile" data-gsel="chess">♞ Chess</button><button class="btn ghost gtile" disabled style="opacity:.5">🎱 Billiards · soon</button></div></div>
     <div class="card flex flex-wrap items-center gap-2 g-gun"><span class="text-sm">Your character:</span>
       <button class="btn ghost" data-gender="male">Male</button><button class="btn ghost" data-gender="female">Female</button></div>
     <div class="card space-y-3 g-gun">
@@ -142,6 +149,26 @@
       <p class="text-sm opacity-80">Create a private 1v1 room and share the 4-digit code. Same bet for both, winner takes double. No rank points.</p>
       <div class="flex flex-wrap gap-2 items-center"><button id="btnTCreate" class="btn">Create Tetris room</button>
         <input id="tJoinCode" class="inp w-32" inputmode="numeric" maxlength="4" placeholder="Room code"><button id="btnTJoin" class="btn">Join</button></div>
+    </div>
+    <div class="card space-y-2 g-chess hidden">
+      <h2 class="text-base">♞ Chess: time control</h2>
+      <div class="flex flex-wrap gap-2"><button class="btn ghost" data-ctc="1-0">1 min</button><button class="btn ghost" data-ctc="3-0">3 min</button><button class="btn ghost" data-ctc="5-0">5 min</button><button class="btn ghost" data-ctc="10-0">10 min</button><button class="btn ghost" data-ctc="15-10">15 | 10</button></div>
+      <p class="text-xs opacity-70">Standard chess clocks: each player has the full time for the whole game. If your time runs out, you lose. "15 | 10" adds 10 seconds after every move.</p>
+    </div>
+    <div class="card space-y-3 g-chess hidden">
+      <h2 class="text-base">Chess: practice vs bot (free)</h2>
+      <div class="flex flex-wrap gap-2"><button class="btn ghost" data-level="easy">Easy</button><button class="btn ghost" data-level="normal">Normal</button><button class="btn ghost" data-level="hard">Hard</button></div>
+      <button id="btnCPractice" class="btn pink w-full">Practice Chess</button>
+    </div>
+    <div class="card space-y-2 g-chess hidden">
+      <h2 class="text-base">Chess ranked 1v1</h2>
+      <p class="text-sm opacity-80">Uses your bet and time control. Winner takes 2x (+25 RP, a loss costs -15 RP). Draw = bet returned.</p>
+      <button id="btnCFind" class="btn w-full">Find Chess match (ranked)</button>
+    </div>
+    <div class="card space-y-3 g-chess hidden">
+      <h2 class="text-base">Chess friends room</h2>
+      <div class="flex flex-wrap gap-2 items-center"><button id="btnCCreate" class="btn">Create Chess room</button>
+        <input id="cJoinCode" class="inp w-32" inputmode="numeric" maxlength="4" placeholder="Room code"><button id="btnCJoin" class="btn">Join</button></div>
     </div>
     <div class="flex flex-wrap gap-2">
       <button id="btnBuy" class="btn yellow">Coin Store</button>
@@ -190,7 +217,7 @@
     </div>
     <div id="tPlay" class="hidden">
       <div class="flex items-center justify-between px-1">
-        <div class="text-center w-24"><div class="text-xs text-[#35e0d0]">YOU</div><div id="tYou" class="px text-lg">0</div></div>
+        <div class="text-center w-24"><div id="tYouName" class="text-xs text-[#35e0d0] truncate">YOU</div><div id="tYou" class="px text-lg">0</div></div>
         <div class="text-center"><div id="tClock" class="px text-3xl text-[#ffd23f]">5:00</div><div id="tPot" class="text-xs opacity-80"></div></div>
         <div class="text-center w-24"><div id="tOppName" class="text-xs text-[#ff3d81] truncate">OPPONENT</div><div id="tOppS" class="px text-lg">0</div></div>
       </div>
@@ -206,6 +233,23 @@
         <button id="tbH" class="btn yellow tb" style="font-size:.65rem">HOLD</button><button id="tbDrop" class="btn pink tb" style="font-size:.65rem">DROP</button>
       </div>
       <p id="tHint" class="text-xs text-center opacity-70 mt-1">PC: ← → move · ↓ soft drop · ↑ or X rotate · Z rotate back · Space hard drop · C hold. Phone: drag on the board to move, tap to rotate, flick down to drop.</p>
+    </div>
+  </section>
+
+  <!-- Chess -->
+  <section id="chess" class="hidden">
+    <div id="cLobby" class="card text-center space-y-4 hidden max-w-md mx-auto">
+      <div class="text-xs">Chess room code</div><div id="cCode" class="px text-4xl text-[#ffd23f] tracking-widest"></div>
+      <div id="cLobInfo" class="text-sm"></div><div id="cLobPlayers" class="grid grid-cols-2 gap-3 text-left text-sm"></div>
+      <div class="flex justify-center gap-2"><button id="btnCStart" class="btn">Start match</button><button id="btnCLeave" class="btn ghost">Leave</button></div>
+      <p class="text-xs opacity-70">Both players need the bet in coins. Colors are assigned randomly. The bet is deducted when the match starts.</p>
+    </div>
+    <div id="cPlay" class="hidden">
+      <div class="cbar"><span id="cTopDot" class="cdot"></span><b id="cTopName" class="truncate"></b><span id="cTopMat" class="text-xs text-[#ffd23f]"></span><span id="cTopClk" class="cclk">0:00</span></div>
+      <div class="flex items-center gap-2"><button id="cQuit" class="btn ghost text-xs" style="padding:.3rem .6rem">✕ Quit</button><div id="cBub" class="flex-1 h-6 text-center text-sm truncate"></div><button id="cMute" class="btn ghost text-xs" style="padding:.3rem .6rem">🔊</button></div>
+      <div id="cStage" style="flex:1;min-height:0;display:flex;justify-content:center;align-items:center"><canvas id="cBoard" style="touch-action:none;border:3px solid #3b3560"></canvas></div>
+      <div class="cbar"><span id="cBotDot" class="cdot"></span><b id="cBotName" class="truncate"></b><span id="cBotMat" class="text-xs text-[#ffd23f]"></span><span id="cBotClk" class="cclk">0:00</span></div>
+      <div class="grid grid-cols-2 gap-2"><button id="btnCResign" class="btn ghost">🏳 Resign</button><button id="btnCDraw" class="btn ghost">🤝 Offer draw</button></div>
     </div>
   </section>
 
@@ -237,6 +281,7 @@
   <div><b class="text-[#35e0d0]">4. Online matches and bets</b><br>Sign in with Google and choose your bet per player: <b>5, 10, 20, 50 or 100 coins</b>. Everyone in a match needs the bet in coins.<br>• <b>Find match (ranked):</b> we search for players online and a countdown starts once two players are found. With only a few players you go straight into a 1v1 or 2v2, and with 8 players it becomes a 4v4. You earn rank points.<br>• <b>Friends room:</b> create a room with a 4-digit code and share it with your friends. The same bet applies and the winners double it. No rank points.<br>If the other team has a free slot, you can tap <b>Switch team</b>.</div>
   <div><b class="text-[#ffd23f]">5. How to earn</b><br>• <b>Win:</b> you receive <b>2x your bet</b>. For example, with a bet of 20 coins you win 40 coins (a profit of 20).<br>• <b>Draw:</b> your bet is returned.<br>• <b>Loss:</b> you lose your bet.<br>• In 2v2 and 4v4, every winner receives 2x their own bet.<br>• <b>Ranked:</b> +25 RP for a win and -15 RP for a loss. Ranks: Bronze, Silver (100 RP), Gold (300 RP), Platinum (600 RP) and Diamond (1000 RP).<br>• If you quit or disconnect during a match, you lose it.</div>
   <div><b class="text-[#35e0d0]">🧱 Tetris Battle (1v1)</b><br>Pick <b>Tetris Battle</b> in the lobby. Same bets (5 to 100 coins), same payout: the winner gets <b>2x the bet</b>, a draw returns the bet. A match lasts <b>5 minutes</b> and the game gets faster every 30 seconds. Clear 2 or more lines to send garbage rows to your opponent (a Tetris sends 4). If you top out, you lose. When time runs out, the <b>higher score wins</b>. Use the taunt buttons to trash talk!<br><b>Phone:</b> drag on the board to move, drag down to soft drop, tap to rotate, flick down to hard drop, or use the buttons. <b>PC:</b> arrows or WASD, Space to drop, C to hold.</div>
+  <div><b class="text-[#35e0d0]">♞ Chess (1v1)</b><br>Pick <b>Chess</b> in the lobby, choose a time control (1, 3, 5, 10 min or 15 | 10) and a bet. Winner gets <b>2x the bet</b>; draw returns the bet. Full rules: castling, en passant, promotion, check, checkmate, stalemate. <b>If your clock hits zero you lose.</b> Tap a piece then a square, or drag it. You can resign or offer a draw.</div>
   <div id="helpEco"></div>
   <div class="text-xs opacity-80">Winnings are not guaranteed. Only bet what you can afford to lose. For players aged 18 and over.</div>
   <button class="btn" data-close>Let's play!</button>
@@ -294,7 +339,7 @@
 
 <!-- Tetris: searching -->
 <div id="mTSearch" class="modal hidden"><div class="card space-y-3 text-center">
-  <h2 class="text-sm">Finding a Tetris opponent</h2>
+  <h2 id="tSrchTitle" class="text-sm">Finding an opponent</h2>
   <div id="tSrchMsg" class="text-sm opacity-80">Searching for an opponent...</div>
   <div id="tSrchTime" class="px text-4xl text-[#ffd23f]">0:00</div>
   <div class="text-sm">Players found: <b id="tSrchCount">1</b> · Bet: <b><span id="tSrchBet"></span> coins</b></div>
@@ -416,7 +461,7 @@ const KILL_LINES=["Too easy!","Next!","Thanks for the points!","Is that all?","S
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),rdb=getDatabase(app);
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const SCREENS=["login","lobby","room","game","tetris","admin"];
+const SCREENS=["login","lobby","room","game","tetris","chess","admin"];
 const show=s=>{SCREENS.forEach(x=>$(x).classList.toggle("hidden",x!==s));document.querySelector("main").style.maxWidth=s==="game"?"none":""};
 const toast=t=>{const e=$("toast");e.textContent=t;e.classList.remove("hidden");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add("hidden"),3200)};
 const open=id=>$(id).classList.remove("hidden"), close=id=>$(id).classList.add("hidden");
@@ -778,7 +823,7 @@ function tRun(cfg){
   const H={dir:0,t:0,n:0};let kL=false,kR=false,lastTalk=((cfg.getOpp&&cfg.getOpp())||{}).talk?.n||0,msg="";
   const o=()=>bot?{sent:bot.sent,score:bot.score,b:tSer(bot),dead:bot.dead,ab:bot.applied+bot.canc,name:"BOT "+cfg.bot.toUpperCase()}:cfg.getOpp();
   const pot=cfg.bet?`Bet ${cfg.bet} · winner gets ${cfg.bet*2}`:"Practice (free)";
-  $("tPot").textContent=pot;$("tOppName").textContent=bot?"BOT "+cfg.bot.toUpperCase():(o()||{}).name||"OPPONENT";$("tBub").innerHTML="";
+  $("tPot").textContent=pot;$("tYouName").textContent=((me&&me.displayName)||"YOU").slice(0,14);$("tOppName").textContent=bot?"BOT "+cfg.bot.toUpperCase():(o()||{}).name||"OPPONENT";$("tBub").innerHTML="";
   $("tPad").classList.toggle("hidden",!touch);$("tHint").classList.toggle("hidden",touch);
 
   function fit(){const P=$("tPlay");let used=18;[...P.children].forEach(e=>{if(e.id!=="tStage")used+=e.offsetHeight});
@@ -915,7 +960,7 @@ let tcode=null,troom=null,tStopRoom=null,tCtl=null,tStarted=false,tDone=false,tR
 const trRef=()=>ref(rdb,`rooms/${tcode}`),tpRef=()=>ref(rdb,`rooms/${tcode}/players/${me.uid}`);
 const paintT=m=>{$("tLobby").classList.toggle("hidden",m!=="lobby");$("tPlay").classList.toggle("hidden",m!=="play")};
 function paintGame(){let g="gun";try{g=localStorage.getItem("ga_game")||"gun"}catch{}
-  document.querySelectorAll(".g-gun").forEach(e=>e.classList.toggle("hidden",g!=="gun"));document.querySelectorAll(".g-tetris").forEach(e=>e.classList.toggle("hidden",g!=="tetris"));
+  document.querySelectorAll(".g-gun").forEach(e=>e.classList.toggle("hidden",g!=="gun"));document.querySelectorAll(".g-tetris").forEach(e=>e.classList.toggle("hidden",g!=="tetris"));document.querySelectorAll(".g-chess").forEach(e=>e.classList.toggle("hidden",g!=="chess"));
   document.querySelectorAll("[data-gsel]").forEach(b=>b.classList.toggle("yellow",b.dataset.gsel===g))}
 document.querySelectorAll("[data-gsel]").forEach(b=>b.onclick=()=>{try{localStorage.setItem("ga_game",b.dataset.gsel)}catch{}paintGame()});paintGame();
 
@@ -1032,7 +1077,7 @@ async function tFind(){
       cur.queue[me.uid]={name:me.displayName||"Player",gender,joined:now,ts:now};return cur});
     onDisconnect(tqMine(tqBet)).remove()}
   catch(e){console.warn(e);tqBet=null;return toast("Matchmaking is not available right now. Please try again.")}
-  $("tSrchBet").textContent=bet;open("mTSearch");const b=tqBet;
+  $("tSrchTitle").textContent="Finding a Tetris opponent";$("btnTSrchCancel").onclick=tqCancel;$("tSrchBet").textContent=bet;open("mTSearch");const b=tqBet;
   tqUnsub=onValue(tqRef(b),s=>{tqData=s.val()});tqBeat=setInterval(()=>rtUpdate(tqMine(b),{ts:srvNow()}).catch(()=>{}),4000);tqTick=setInterval(tqStep,500);tqStep()}
 function tqStop(rm){clearInterval(tqTick);clearInterval(tqBeat);tqTick=tqBeat=null;tqUnsub&&tqUnsub();tqUnsub=null;
   if(tqBet!==null&&me&&rm){const r=tqMine(tqBet);onDisconnect(r).cancel().catch(()=>{});remove(r).catch(()=>{})}tqBet=null;tqBusy=false;tqData=null}
@@ -1058,6 +1103,282 @@ async function tqJoin(m){
   onDisconnect(mine).cancel().catch(()=>{});remove(mine).catch(()=>{});
   if(!tcode)toast("Could not join the match. Please search again.")}
 /* ====================== end of Tetris Battle ====================== */
+/* ====================== CHESS (1v1, standard time controls) ====================== */
+const CTC={"1-0":[60,0,"1 min"],"3-0":[180,0,"3 min"],"5-0":[300,0,"5 min"],"10-0":[600,0,"10 min"],"15-10":[900,10,"15 | 10"]};
+let ctc="5-0";
+const KN=[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]],KG=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]],DG=[[-1,-1],[-1,1],[1,-1],[1,1]],ST=[[-1,0],[1,0],[0,-1],[0,1]];
+const CV={p:100,n:320,b:330,r:500,q:900,k:0},cW=p=>p<"a";
+const sqn=q=>"abcdefgh"[q&7]+(8-(q>>3)),uci=m=>sqn(m.f)+sqn(m.t)+(m.p||"");
+const cKey=s=>s.b.join("")+s.turn+s.cas+s.ep;
+const cInsuff=b=>{const r=b.filter(p=>p&&p.toLowerCase()!=="k").map(p=>p.toLowerCase());return !r.length||(r.length===1&&(r[0]==="n"||r[0]==="b"))};
+function cNew(){return{b:[..."rnbqkbnrpppppppp"+" ".repeat(32)+"PPPPPPPPRNBQKBNR"].map(x=>x===" "?"":x),turn:"w",cas:"KQkq",ep:-1,half:0,full:1}}
+function cAtt(b,sq,by){const r=sq>>3,c=sq&7,w=by==="w",pr=w?r+1:r-1;
+  for(const dc of[-1,1]){const cc=c+dc;if(pr>=0&&pr<8&&cc>=0&&cc<8&&b[pr*8+cc]===(w?"P":"p"))return true}
+  for(const [dr,dc] of KN){const rr=r+dr,cc=c+dc;if(rr>=0&&rr<8&&cc>=0&&cc<8&&b[rr*8+cc]===(w?"N":"n"))return true}
+  for(const [dr,dc] of KG){const rr=r+dr,cc=c+dc;if(rr>=0&&rr<8&&cc>=0&&cc<8&&b[rr*8+cc]===(w?"K":"k"))return true}
+  for(const [ds,t1] of [[ST,"r"],[DG,"b"]])for(const [dr,dc] of ds){let rr=r+dr,cc=c+dc;while(rr>=0&&rr<8&&cc>=0&&cc<8){const p=b[rr*8+cc];if(p){const l=p.toLowerCase();if(cW(p)===w&&(l===t1||l==="q"))return true;break}rr+=dr;cc+=dc}}
+  return false}
+function cGen(s){const b=s.b,w=s.turn==="w",o=[];
+  const add=(f,t,promo,cap)=>{if(promo)for(const q of"qrbn")o.push({f,t,p:q,c:1});else o.push(cap?{f,t,c:1}:{f,t})};
+  for(let sq=0;sq<64;sq++){const p=b[sq];if(!p||cW(p)!==w)continue;const r=sq>>3,c=sq&7,t=p.toLowerCase();
+    if(t==="p"){const d=w?-1:1,r1=r+d,pr=r1===(w?0:7);
+      if(r1>=0&&r1<8){if(!b[r1*8+c]){add(sq,r1*8+c,pr);if(r===(w?6:1)&&!b[(r+2*d)*8+c])o.push({f:sq,t:(r+2*d)*8+c})}
+        for(const dc of[-1,1]){const cc=c+dc;if(cc<0||cc>7)continue;const to=r1*8+cc,q=b[to];if(q&&cW(q)!==w)add(sq,to,pr,1);else if(to===s.ep)o.push({f:sq,t:to,e:1,c:1})}}}
+    else if(t==="n"||t==="k"){for(const [dr,dc] of t==="n"?KN:KG){const rr=r+dr,cc=c+dc;if(rr<0||rr>7||cc<0||cc>7)continue;const to=rr*8+cc,q=b[to];if(!q||cW(q)!==w)add(sq,to,0,!!q)}
+      if(t==="k"&&sq===(w?60:4)){const en=w?"b":"w",K=w?"K":"k",Q=w?"Q":"q",base=w?56:0;
+        if(s.cas.includes(K)&&!b[base+5]&&!b[base+6]&&!cAtt(b,sq,en)&&!cAtt(b,base+5,en)&&!cAtt(b,base+6,en))o.push({f:sq,t:base+6,cs:1});
+        if(s.cas.includes(Q)&&!b[base+1]&&!b[base+2]&&!b[base+3]&&!cAtt(b,sq,en)&&!cAtt(b,base+3,en)&&!cAtt(b,base+2,en))o.push({f:sq,t:base+2,cs:1})}}
+    else{for(const [dr,dc] of t==="r"?ST:t==="b"?DG:KG){let rr=r+dr,cc=c+dc;while(rr>=0&&rr<8&&cc>=0&&cc<8){const to=rr*8+cc,q=b[to];if(q){if(cW(q)!==w)add(sq,to,0,1);break}add(sq,to);rr+=dr;cc+=dc}}}}
+  return o}
+function cApply(s,m){const b=s.b.slice(),p=b[m.f],w=s.turn==="w",cap=b[m.t];let cas=s.cas,ep=-1;
+  b[m.t]=m.p?(w?m.p.toUpperCase():m.p):p;b[m.f]="";if(m.e)b[m.t+(w?8:-8)]="";
+  if(m.cs){if(m.t===62){b[61]=b[63];b[63]=""}else if(m.t===58){b[59]=b[56];b[56]=""}else if(m.t===6){b[5]=b[7];b[7]=""}else{b[3]=b[0];b[0]=""}}
+  if(p==="K")cas=cas.replace(/[KQ]/g,"");if(p==="k")cas=cas.replace(/[kq]/g,"");
+  for(const [q,l] of [[56,"Q"],[63,"K"],[0,"q"],[7,"k"]])if(m.f===q||m.t===q)cas=cas.replace(l,"");
+  if(p.toLowerCase()==="p"&&Math.abs(m.t-m.f)===16)ep=(m.f+m.t)/2;
+  return{b,turn:w?"b":"w",cas,ep,half:(p.toLowerCase()==="p"||cap||m.e)?0:s.half+1,full:s.full+(w?0:1)}}
+const cInCheck=(b,col)=>{const k=b.indexOf(col==="w"?"K":"k");return k>=0&&cAtt(b,k,col==="w"?"b":"w")};
+const cLegal=s=>cGen(s).filter(m=>!cInCheck(cApply(s,m).b,s.turn));
+function cSan(s,m){const p=s.b[m.f],t=p.toLowerCase();let x;
+  if(m.cs)x=(m.t&7)===6?"O-O":"O-O-O";else x=(t==="p"?"":t.toUpperCase())+(m.c?(t==="p"?"abcdefgh"[m.f&7]:"")+"x":"")+sqn(m.t)+(m.p?"="+m.p.toUpperCase():"");
+  const ns=cApply(s,m);if(cInCheck(ns.b,ns.turn))x+=cLegal(ns).length?"+":"#";return x}
+/* bot: small alpha-beta search */
+function cEval(s){let v=0;for(let sq=0;sq<64;sq++){const p=s.b[sq];if(!p)continue;const t=p.toLowerCase(),w=p<"a",r=sq>>3,c=sq&7;let x=CV[t];const cen=7-Math.abs(c-3.5)-Math.abs(r-3.5);
+  if(t==="p")x+=(w?6-r:r-1)*6+cen;else if(t==="n"||t==="b")x+=cen*5;else if(t==="q")x+=cen;v+=w?x:-x}return s.turn==="w"?v:-v}
+function cSearch(s,d,a,b){const ms=cLegal(s);if(!ms.length)return cInCheck(s.b,s.turn)?-99999-d:0;if(d===0)return cEval(s);
+  ms.sort((x,y)=>(s.b[y.t]?CV[s.b[y.t].toLowerCase()]:0)-(s.b[x.t]?CV[s.b[x.t].toLowerCase()]:0));
+  for(const m of ms){const v=-cSearch(cApply(s,m),d-1,-b,-a);if(v>=b)return b;if(v>a)a=v}return a}
+function cBot(s,lvl){const ms=cLegal(s),D={easy:1,normal:2,hard:3}[lvl]||2,nz={easy:160,normal:15,hard:3}[lvl]||15;let best=null,bv=-1e9;
+  for(const m of ms){const v=-cSearch(cApply(s,m),D-1,-1e9,1e9)+Math.random()*nz;if(v>bv){bv=v;best=m}}return best}
+
+/* piece art: vector paths drawn once into crisp sprites (no pixelation at any DPI) */
+const CPATH={p:["M37 29a13 13 0 1 0 26 0a13 13 0 1 0-26 0Z","M41 44H59L57 58Q71 66 73 86H27Q29 66 43 58Z"],r:["M27 86V76H33L37 46H31V24H41V32H46V24H54V32H59V24H69V46H63L67 76H73V86Z"],
+  b:["M42 22a8 8 0 1 0 16 0a8 8 0 1 0-16 0Z","M50 28Q70 42 62 58Q58 64 60 68H70V76H64Q66 82 76 85V90H24V85Q34 82 36 76H30V68H40Q42 64 38 58Q30 42 50 28Z"],
+  n:["M28 88V80Q30 64 42 52Q34 50 29 56L23 50Q29 33 45 24L50 15L56 22Q77 28 77 58V80Q77 84 79 88Z"],
+  q:["M22 38a5 5 0 1 0 10 0a5 5 0 1 0-10 0Z","M45 24a5 5 0 1 0 10 0a5 5 0 1 0-10 0Z","M68 38a5 5 0 1 0 10 0a5 5 0 1 0-10 0Z","M27 40L38 62L40 34L50 60L60 34L62 62L73 40L70 78H30Z","M26 80H74V90H26Z"],
+  k:["M46 8H54V16H62V24H54V32H46V24H38V16H46Z","M32 46Q50 36 68 46Q76 62 67 76H33Q24 62 32 46Z","M27 79H73V90H27Z"]};
+const CSP={};
+function cspr(p,px){const k=p+px;if(CSP[k])return CSP[k];const c=document.createElement("canvas");c.width=c.height=px;const q=c.getContext("2d"),w=cW(p),t=p.toLowerCase();
+  q.scale(px/100,px/100);q.lineJoin="round";q.fillStyle="rgba(0,0,0,.28)";q.beginPath();q.ellipse(50,91,30,5,0,0,7);q.fill();
+  const P=new Path2D();CPATH[t].forEach(d=>P.addPath(new Path2D(d)));q.strokeStyle=w?"#2b2745":"#d9d6ff";q.lineWidth=6;q.stroke(P);q.fillStyle=w?"#f6f4ff":"#2b2745";q.fill(P);
+  if(t==="n"){q.fillStyle=w?"#2b2745":"#d9d6ff";q.beginPath();q.arc(58,34,3.2,0,7);q.fill()}
+  return CSP[k]=c}
+const CS={move:()=>tb("triangle",520,420,.06,.12),cap:()=>{tb("square",200,90,.1,.2);tb("triangle",320,160,.12,.14)},check:()=>{tb("square",740,740,.08,.12);setTimeout(()=>tb("square",980,980,.12,.12),90)},win:()=>TS.win(),lose:()=>TS.lose()};
+const myName=()=>((me&&me.displayName)||"You").slice(0,16);
+const cfm=ms=>{if(ms<10000)return(ms/1000).toFixed(1);const t=Math.ceil(ms/1000);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")};
+
+function cRun(cfg){
+  const dpr=Math.min(3,window.devicePixelRatio||1),cv=$("cBoard"),cx=cv.getContext("2d",{alpha:false,desynchronized:true});
+  const clk=()=>cfg.bot?performance.now():srvNow(),my=cfg.myColor,opp=my==="w"?"b":"w",flip=my==="b",gOpp=()=>cfg.getOpp?cfg.getOpp():null;
+  let s=cNew(),keys=[cKey(s)],mvs=[],cs=40,sel=-1,lg=[],anims=[],fx=[],over=false,last=null,drag=null,promo=null,raf=0,lt=performance.now(),chkSq=-1,bg=null,lgMemo=-1,lgAll=[],lastAt=cfg.startAt,lastBeep=-1,dcAt=0,cnt=-1;
+  const cl={w:cfg.base*1000,b:cfg.base*1000},txt={};
+  const rem=c=>{let v=cl[c];if(!over&&s.turn===c)v-=Math.max(0,clk()-lastAt);return Math.max(0,v)};
+  const legalAll=()=>{if(lgMemo!==mvs.length){lgMemo=mvs.length;lgAll=cLegal(s)}return lgAll};
+  const myTurn=()=>!over&&s.turn===my&&clk()>=cfg.startAt;
+  const X=q=>(flip?7-(q&7):q&7)*cs,Y=q=>(flip?7-(q>>3):q>>3)*cs;
+  const ptr=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*(cs*8/r.width),y:(e.clientY-r.top)*(cs*8/r.height)}};
+  const sqAt=e=>{const {x,y}=ptr(e),c=Math.floor(x/cs),r=Math.floor(y/cs);if(c<0||c>7||r<0||r>7)return -1;return(flip?7-r:r)*8+(flip?7-c:c)};
+  const bub=(t,c)=>{const e=$("cBub");e.style.color=c||"#fff";e.textContent=t};
+  const setT=(id,v)=>{if(txt[id]!==v){txt[id]=v;$(id).textContent=v}};
+  const setClk=(id,ms,on)=>{setT(id,cfm(ms));const k=(on?"on":"")+(ms<20000?"low":"");if(txt[id+"c"]!==k){txt[id+"c"]=k;$(id).className="cclk"+(on?" on":"")+(ms<20000&&on?" low":"")}};
+  $("cTopName").textContent=cfg.names[opp];$("cBotName").textContent=cfg.names[my]+" (you)";
+  $("cTopDot").style.background=opp==="w"?"#f6f4ff":"#2b2745";$("cBotDot").style.background=my==="w"?"#f6f4ff":"#2b2745";
+  $("btnCDraw").classList.toggle("hidden",!!cfg.bot);$("btnCDraw").textContent="🤝 Offer draw";bub("");
+
+  function fit(){const P=$("cPlay");let used=18;[...P.children].forEach(e=>{if(e.id!=="cStage")used+=e.offsetHeight});
+    const W=P.clientWidth,A=P.clientHeight-used-14;cs=Math.max(20,Math.floor(Math.min(W-22,A-6)/8));
+    cv.width=cv.height=cs*8*dpr;cv.style.width=cv.style.height=cs*8+"px";
+    bg=document.createElement("canvas");bg.width=bg.height=cs*8*dpr;const q=bg.getContext("2d");q.scale(dpr,dpr);q.font=`bold ${Math.max(9,cs*.2)}px system-ui`;
+    for(let r=0;r<8;r++)for(let c=0;c<8;c++){const d=(r+c)%2;q.fillStyle=d?"#6c5fb3":"#d8d4f7";q.fillRect(c*cs,r*cs,cs,cs);q.fillStyle=d?"#d8d4f7":"#6c5fb3";
+      if(r===7){q.textAlign="right";q.fillText("abcdefgh"[flip?7-c:c],c*cs+cs-3,r*cs+cs-3)}if(c===0){q.textAlign="left";q.fillText(String(flip?r+1:8-r),3,r*cs+Math.max(11,cs*.22))}}}
+  function burst(sq,p,n){const x=X(sq)+cs/2,y=Y(sq)+cs/2;for(let i=0;i<(n||16);i++){const a=Math.random()*7,v=60+Math.random()*180;fx.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-40,l:.7,c:cW(p)?"#f6f4ff":"#8d86ff"})}fx.push({x,y,ring:1,l:.4})}
+  function refresh(){let d=0;s.b.forEach(p=>{if(p&&p.toLowerCase()!=="k"){const v=CV[p.toLowerCase()]/100;d+=cW(p)?v:-v}});
+    const mine=my==="w"?d:-d;setT("cTopMat",mine<0?"+"+(-mine):"");setT("cBotMat",mine>0?"+"+mine:"");
+    const o=gOpp();$("btnCDraw").textContent=o&&o.offer===mvs.length&&!over?"🤝 Accept draw":"🤝 Offer draw"}
+  function end(w,reason){if(over)return;if(reason==="time")cl[w==="w"?"b":"w"]=0;over=true;sel=-1;lg=[];drag=null;promo=null;
+    if(w===my){CS.win();for(let i=0;i<4;i++)burst(Math.floor(Math.random()*64),"P",24)}else if(w!=="draw")CS.lose();
+    bub(w==="draw"?`Draw: ${reason}`:`${w===my?"You win":"You lose"}: ${reason}`,w===my?"#35e0d0":"#ff3d81");cfg.onEnd(w,reason)}
+  function judge(mover){const n=legalAll().length;
+    if(!n){chkSq>=0?end(mover,"checkmate"):end("draw","stalemate")}
+    else if(s.half>=100)end("draw","50-move rule");
+    else if(keys.filter(k=>k===keys[keys.length-1]).length>=3)end("draw","threefold repetition");
+    else if(cInsuff(s.b))end("draw","insufficient material")}
+  function play(m,rec,noAnim){const t=rec?rec.at:clk(),mover=s.turn,p=s.b[m.f],cap=s.b[m.t]||(m.e?(mover==="w"?"p":"P"):"");
+    if(rec){cl.w=rec.w;cl.b=rec.b}else cl[mover]=Math.max(0,cl[mover]-Math.max(0,t-lastAt))+cfg.inc*1000;
+    lastAt=t;const san=cSan(s,m);s=cApply(s,m);keys.push(cKey(s));mvs.push(uci(m));last=m;sel=-1;lg=[];
+    if(!noAnim){const n=performance.now();anims.push({p,f:m.f,t:m.t,t0:n,d:cap?200:160});if(m.cs){const rf=m.t>m.f?m.t+1:m.t-2,rt=m.t>m.f?m.t-1:m.t+1;anims.push({p:s.b[rt],f:rf,t:rt,t0:n,d:200})}}
+    if(cap){burst(m.t,cap);CS.cap()}else CS.move();
+    chkSq=cInCheck(s.b,s.turn)?s.b.indexOf(s.turn==="w"?"K":"k"):-1;if(chkSq>=0)CS.check();
+    bub(`${mover==="w"?"White":"Black"}: ${san}`,mover===my?"#35e0d0":"#ff3d81");refresh();judge(mover);
+    return{m:uci(m),at:t,w:cl.w,b:cl.b}}
+  function commit(m,noAnim){const rec=play(m,null,noAnim);if(cfg.onMove)cfg.onMove(rec,mvs.length-1);if(cfg.bot&&!over){bub("Bot is thinking...","#ff3d81");setTimeout(botGo,350+Math.random()*450)}}
+  function botGo(){if(over||s.turn===my)return;setTimeout(()=>{if(over||s.turn===my)return;const m=cBot(s,cfg.level);if(m)play(m)},30)}
+  function tryMove(f,t,noAnim){const c=legalAll().filter(m=>m.f===f&&m.t===t);if(!c.length)return;if(c.length>1){promo={c};sel=-1;lg=[];return}commit(c[0],noAnim)}
+  function sync(room){const M=room.moves||{};for(let i=mvs.length;M[i];i++){const m=legalAll().find(x=>uci(x)===M[i].m);if(!m)break;play(m,M[i])}refresh()}
+
+  cv.onpointerdown=e=>{if(over)return;
+    if(promo){const {x,y}=ptr(e),i=Math.floor(x/cs)-2;if(y>=cs*3.5&&y<=cs*4.5&&i>=0&&i<4){const m=promo.c.find(m=>m.p==="qrbn"[i]);promo=null;commit(m,true)}else promo=null;return}
+    const q=sqAt(e);if(q<0)return;try{cv.setPointerCapture(e.pointerId)}catch{}
+    if(sel>=0&&lg.some(m=>m.t===q)){tryMove(sel,q);return}
+    const p=s.b[q];if(p&&(cW(p)?"w":"b")===my&&myTurn()){sel=q;lg=legalAll().filter(m=>m.f===q);const pt=ptr(e);drag={f:q,x:pt.x,y:pt.y,sx:pt.x,sy:pt.y,mv:false}}else{sel=-1;lg=[]}};
+  cv.onpointermove=e=>{if(!drag)return;const pt=ptr(e);drag.x=pt.x;drag.y=pt.y;if(Math.hypot(pt.x-drag.sx,pt.y-drag.sy)>cs*.25)drag.mv=true};
+  cv.onpointerup=e=>{if(!drag)return;const d=drag;drag=null;const q=sqAt(e);if(d.mv&&q>=0&&q!==d.f&&lg.some(m=>m.t===q))tryMove(d.f,q,true);else if(d.mv){sel=-1;lg=[]}};
+  cv.onpointercancel=()=>{drag=null};
+
+  function draw(pre){
+    cx.setTransform(dpr,0,0,dpr,0,0);cx.drawImage(bg,0,0,cs*8,cs*8);const T=performance.now(),px=Math.round(cs*dpr);
+    if(last){cx.fillStyle="rgba(255,214,64,.38)";cx.fillRect(X(last.f),Y(last.f),cs,cs);cx.fillRect(X(last.t),Y(last.t),cs,cs)}
+    if(sel>=0){cx.fillStyle="rgba(53,224,208,.5)";cx.fillRect(X(sel),Y(sel),cs,cs)}
+    if(chkSq>=0){cx.fillStyle=`rgba(255,40,80,${.35+.2*Math.sin(T/120)})`;cx.fillRect(X(chkSq),Y(chkSq),cs,cs)}
+    const hide=new Set();anims.forEach(a=>hide.add(a.t));if(drag&&drag.mv)hide.add(drag.f);
+    for(let q=0;q<64;q++){const p=s.b[q];if(p&&!hide.has(q))cx.drawImage(cspr(p,px),X(q),Y(q),cs,cs)}
+    cx.lineWidth=Math.max(2,cs*.07);lg.forEach(m=>{const x=X(m.t)+cs/2,y=Y(m.t)+cs/2;cx.beginPath();
+      if(s.b[m.t]||m.e){cx.strokeStyle="rgba(255,61,129,.85)";cx.arc(x,y,cs*.42,0,7);cx.stroke()}else{cx.fillStyle=`rgba(40,30,90,${.4+.12*Math.sin(T/200)})`;cx.arc(x,y,cs*.15,0,7);cx.fill()}});
+    anims=anims.filter(a=>{const k=Math.min(1,(T-a.t0)/a.d),e=1-Math.pow(1-k,3),x=X(a.f)+(X(a.t)-X(a.f))*e,y=Y(a.f)+(Y(a.t)-Y(a.f))*e-Math.sin(k*Math.PI)*cs*.1;cx.drawImage(cspr(a.p,px),x,y,cs,cs);return k<1});
+    if(drag&&drag.mv){cx.fillStyle="rgba(0,0,0,.25)";cx.beginPath();cx.ellipse(drag.x,drag.y+cs*.32,cs*.34,cs*.08,0,0,7);cx.fill();const z=cs*1.15;cx.drawImage(cspr(s.b[drag.f],px),drag.x-z/2,drag.y-z/2-cs*.2,z,z)}
+    fx.forEach(p=>{if(p.ring){cx.strokeStyle=`rgba(255,255,255,${p.l*2})`;cx.lineWidth=3;cx.beginPath();cx.arc(p.x,p.y,cs*(.2+(.4-p.l)*2),0,7);cx.stroke()}else{cx.globalAlpha=Math.max(0,p.l);cx.fillStyle=p.c;cx.fillRect(p.x-2,p.y-2,4,4);cx.globalAlpha=1}});
+    if(promo){cx.fillStyle="rgba(15,12,30,.93)";cx.fillRect(cs*1.5,cs*3,cs*5,cs*2);cx.fillStyle="#fff";cx.font=`bold ${cs*.3}px system-ui`;cx.textAlign="center";cx.fillText("Promote to:",cs*4,cs*3.38);
+      [...(my==="w"?"QRBN":"qrbn")].forEach((p,i)=>cx.drawImage(cspr(p,px),(2+i)*cs,cs*3.5,cs,cs))}
+    if(pre>0){cx.fillStyle="rgba(0,0,0,.5)";cx.fillRect(0,cs*3,cs*8,cs*2);cx.fillStyle="#ffd23f";cx.font=`bold ${cs*1.2}px system-ui`;cx.textAlign="center";cx.fillText(Math.ceil(pre/1000),cs*4,cs*4.4)}}
+  function frame(ts){raf=requestAnimationFrame(frame);const dt=Math.min(.05,(ts-lt)/1000);lt=ts;const now=clk(),pre=cfg.startAt-now;
+    if(pre>0){const c=Math.ceil(pre/1000);if(c!==cnt){cnt=c;tb("square",c>1?440:660,c>1?440:660,.1,.12)}}
+    if(!over&&pre<=0&&rem(s.turn)<=0)end(s.turn==="w"?"b":"w","time");
+    const o=gOpp();if(!over&&o&&o.connected===false){if(!dcAt)dcAt=now;else if(now-dcAt>20000)end(my,"opponent left")}else dcAt=0;
+    if(!over&&s.turn===my&&pre<=0&&rem(my)<10000){const c=Math.ceil(rem(my)/1000);if(c!==lastBeep){lastBeep=c;tb("square",900,900,.05,.1)}}
+    setClk("cTopClk",rem(opp),!over&&pre<=0&&s.turn===opp);setClk("cBotClk",rem(my),!over&&pre<=0&&s.turn===my);
+    fx.forEach(p=>{p.x+=(p.vx||0)*dt;p.y+=(p.vy||0)*dt;if(p.vy!==undefined)p.vy+=500*dt;p.l-=dt});fx=fx.filter(p=>p.l>0);
+    draw(pre)}
+  addEventListener("resize",fit);fit();setTimeout(fit,250);refresh();
+  if(cfg.bot&&my==="b")setTimeout(botGo,Math.max(0,cfg.startAt-clk())+500);
+  raf=requestAnimationFrame(frame);
+  return{stop(){over=true;cancelAnimationFrame(raf);removeEventListener("resize",fit)},sync,freeze(){over=true;sel=-1;lg=[];drag=null;promo=null},
+    resign(){end(opp,"resignation")},
+    draw(){const o=gOpp();if(cfg.bot){bub("The bot declines a draw. Keep playing!","#ff3d81");return}if(o&&o.offer===mvs.length)end("draw","agreement");else{cfg.push({offer:mvs.length});bub("Draw offer sent","#ffd23f")}}}
+}
+
+/* ---- Chess screens, rooms, matchmaking, settlement ---- */
+const cPaint=m=>{$("cLobby").classList.toggle("hidden",m!=="lobby");$("cPlay").classList.toggle("hidden",m!=="play")};
+function paintCtc(){document.querySelectorAll("[data-ctc]").forEach(b=>b.classList.toggle("yellow",b.dataset.ctc===ctc))}
+document.querySelectorAll("[data-ctc]").forEach(b=>b.onclick=()=>{ctc=b.dataset.ctc;paintCtc()});paintCtc();
+function cPractice(){tDemo=true;show("chess");cPaint("play");const col=Math.random()<.5?"w":"b",[base,inc]=CTC[ctc],bn="BOT "+aiLevel.toUpperCase();
+  tCtl=cRun({bot:1,level:aiLevel,myColor:col,base,inc,startAt:performance.now()+3000,names:{w:col==="w"?myName():bn,b:col==="b"?myName():bn},
+    onEnd:(w,r)=>setTimeout(()=>tResult(w==="draw"?"Draw":w===col?"You win!":"You lose",w===col?"#35e0d0":"#ff3d81",`Practice vs bot (free): ${r}. ${w===col?"Ready for real coins?":"Try again, you got this!"}`,null),1000)})}
+$("btnCPractice").onclick=cPractice;$("btnCDemoL").onclick=cPractice;
+$("btnCResign").onclick=()=>{if(tCtl&&tCtl.resign&&confirm("Resign this game?"))tCtl.resign()};
+$("btnCDraw").onclick=()=>tCtl&&tCtl.draw&&tCtl.draw();
+$("cQuit").onclick=()=>{if(tDemo||confirm("Leave the game? You will resign and lose your bet."))cLeave()};
+$("cMute").onclick=()=>{muted=!muted;$("cMute").textContent=muted?"🔇":"🔊"};
+$("btnCLeave").onclick=()=>cLeave();
+$("btnCStart").onclick=()=>rtUpdate(trRef(),{status:"playing",startAt:srvNow()+3500});
+async function cLeave(){
+  if(tDemo){tCleanup();show(me?"lobby":"login");return}
+  if(!tcode){show("lobby");return}
+  tStopRoom&&tStopRoom();tStopRoom=null;
+  try{if(troom?.status==="lobby"){troom.host===me.uid?await remove(trRef()):await remove(tpRef())}
+  else if(troom?.status==="playing"&&!tDone){const o=Object.keys(troom.players||{}).find(u=>u!==me.uid);
+    await rtTx(trRef(),cur=>{if(!cur||cur.status!=="playing")return;cur.status="done";cur.winner=o||"draw";cur.reason="resignation";return cur})}}catch{}
+  tCleanup();show("lobby")}
+async function cCreate(){
+  if(!me)return toast("Sign in with Google to play Chess for coins.");
+  if(coins<bet)return toast(`You need ${bet} coins for this bet. Open the Coin Store or pick a smaller bet.`);
+  for(let i=0;i<10;i++){const c="C"+String(Math.floor(1000+Math.random()*9000));
+    const res=await rtTx(ref(rdb,"rooms/"+c),cur=>cur?undefined:{game:"chess",host:me.uid,status:"lobby",bet,size:2,ranked:false,seed:Math.floor(Math.random()*1e9),tc:ctc,createdAt:Date.now()});
+    if(res.committed)return cEnter(c)}
+  toast("Could not create a room. Try again.")}
+$("btnCCreate").onclick=cCreate;
+$("btnCJoin").onclick=()=>{const v=$("cJoinCode").value.trim();if(!/^\d{4}$/.test(v))return toast("Room code is 4 digits.");cEnter("C"+v)};
+async function cEnter(c,quiet,assign){
+  const say=m=>{if(!quiet)toast(m)};
+  if(!me)return say("Sign in with Google first.");
+  const snap=await get(ref(rdb,"rooms/"+c));
+  if(!snap.exists()&&!assign)return say("Room not found.");
+  const r0=snap.exists()?snap.val():assign.create;
+  if(snap.exists()&&r0.game!=="chess")return say("That is not a Chess room.");
+  if(coins<r0.bet)return say(`You need ${r0.bet} coins to join this room. Open the Coin Store.`);
+  await rtTx(ref(rdb,"rooms/"+c),cur=>{
+    if(cur===null){if(!assign)return cur;const a=assign.create;cur={game:"chess",host:a.host,status:"lobby",bet:a.bet,size:2,ranked:true,auto:true,seed:a.seed,tc:a.tc,createdAt:Date.now(),players:{}}}
+    if(cur.status!=="lobby")return;
+    const ps=cur.players||{};if(ps[me.uid])return cur;if(Object.keys(ps).length>=2)return;
+    ps[me.uid]={name:me.displayName||"Player",gender,coins,connected:true};cur.players=ps;return cur});
+  const chk=await get(ref(rdb,`rooms/${c}/players/${me.uid}`));
+  if(!chk.exists())return say("Could not join: the room is full or already started.");
+  tcode=c;tStarted=tDone=false;tDemo=false;
+  onDisconnect(tpRef()).remove();if(r0.host===me.uid)onDisconnect(trRef()).remove();
+  tStopRoom=onValue(trRef(),onCRoom);show("chess");cPaint("lobby");
+  if(assign){clearTimeout(tFill);tFill=setTimeout(()=>{if(tcode===c&&troom&&troom.status==="lobby"&&Object.keys(troom.players||{}).length<2){toast("Your opponent did not connect. Please search again.");cLeave()}},25000)}}
+function onCRoom(s){
+  if(!s.exists()){if(tcode&&!tDone){toast("The room was closed.");tCleanup();show("lobby")}return}
+  troom=s.val();const ps=troom.players||{},n=Object.keys(ps).length,bt=troom.bet;
+  if(troom.status==="lobby"){
+    $("cCode").textContent=troom.auto?"RANKED":tcode.slice(1);
+    $("cLobInfo").textContent=`Chess 1v1 · ${(CTC[troom.tc]||[0,0,troom.tc])[2]} · ${n}/2 players · Bet ${bt} coins, winner gets ${bt*2}`+(troom.auto?(n<2?" · Match found! Waiting for your opponent...":" · Opponent is here! Starting..."):"");
+    $("cLobPlayers").innerHTML=Object.entries(ps).map(([u,p])=>`<div class="card">${esc(p.name)}${u===troom.host?" ★":""}${u===me.uid?" (you)":""} ${(p.coins||0)>=bt?'<span style="color:#7cfc00">✔</span>':'<span style="color:#ff3d81">✖ needs coins</span>'}</div>`).join("");
+    $("btnCStart").classList.toggle("hidden",troom.host!==me.uid||!!troom.auto);$("btnCStart").disabled=n<2||Object.values(ps).some(p=>(p.coins||0)<bt);
+    if(troom.auto&&n>=2&&troom.host===me.uid&&!tAuto)tAuto=setTimeout(()=>rtUpdate(trRef(),{status:"playing",startAt:srvNow()+3500}),1200);
+  }
+  if(troom.status==="playing"){if(!tStarted)cStartMatch();else tCtl&&tCtl.sync&&tCtl.sync(troom)}
+  if(troom.status==="done"&&tStarted&&!tDone)cFinish()}
+async function cStartMatch(){
+  tStarted=true;clearTimeout(tAuto);clearTimeout(tFill);
+  onDisconnect(trRef()).cancel();onDisconnect(tpRef()).cancel();onDisconnect(tpRef()).update({connected:false});   // disconnect = forfeit after 20s
+  try{await runTransaction(db,async t=>{const s=await t.get(uref());if((s.data().coins||0)<troom.bet)throw new Error("coins");t.update(uref(),{coins:increment(-troom.bet)})})}
+  catch{toast("Not enough coins. You forfeited the match.");await cLeave();return}
+  cPaint("play");const ids=Object.keys(troom.players).sort(),wid=ids[troom.seed%2],bid=ids.find(u=>u!==wid),[base,inc]=CTC[troom.tc]||CTC["5-0"],myc=wid===me.uid?"w":"b",nm=u=>((troom.players[u]||{}).name||"Player").slice(0,16);
+  tCtl=cRun({myColor:myc,base,inc,startAt:troom.startAt,names:{w:nm(wid),b:nm(bid)},
+    getOpp:()=>{const u=myc==="w"?bid:wid;return(troom&&troom.players&&troom.players[u])||null},
+    push:x=>rtUpdate(tpRef(),x).catch(()=>{}),
+    onMove:(rec,i)=>rtTx(ref(rdb,`rooms/${tcode}/moves/${i}`),cur=>cur?undefined:rec).catch(()=>{}),
+    onEnd:(w,r)=>rtTx(trRef(),cur=>{if(!cur||cur.status!=="playing")return;cur.status="done";cur.winner=w==="draw"?"draw":(w==="w"?wid:bid);cur.reason=r;return cur}).catch(()=>{})});
+  tCtl.sync(troom)}
+async function cFinish(){
+  tDone=true;tCtl&&tCtl.freeze&&tCtl.freeze();
+  const w=troom.winner,win=w===me.uid,draw=w==="draw",stake=troom.bet,pay=win?stake*2:draw?stake:0,inc={matches:increment(1)};
+  if(troom.ranked&&!draw)inc.rp=increment(win?25:-Math.min(15,myRP));if(win)inc.wins=increment(1);
+  if(pay){const res=await rtTx(ref(rdb,`rooms/${tcode}/paid/${me.uid}`),c=>c?undefined:true);if(res.committed){inc.coins=increment(pay);if(win)inc.won=increment(pay)}}
+  await updateDoc(uref(),inc);const bal=(await getDoc(uref())).data().coins;
+  const o=Object.entries(troom.players||{}).find(([u])=>u!==me.uid),on=o?o[1].name:"opponent",why=troom.reason||"game over";
+  setTimeout(()=>tResult(draw?"Draw":win?"Victory":"Defeat",win?"#35e0d0":"#ff3d81",
+    `${win?"You beat":draw?"You drew with":"You lost to"} ${on} (${why}). `+(draw?"Bet refunded.":win?`You won ${pay} coins`+(troom.ranked?" and 25 rank points.":"."):"Your bet is lost"+(troom.ranked?" (-15 rank points).":".")),bal),900)}
+
+/* Generic ranked matchmaking queue (rooms/<pre><key>): the longest-waiting player pairs the first two. Reusable by future games. */
+function mkQ(P){
+  let key=null,unsub=null,tick=null,beat=null,data=null,busy=false,since=0,ent=false;
+  const qr=k=>ref(rdb,`rooms/${P.pre}${k}`),mine=k=>ref(rdb,`rooms/${P.pre}${k}/queue/${me.uid}`);
+  function stop(rm){clearInterval(tick);clearInterval(beat);unsub&&unsub();unsub=null;if(key!==null&&me&&rm){const r=mine(key);onDisconnect(r).cancel().catch(()=>{});remove(r).catch(()=>{})}key=null;busy=false;data=null}
+  const cancel=()=>{stop(true);close("mTSearch")};
+  async function find(){
+    if(!me)return toast("Sign in with Google to play for coins.");if(key!==null)return;
+    if(coins<bet)return toast(`You need ${bet} coins for this bet. Open the Coin Store or pick a smaller bet.`);
+    key=P.key();since=srvNow();data=null;ent=false;busy=false;const k=key;
+    try{await rtTx(qr(k),cur=>{cur=cur||{};cur.status="lobby";cur.pool=true;cur.queue=cur.queue||{};const now=srvNow();
+        Object.keys(cur.queue).forEach(u=>{if(now-cur.queue[u].ts>STALE*2)delete cur.queue[u]});cur.queue[me.uid]={name:me.displayName||"Player",gender,joined:now,ts:now};return cur});
+      onDisconnect(mine(k)).cancel().catch(()=>{});onDisconnect(mine(k)).remove()}
+    catch(e){console.warn(e);key=null;return toast("Matchmaking is not available right now. Please try again.")}
+    $("tSrchTitle").textContent=P.title;$("tSrchBet").textContent=bet;$("btnTSrchCancel").onclick=cancel;open("mTSearch");
+    unsub=onValue(qr(k),s=>{data=s.val()});beat=setInterval(()=>rtUpdate(mine(k),{ts:srvNow()}).catch(()=>{}),4000);tick=setInterval(step,500);step()}
+  function step(){
+    if(key===null)return;if(!me)return cancel();
+    const q=(data||{}).queue||{},now=srvNow(),m0=q[me.uid];
+    if(m0&&m0.match&&!ent){ent=true;join(m0.match);return}
+    const fresh=Object.entries(q).filter(([,e])=>!e.match&&now-e.ts<STALE).sort(byJoin),n=fresh.length,s=Math.max(0,Math.floor((now-since)/1000));
+    $("tSrchCount").textContent=Math.max(1,n);$("tSrchTime").textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
+    $("tSrchMsg").textContent=n>=2?"Opponent found! Starting...":s>40?"Few players are online right now. Keep waiting, or practice vs the bot for free.":"Searching for an opponent...";
+    if(n>=2&&fresh[0][0]===me.uid&&!busy){busy=true;const k=key;
+      rtTx(qr(k),cur=>{if(!cur||!cur.queue)return cur;const t=srvNow(),qq=cur.queue;
+        Object.keys(qq).forEach(u=>{if(t-qq[u].ts>STALE*2||(qq[u].match&&t-qq[u].ts>60000))delete qq[u]});
+        const fr=Object.entries(qq).filter(([,e])=>!e.match&&t-e.ts<STALE).sort(byJoin);if(fr.length<2)return cur;
+        const mc=P.codePre+String(Math.floor(100000+Math.random()*900000)),seed=Math.floor(Math.random()*1e9);
+        fr.slice(0,2).forEach(([u])=>{qq[u].match={code:mc,host:fr[0][0],bet:+k.split("_")[0],seed,key:k}});return cur})
+      .catch(e=>console.warn(e)).finally(()=>setTimeout(()=>{busy=false},700))}}
+  async function join(m){const k=key;stop(false);close("mTSearch");const mr=ref(rdb,`rooms/${P.pre}${k}/queue/${me.uid}`);
+    await P.enter(m);onDisconnect(mr).cancel().catch(()=>{});remove(mr).catch(()=>{});if(!tcode)toast("Could not join the match. Please search again.")}
+  return{find,cancel}}
+const cQ=mkQ({pre:"QC",codePre:"CM",title:"Finding a Chess opponent",key:()=>`${bet}_${ctc}`,
+  enter:m=>cEnter(m.code,true,{create:{host:m.host,bet:m.bet,seed:m.seed,tc:m.key.split("_")[1]}})});
+$("btnCFind").onclick=()=>cQ.find();
+/* ====================== end of Chess ====================== */
+
+
 
 /* ---------- Practice vs AI (free, works without sign-in) ---------- */
 var demo=false;
