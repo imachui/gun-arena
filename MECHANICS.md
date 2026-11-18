@@ -49,7 +49,7 @@ Pick **Billiards** in the lobby. Same coins, same bets, same payout: **win = 2x*
 No sign-in and no coins needed. Fight bots on Easy, Normal or Hard to learn the game before you bet.
 
 ## 🪙 How to earn
-Sign in with Google and choose your bet per player: **5, 10, 20, 50 or 100 coins**.
+Sign in with Google and choose your bet per player: **5, 10, 20, 50 or 100 GGD**.
 
 | Result | What happens |
 |---|---|
@@ -64,16 +64,16 @@ Sign in with Google and choose your bet per player: **5, 10, 20, 50 or 100 coins
 - Every player needs enough coins for the bet before joining a match or a room.
 - In 2v2 and 4v4, every winner receives 2x their own bet.
 
-## 💳 Buying coins
-Choose a package in the Coin Store. The bigger the package, the bigger the bonus:
+## 💳 Buying GameGold (GGD)
+Choose a package in the GameGold (GGD) Store. The bigger the package, the bigger the bonus:
 
 | Package | Coins |
 |---|---|
-| ₱50 | 30 coins |
-| ₱100 | 64 coins (+8% bonus) |
-| ₱200 | 132 coins (+10% bonus) |
-| ₱500 | 336 coins (+12% bonus) |
-| ₱900 | 621 coins (+15% bonus) |
+| ₱50 | 30 GGD |
+| ₱100 | 64 GGD (+8% bonus) |
+| ₱200 | 132 GGD (+10% bonus) |
+| ₱500 | 336 GGD (+12% bonus) |
+| ₱900 | 621 GGD (+15% bonus) |
 
 The bonus coins are added automatically. You do not need to claim anything.
 
@@ -81,11 +81,11 @@ The bonus coins are added automatically. You do not need to claim anything.
 2. Enter the **13-digit reference number**.
 3. Tap **I Have Paid**. The admin adds your coins after verifying the payment.
 
-## 📈 Coin Market and withdrawing to GCash
-- The **Coin Market** chart in the lobby shows what one coin is worth when you withdraw. The price **updates automatically every 30 minutes** and goes up and down over time, so you can choose the best moment to cash out.
+## 📈 GameGold (GGD) Market and withdrawing to GCash
+- The **GameGold (GGD) Market** chart in the lobby shows what one coin is worth when you withdraw. The price **updates automatically every 30 minutes** and goes up and down over time, so you can choose the best moment to cash out.
 - **Cash-out is only open every Sunday (Philippine time).** On other days the Withdraw button is locked.
-- The minimum withdrawal is **20 coins**.
-- You receive your coins at the current Coin Market price. For example, at 1 coin = ₱1.00, **100 coins = ₱100.00**.
+- The minimum withdrawal is **20 GGD**.
+- You receive your coins at the current GameGold (GGD) Market price. For example, at 1 GGD = ₱1.00, **100 GGD = ₱100.00**.
 - Your coins are held until the admin approves the request, and they are returned if the request is rejected.
 
 ## ⚡ Match features
@@ -105,9 +105,9 @@ Last team standing wins! 1v1, 2v2 and 4v4.
 ♞ NEW: 3D Chess 1v1 with trash talk, winner takes 2x!
 🎱 NEW: 3D Billiards 1v1! Cash-out every Sunday!
 ✅ Practice against bots: FREE
-✅ Bet 5 to 100 coins, and a win pays **2x**
+✅ Bet 5 to 100 GGD, and a win pays **2x**
 ✅ Buy coins with GCash: bigger packages give bonus coins
-✅ Follow the live coin price on the Coin Market chart
+✅ Follow the live coin price on the GameGold (GGD) Market chart
 📱 Play on phone or PC. Sign in with Google.
 Play now 👉 https://imachui.github.io/gun-arena/
 *Winnings are not guaranteed. Play responsibly. 18+*
