@@ -43,3 +43,9 @@ Added inside `index.html` (search for `TETRIS BATTLE`). Players choose Gun Arena
 
 ## Chess
 Search `CHESS` in `index.html`. Rooms: friends `rooms/C####`, ranked queue `rooms/QC<bet>_<seconds-per-move>`, matches `rooms/CM######`. Moves are stored in `rooms/<code>/moves/<n>` (and a timestamp); every client replays them with the same rules engine. There is a per-move timer: a timed-out turn is recorded as a deterministic `pass` (or a forced legal move when in check), so both clients write the same record. The board is rendered with three.js (already loaded for Gun Arena). No rules-file changes are needed. The generic `mkQ()` matchmaking helper can be reused for future games.
+
+## Billiards
+Search `BILLIARDS` in `index.html`. Rooms: friends `rooms/B####`, ranked queue `rooms/QB<bet>`, matches `rooms/BM######`. The player who shoots runs the physics and applies the 8-ball rules, then publishes the final ball positions (`rooms/<code>/snaps/<n>`); the opponent replays the shot (`rooms/<code>/shots/<n>`) and then snaps to those positions, so both screens always agree.
+
+## Sunday-only cash-out
+Withdrawals are only allowed on Sundays in Philippine time (UTC+8). The Withdraw window shows the next cash-out day and locks the button on other days. **Republish `firestore.rules`** too: it now rejects withdrawal requests created on any other day, so the rule cannot be bypassed from the browser.
