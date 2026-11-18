@@ -321,7 +321,8 @@
     <div class="card space-y-2"><h2 class="text-base">Coin value</h2>
       <p class="text-xs opacity-80"><b>Value of 1 coin</b> is the Coin Market price: it is used for withdrawals and the chart, and every change is recorded on the chart. <b>Coins per ₱1</b> is the Coin Store base price (0.6 means ₱50 = 30 coins); bigger packages add a bonus. Pending requests keep the value they were created with.</p>
       <div class="flex flex-wrap gap-2 items-end">
-        <label class="text-sm">Base value of 1 coin (₱)<input id="ecoRate" class="inp mt-1 w-40" type="number" step="0.01" min="0.01"></label>
+        <label class="text-sm">Auto market center (₱ per coin)<input id="ecoCenter" class="inp mt-1 w-40" type="number" step="0.01" min="0.01"></label>
+        <label class="text-sm">Fixed value when Auto is OFF (₱)<input id="ecoRate" class="inp mt-1 w-40" type="number" step="0.01" min="0.01"></label>
         <label class="text-sm">Auto market swing (± %)<input id="ecoAmp" class="inp mt-1 w-32" type="number" step="1" min="0" max="50"></label>
         <label class="text-sm flex items-center gap-2"><input id="ecoAuto" type="checkbox" class="w-5 h-5"> Auto market (every 30 min)</label>
         <label class="text-sm">Coin Store: coins per ₱1 (base)<input id="ecoStore" class="inp mt-1 w-40" type="number" step="0.01" min="0.05" max="10"></label>
@@ -434,7 +435,7 @@ const LOGO="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAA
 document.querySelectorAll("[data-logo]").forEach(i=>i.src=LOGO);document.getElementById("favicon").href=LOGO;
 /* ================= CONFIG: edit these ================= */
 const {firebaseConfig,ADMIN_UIDS,GCASH_NUMBER}=window.GA_CONFIG,GCASH_NAME=window.GA_CONFIG.GCASH_NAME||"NE**S V."; // edit config.js, not this file
-const FEE=20; let COIN_PHP=1;   // value of 1 coin in pesos, set by the admin (settings/economy)
+const FEE=20; let COIN_PHP=0.5;   // value of 1 coin in pesos, set by the admin (settings/economy)
 const BETS=[5,10,20,50,100];   // coins each player stakes; every winner gets 2x the stake (pool is split evenly, no house cut)
 const AI={easy:{spd:4.7,cd:1.4,spr:.7,dodge:.012,taken:34,dmg:6,range:18},
           normal:{spd:6.5,cd:.75,spr:.35,dodge:.05,taken:25,dmg:10,range:26},
@@ -2344,12 +2345,12 @@ $("pending").onclick=async e=>{
 /* ---------- Coin value (set by the admin) + Coin Market chart ---------- */
 const peso=n=>"₱"+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
 const wdAmt=n=>Math.round(n*COIN_PHP*100)/100;
-let ECO_HIST=[],mkRange=1,ECO_AUTO=true,ECO_AMP=12,ECO_BASE=1;
+let ECO_HIST=[],mkRange=1,ECO_AUTO=true,ECO_AMP=20,ECO_BASE=.5,ECO_CENTER=.5;   // auto market: around P0.50 per coin, +/-20%
 const SLOT=18e5;   // the Coin Market updates every 30 minutes
 const mkHash=n=>{const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)};
 const mkNoise=s=>.55*Math.sin(s*.21+1.3)+.3*Math.sin(s*.57+.7)+.15*(mkHash(s)*2-1);   // smooth, repeatable "market" curve, the same on every phone
 function baseAt(t){const H=ECO_HIST.slice().sort((a,b)=>a.t-b.t);let v=null;for(const h of H)if(h.t<=t)v=h.v;return v!=null?v:(H.length?H[0].v:ECO_BASE)}   // admin base price in force at time t
-function priceAt(t){const b=baseAt(t);if(!ECO_AUTO)return b;return Math.max(.01,Math.round(b*(1+ECO_AMP/100*mkNoise(Math.floor(t/SLOT)))*100)/100)}
+function priceAt(t){if(!ECO_AUTO)return baseAt(t);return Math.max(.01,Math.round(ECO_CENTER*(1+ECO_AMP/100*mkNoise(Math.floor(t/SLOT)))*100)/100)}
 function mktSeries(t0,now){const n=Math.ceil((now-t0)/SLOT),k=Math.max(1,Math.ceil(n/240)),p=[];for(let t=Math.floor(t0/SLOT)*SLOT;t<=now;t+=SLOT*k)p.push({t:Math.max(t,t0),v:priceAt(t)});p.push({t:now,v:COIN_PHP});return p}
 function mktNote(H){const now=srvNow(),cur=Math.floor(now/SLOT)*SLOT,nx=cur+SLOT,tm=t=>new Date(t).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
   return ECO_AUTO?` <span class="opacity-60">· 🔄 Auto-updated ${tm(cur)} · next update ${tm(nx)} (in ${Math.max(1,Math.ceil((nx-now)/6e4))} min)</span>`:(H.length?` <span class="opacity-60">· Updated ${esc(new Date(H[H.length-1].t).toLocaleString())}</span>`:"")}
@@ -2413,16 +2414,16 @@ function applyEconomy(){
   const ex=n=>`• ${n} coins = <b>${peso(wdAmt(n))}</b>`;
   $("helpEco").innerHTML=`<div><b class="text-[#ffd23f]">6. Buying coins</b><br>Open the Coin Store and choose a package: ${TIERS.map(t=>`₱${t.php} = ${t.coins} coins`).join(", ")}. The bigger packages include bonus coins, and the bonus is added automatically. Pay through GCash, enter the 13-digit reference number and tap <b>I Have Paid</b>. The admin adds your coins after verifying the payment.</div>
   <div class="mt-3"><b class="text-[#ffd23f]">7. Coin Market and withdrawing to GCash</b><br><b>Cash-out is only open every Sunday (Philippine time).</b> The <b>Coin Market</b> chart in the lobby shows what one coin is worth when you withdraw. Right now, <b>1 coin = ${peso(COIN_PHP)}</b>, and the price goes up and down over time. The minimum withdrawal is <b>20 coins</b>. For example, at the current price:<br>${ex(50)}<br>${ex(100)}<br>${ex(500)}<br>Your coins are held until the admin approves the request, and they are returned if the request is rejected.</div>`;
-  if(document.activeElement!==$("ecoRate"))$("ecoRate").value=ECO_BASE;if(document.activeElement!==$("ecoAmp"))$("ecoAmp").value=ECO_AMP;$("ecoAuto").checked=ECO_AUTO;
+  if(document.activeElement!==$("ecoRate"))$("ecoRate").value=ECO_BASE;if(document.activeElement!==$("ecoAmp"))$("ecoAmp").value=ECO_AMP;if(document.activeElement!==$("ecoCenter"))$("ecoCenter").value=ECO_CENTER;$("ecoAuto").checked=ECO_AUTO;
   if(document.activeElement!==$("ecoStore"))$("ecoStore").value=storeRate;
   const H=ECO_HIST.slice().sort((a,b)=>b.t-a.t).slice(0,5);
-  $("ecoNow").textContent=ECO_AUTO?`Live price now: 1 coin = ${peso(COIN_PHP)} (auto market, base ${peso(ECO_BASE)} ±${ECO_AMP}%, changes every 30 min)`:`Now: 1 coin = ${peso(COIN_PHP)} (fixed price, auto market is OFF)`;
+  $("ecoNow").textContent=ECO_AUTO?`Live price now: 1 coin = ${peso(COIN_PHP)} (auto market around ${peso(ECO_CENTER)} ±${ECO_AMP}%, changes every 30 min)`:`Now: 1 coin = ${peso(COIN_PHP)} (fixed price, auto market is OFF)`;
   $("ecoLog").innerHTML=H.length?"Recent changes:<br>"+H.map(h=>`${esc(new Date(h.t).toLocaleString())}: ${peso(h.v)}`).join("<br>"):"No changes recorded yet.";
 }
 onSnapshot(doc(db,"settings","economy"),s=>{
   const d=s.data()||{};
   if(+d.coinValue>0)ECO_BASE=+d.coinValue;
-  ECO_AUTO=d.auto!==false;ECO_AMP=(d.amp!=null&&Number.isFinite(+d.amp))?Math.max(0,Math.min(50,+d.amp)):12;
+  ECO_AUTO=d.auto!==false;ECO_CENTER=+d.center>0?+d.center:.5;ECO_AMP=(d.amp!=null&&Number.isFinite(+d.amp))?Math.max(0,Math.min(50,+d.amp)):20;
   storeRate=+d.storeRate>0?+d.storeRate:STORE_BASE;
   ECO_HIST=Array.isArray(d.history)?d.history.filter(h=>h&&+h.t>0&&+h.v>0).map(h=>({t:+h.t,v:+h.v})):[];
   COIN_PHP=priceAt(srvNow());applyEconomy();
@@ -2434,7 +2435,8 @@ $("btnEco").onclick=async()=>{
   if(!(sr>=.05&&sr<=10))return toast("Store coins per ₱1 must be between 0.05 and 10.");
   try{
     const amp=Math.max(0,Math.min(50,Math.round(+$("ecoAmp").value||0)));
-    const data={coinValue:v,storeRate:sr,auto:$("ecoAuto").checked,amp,updatedAt:serverTimestamp(),by:me.uid};
+    const ctr=Math.round(+$("ecoCenter").value*100)/100;if(!(ctr>=.01&&ctr<=1000))return toast("The auto market center must be between ₱0.01 and ₱1,000.");
+    const data={coinValue:v,center:ctr,storeRate:sr,auto:$("ecoAuto").checked,amp,updatedAt:serverTimestamp(),by:me.uid};
     if(v!==ECO_BASE||!ECO_HIST.length)data.history=arrayUnion({t:Date.now(),v});
     await setDoc(doc(db,"settings","economy"),data,{merge:true});toast("Saved. Players now see the new coin value.");
   }catch(e){toast(e.code==="permission-denied"?"Permission denied. Publish the new firestore.rules file first.":e.message)}
