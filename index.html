@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Gun Arena</title>
 <meta name="theme-color" content="#14121f">
 <link rel="icon" id="favicon" href="data:,">
@@ -32,14 +32,17 @@
   #tPad button{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
   .tb{height:3.2rem;padding:0;font-size:1.25rem;line-height:1}
   .gtile{padding:1rem .5rem;font-size:1.05rem}
+  #tPlay{position:fixed;inset:0;z-index:45;background:#14121f;display:flex;flex-direction:column;padding:6px 8px calc(6px + env(safe-area-inset-bottom));overflow:hidden}
+  #tPlay.hidden{display:none}
+  body{overflow-x:hidden}
 </style>
 </head>
 <body class="min-h-screen">
 
-<header class="flex items-center justify-between gap-3 p-3 border-b-4 border-[#3b3560]">
+<header class="flex flex-wrap items-center justify-between gap-3 p-3 border-b-4 border-[#3b3560]">
   <div class="flex items-center gap-2"><img data-logo alt="" class="w-10 h-10"><h1 class="text-lg sm:text-2xl tracking-wide text-[#ffd23f]">GUN ARENA</h1></div>
-  <div class="flex items-center gap-2"><button id="btnHelp" class="btn yellow">How to play &amp; earn</button>
-  <div id="bar" class="hidden items-center gap-2 text-sm">
+  <div class="flex flex-wrap items-center justify-end gap-2"><button id="btnHelp" class="btn yellow">How to play &amp; earn</button>
+  <div id="bar" class="hidden flex-wrap justify-end items-center gap-2 text-sm">
     <span id="who" class="hidden sm:inline"></span>
     <span id="role" class="px text-xs px-2 py-1 bg-[#ff3d81]"></span>
     <span class="px text-base text-[#ffd23f]">🪙 <b id="coins">0</b></span>
@@ -185,26 +188,24 @@
       <div class="flex justify-center gap-2"><button id="btnTStart" class="btn">Start match</button><button id="btnTLeave" class="btn ghost">Leave</button></div>
       <p class="text-xs opacity-70">Both players need the bet in coins (a green check means ready). The bet is deducted when the match starts.</p>
     </div>
-    <div id="tPlay" class="hidden mx-auto" style="max-width:36rem">
+    <div id="tPlay" class="hidden">
       <div class="flex items-center justify-between px-1">
         <div class="text-center w-24"><div class="text-xs text-[#35e0d0]">YOU</div><div id="tYou" class="px text-lg">0</div></div>
         <div class="text-center"><div id="tClock" class="px text-3xl text-[#ffd23f]">5:00</div><div id="tPot" class="text-xs opacity-80"></div></div>
         <div class="text-center w-24"><div id="tOppName" class="text-xs text-[#ff3d81] truncate">OPPONENT</div><div id="tOppS" class="px text-lg">0</div></div>
       </div>
-      <div id="tBub" class="h-6 text-center text-sm my-1 truncate"></div>
-      <div id="tStage" class="flex justify-center items-start gap-2">
-        <div class="flex flex-col items-center gap-1"><div class="text-[10px] opacity-70">HOLD</div><canvas id="tHold"></canvas></div>
+      <div class="flex items-center gap-2 my-1"><button id="tQuit" class="btn ghost text-xs" style="padding:.3rem .6rem">✕ Quit</button><div id="tBub" class="flex-1 h-6 text-center text-sm truncate"></div><button id="tMute" class="btn ghost text-xs" style="padding:.3rem .6rem">🔊</button></div>
+      <div id="tStage" style="flex:1;min-height:0;display:flex;justify-content:center;align-items:center;gap:8px">
         <div id="tShake" style="border:3px solid #3b3560;line-height:0"><canvas id="tBoard"></canvas></div>
-        <div class="flex flex-col items-center gap-1"><div class="text-[10px] opacity-70">NEXT</div><canvas id="tNext"></canvas><div class="text-[10px] opacity-70 mt-1">OPPONENT</div><canvas id="tOppC" style="border:2px solid #3b3560"></canvas></div>
+        <div class="flex flex-col items-center gap-1" style="line-height:1.1"><div class="text-[10px] opacity-70">HOLD</div><canvas id="tHold"></canvas><div class="text-[10px] opacity-70">NEXT</div><canvas id="tNext"></canvas><div class="text-[10px] text-[#ff3d81]">OPPONENT</div><canvas id="tOppC" style="border:2px solid #3b3560"></canvas></div>
       </div>
-      <div id="tTaunts" class="flex gap-1 overflow-x-auto mt-2 pb-1"></div>
-      <div id="tPad" class="hidden grid grid-cols-7 gap-1 mt-2">
+      <div id="tTaunts" class="flex gap-1 overflow-x-auto mt-1 pb-1"></div>
+      <div id="tPad" class="hidden grid grid-cols-7 gap-1 mt-1">
         <button id="tbL" class="btn ghost tb">◀</button><button id="tbD" class="btn ghost tb">▼</button><button id="tbR" class="btn ghost tb">▶</button>
         <button id="tbRL" class="btn ghost tb">⟲</button><button id="tbRR" class="btn ghost tb">⟳</button>
         <button id="tbH" class="btn yellow tb" style="font-size:.65rem">HOLD</button><button id="tbDrop" class="btn pink tb" style="font-size:.65rem">DROP</button>
       </div>
-      <p id="tHint" class="text-xs text-center opacity-70 mt-2">PC: ← → move · ↓ soft drop · ↑ or X rotate · Z rotate back · Space hard drop · C hold. Phone: drag on the board to move, tap to rotate, flick down to drop.</p>
-      <div class="flex justify-center gap-2 mt-2"><button id="tQuit" class="btn ghost">Quit</button><button id="tMute" class="btn ghost">Sound: On</button></div>
+      <p id="tHint" class="text-xs text-center opacity-70 mt-1">PC: ← → move · ↓ soft drop · ↑ or X rotate · Z rotate back · Space hard drop · C hold. Phone: drag on the board to move, tap to rotate, flick down to drop.</p>
     </div>
   </section>
 
@@ -748,7 +749,9 @@ function tBest(g,noise){const k=g.cur.k;let best=null;
   return best}
 
 /* ---- drawing ---- */
-function tCell(c,x,y,s,id,a){c.globalAlpha=a==null?1:a;c.fillStyle=TCOL[id];c.fillRect(x,y,s,s);const e=Math.max(1,s*.14);c.fillStyle="#fff4";c.fillRect(x,y,s,e);c.fillRect(x,y,e,s);c.fillStyle="#0005";c.fillRect(x,y+s-e,s,e);c.fillRect(x+s-e,y,e,s);c.globalAlpha=1}
+const DPR=Math.min(2,window.devicePixelRatio||1),SPR={};
+function spr(id,s){const px=Math.max(2,Math.round(s*DPR)),k=id+"_"+px;if(!SPR[k]){const c=document.createElement("canvas");c.width=c.height=px;const q=c.getContext("2d"),e=Math.max(1,px*.14);q.fillStyle=TCOL[id];q.fillRect(0,0,px,px);q.fillStyle="#ffffff55";q.fillRect(0,0,px,e);q.fillRect(0,0,e,px);q.fillStyle="#00000066";q.fillRect(0,px-e,px,e);q.fillRect(px-e,0,e,px);SPR[k]=c}return SPR[k]}
+function tCell(c,x,y,s,id,a){const al=a!=null&&a!==1;if(al)c.globalAlpha=a;c.drawImage(spr(id,s),x,y,s,s);if(al)c.globalAlpha=1}
 function tPrev(c,k,bx,by,w,s,a){const m=TROT[k][0];let r0=9,r1=0,c0=9,c1=0;m.forEach((row,i)=>row.forEach((v,j)=>{if(v){r0=Math.min(r0,i);r1=Math.max(r1,i);c0=Math.min(c0,j);c1=Math.max(c1,j)}}));
   const ox=bx+(w-(c1-c0+1)*s)/2;m.forEach((row,i)=>row.forEach((v,j)=>{if(v)tCell(c,ox+(j-c0)*s,by+(i-r0)*s,s,TID[k],a)}))}
 
@@ -768,19 +771,21 @@ function tMusic(on){clearInterval(TMU.t);if(!on)return;const c=ac();if(!c)return
 /* ---- the match runner: one function drives practice (bot) and online matches ---- */
 function tRun(cfg){
   const touch=matchMedia("(pointer:coarse)").matches,dpr=Math.min(2,window.devicePixelRatio||1);
-  const cv=$("tBoard"),cx=cv.getContext("2d"),hx=$("tHold").getContext("2d"),nx=$("tNext").getContext("2d"),ox=$("tOppC").getContext("2d"),st=$("tStage");
+  const cv=$("tBoard"),cx=cv.getContext("2d",{alpha:false,desynchronized:true}),hx=$("tHold").getContext("2d"),nx=$("tNext").getContext("2d"),ox=$("tOppC").getContext("2d"),st=$("tStage");
   const clk=()=>cfg.bot?performance.now():srvNow();
   const g=tNew(cfg.seed),bot=cfg.bot?tNew(cfg.seed):null,BL={easy:{d:1.5,n:5},normal:{d:.85,n:1.5},hard:{d:.5,n:0}}[cfg.bot]||null;
-  let raf=0,last=performance.now(),over=false,ended=false,cs=20,fx=[],pops=[],flash=[],shake=0,bt=0,soft=false,lastPush=0,dirty=true,tcd=0,botTalk=9,tk=0,lastLvl=0,lastClock="";
+  let bgc=null,pv=10,vx=0,vy=0,vcur=null,ra=0,coff=Array(TH).fill(0),trail=[],gflash=0,tflash=0,dz=TH,gvLast=.8,lastHK=null,lastOK=null,lastTr='',lastYou=-1,lastOpS=-1,raf=0,last=performance.now(),over=false,ended=false,cs=20,fx=[],pops=[],flash=[],shake=0,bt=0,soft=false,lastPush=0,dirty=true,tcd=0,botTalk=9,tk=0,lastLvl=0,lastClock="";
   const H={dir:0,t:0,n:0};let kL=false,kR=false,lastTalk=((cfg.getOpp&&cfg.getOpp())||{}).talk?.n||0,msg="";
   const o=()=>bot?{sent:bot.sent,score:bot.score,b:tSer(bot),dead:bot.dead,ab:bot.applied+bot.canc,name:"BOT "+cfg.bot.toUpperCase()}:cfg.getOpp();
   const pot=cfg.bet?`Bet ${cfg.bet} · winner gets ${cfg.bet*2}`:"Practice (free)";
   $("tPot").textContent=pot;$("tOppName").textContent=bot?"BOT "+cfg.bot.toUpperCase():(o()||{}).name||"OPPONENT";$("tBub").innerHTML="";
   $("tPad").classList.toggle("hidden",!touch);$("tHint").classList.toggle("hidden",touch);
 
-  function fit(){const aw=Math.min(innerWidth-16,560),ah=innerHeight-(touch?310:220);
-    cs=Math.max(14,Math.min(30,Math.floor((aw-150)/10),Math.floor(ah/20)));
-    for(const [c,w,h] of [[cv,cs*10,cs*20],[$("tHold"),56,44],[$("tNext"),56,106],[$("tOppC"),60,120]]){c.width=w*dpr;c.height=h*dpr;c.style.width=w+"px";c.style.height=h+"px"}}
+  function fit(){const P=$("tPlay");let used=18;[...P.children].forEach(e=>{if(e.id!=="tStage")used+=e.offsetHeight});
+    const W=P.clientWidth,Hh=P.clientHeight-used-14;cs=Math.max(12,Math.min(36,Math.floor((W-30)/15),Math.floor(Hh/20)));pv=Math.max(7,Math.round(cs*.5));
+    for(const [c,w,h] of [[cv,cs*10,cs*20],[$("tHold"),pv*10,pv*3],[$("tNext"),pv*10,pv*9],[$("tOppC"),pv*10,pv*20]]){c.width=w*dpr;c.height=h*dpr;c.style.width=w+"px";c.style.height=h+"px"}
+    bgc=document.createElement("canvas");bgc.width=cs*10*dpr;bgc.height=cs*20*dpr;const q=bgc.getContext("2d");q.scale(dpr,dpr);q.fillStyle="#14121f";q.fillRect(0,0,cs*10,cs*20);
+    q.strokeStyle="#2a2640";q.lineWidth=1;q.beginPath();for(let i=1;i<10;i++){q.moveTo(i*cs+.5,0);q.lineTo(i*cs+.5,cs*20)}for(let i=1;i<20;i++){q.moveTo(0,i*cs+.5);q.lineTo(cs*10,i*cs+.5)}q.stroke();lastHK=lastOK=null}
   const pop=(t,c)=>pops.push({t,c,y:cs*5+pops.length*cs*1.1,l:1.3});
   const banner=(w,t)=>{const e=$("tBub");e.innerHTML=`<b style="color:${w==="me"?"#35e0d0":"#ff3d81"}">${w==="me"?"YOU":esc((o()||{}).name||"OPP")}:</b> ${esc(t)}`;clearTimeout(banner.t);banner.t=setTimeout(()=>e.innerHTML="",3500)};
   const canTalk=()=>performance.now()-tk>2500;
@@ -795,18 +800,21 @@ function tRun(cfg){
   function die(){if(over)return;over=true;TS.lose();if(bot)finishBot(false,false);else cfg.push({dead:true,died:srvNow(),score:g.score,b:tSer(g),sent:g.sent})}
   function timeUp(){if(over)return;over=true;if(bot)finishBot(g.score>bot.score,g.score===bot.score);else cfg.push({fin:true,score:g.score,lines:g.lines,sent:g.sent})}
   function after(res){
-    if(res.n){TS.clear(res.n);res.rows.forEach(y=>flash.push({y,l:.35}));
+    if(res.n){TS.clear(res.n);res.rows.forEach(y=>flash.push({y,l:.35}));{const k=Array(TH).fill(0);for(let y=0;y<TH;y++){if(res.rows.includes(y))continue;const n=res.rows.filter(r=>r>y).length;if(n)k[y+n]=-n}coff=k}if(res.n>=3)tflash=res.n===4?.6:.3;
       for(let k=0;k<res.n*14;k++)fx.push({x:Math.random()*cs*10,y:(res.rows[k%res.n]-2)*cs+cs/2,vx:(Math.random()-.5)*260,vy:-Math.random()*220-40,l:.8,c:TCOL[1+Math.floor(Math.random()*7)]});
       const label=res.pc?"PERFECT CLEAR!":["","","DOUBLE","TRIPLE","TETRIS!"][res.n];
       if(label)pop(label,res.n===4||res.pc?"#ffd23f":"#35e0d0");if(res.b2b)pop("BACK-TO-BACK","#ff9f43");if(res.combo>=2)pop("COMBO x"+res.combo,"#b46bff");
       if(res.n===4)shake=Math.max(shake,6);if((res.out>=4||res.pc)&&canTalk())sayMe(pick(T_AUTO));
     }else TS.lock();
-    if(res.got){shake=9;TS.garb();pop("+"+res.got+" GARBAGE","#ff3d81")}
-    dirty=true;push(true);if(g.dead)die()}
+    if(res.got){coff=Array(TH).fill(res.got);gflash=.9;shake=9;TS.garb();pop("+"+res.got+" GARBAGE","#ff3d81")}
+    dz=g.grid.findIndex(r=>r.some(v=>v));if(dz<0)dz=TH;dirty=true;push(true);if(g.dead)die()}
   function doLock(){const p=o();after(tLock(g,p?p.sent||0:0))}
-  function doHard(){tHard(g);shake=Math.max(shake,2);doLock()}
+  function doHard(){const c=g.cur,y1=tGhostY(g),m=TROT[c.k][c.r],rects=[];
+    for(let j=0;j<m.length;j++){let mi=-1;for(let i=0;i<m.length;i++)if(m[i][j]){mi=i;break}if(mi>=0)rects.push({x:(c.x+j)*cs,y0:(vy+mi-2)*cs,y1:(y1+mi-2)*cs})}
+    trail.push({rects,k:c.k,l:.22});rects.forEach(r=>{for(let q=0;q<3;q++)fx.push({x:r.x+Math.random()*cs,y:r.y1+cs,vx:(Math.random()-.5)*180,vy:-Math.random()*140,l:.5,c:"#fff"})});
+    tHard(g);shake=Math.max(shake,2.5);doLock()}
   function act(a,d){if(over||g.dead||clk()<cfg.startAt)return;
-    if(a==="m"){if(tMove(g,d)){TS.move();dirty=true}}else if(a==="r"){if(tRot(g,d)){TS.rot();dirty=true}}else if(a==="h"){if(tHold(g)){TS.hold();dirty=true}}else if(a==="d")doHard()}
+    if(a==="m"){if(tMove(g,d)){TS.move();dirty=true}}else if(a==="r"){if(tRot(g,d)){TS.rot();ra=-d*Math.PI/2;dirty=true}}else if(a==="h"){if(tHold(g)){TS.hold();dirty=true}}else if(a==="d")doHard()}
   function botMove(){const b=tBest(bot,BL.n);if(b){bot.cur.r=b.r;bot.cur.x=b.x;bot.cur.y=b.y}const res=tLock(bot,g.sent);
     if(res.got&&Math.random()<.6)hear(pick(BOT_HIT));else if(res.out>=2&&Math.random()<.7)hear(pick(BOT_ATK));if(bot.dead)finishBot(true,false)}
 
@@ -838,14 +846,20 @@ function tRun(cfg){
   bh("tbRL",()=>act("r",-1));bh("tbRR",()=>act("r",1));bh("tbH",()=>act("h"));bh("tbDrop",()=>act("d"));
 
   function draw(pre,left){
-    cx.setTransform(dpr,0,0,dpr,0,0);cx.fillStyle="#14121f";cx.fillRect(0,0,cs*10,cs*20);
-    cx.strokeStyle="#2a2640";cx.lineWidth=1;cx.beginPath();for(let i=1;i<10;i++){cx.moveTo(i*cs+.5,0);cx.lineTo(i*cs+.5,cs*20)}for(let i=1;i<20;i++){cx.moveTo(0,i*cs+.5);cx.lineTo(cs*10,i*cs+.5)}cx.stroke();
-    for(let y=2;y<TH;y++)for(let x=0;x<TW;x++){const v=g.grid[y][x];if(v)tCell(cx,x*cs,(y-2)*cs,cs,v)}
-    if(!g.dead){const c=g.cur,m=TROT[c.k][c.r],gy=tGhostY(g);
-      m.forEach((row,i)=>row.forEach((v,j)=>{if(v&&gy+i>=2){cx.strokeStyle=TCOL[TID[c.k]];cx.globalAlpha=.55;cx.strokeRect((c.x+j)*cs+1.5,(gy+i-2)*cs+1.5,cs-3,cs-3);cx.globalAlpha=1}}));
-      m.forEach((row,i)=>row.forEach((v,j)=>{if(v&&c.y+i>=2)tCell(cx,(c.x+j)*cs,(c.y+i-2)*cs,cs,TID[c.k])}))}
+    cx.setTransform(dpr,0,0,dpr,0,0);cx.globalAlpha=1;cx.drawImage(bgc,0,0,cs*10,cs*20);
+    for(let y=2;y<TH;y++){const o=coff[y]*cs;for(let x=0;x<TW;x++){const v=g.grid[y][x];if(v)tCell(cx,x*cs,(y-2)*cs+o,cs,v)}}
+    trail.forEach(t=>{cx.globalAlpha=Math.min(.5,t.l*2);cx.fillStyle=TCOL[TID[t.k]];t.rects.forEach(r=>cx.fillRect(r.x+cs*.12,r.y0,cs*.76,Math.max(0,r.y1-r.y0)))});cx.globalAlpha=1;
+    if(!g.dead){const c=g.cur,m=TROT[c.k][c.r],n=m.length,gy=tGhostY(g);
+      cx.strokeStyle=TCOL[TID[c.k]];cx.globalAlpha=.5;m.forEach((row,i)=>row.forEach((v,j)=>{if(v&&gy+i>=2)cx.strokeRect((vx+j)*cs+1.5,(gy+i-2)*cs+1.5,cs-3,cs-3)}));cx.globalAlpha=1;
+      cx.save();cx.translate((vx+n/2)*cs,(vy-2+n/2)*cs);cx.rotate(ra);
+      m.forEach((row,i)=>row.forEach((v,j)=>{if(v)tCell(cx,(j-n/2)*cs,(i-n/2)*cs,cs,TID[c.k])}));
+      if(c.lock>.05){cx.globalAlpha=Math.min(.45,c.lock*.9);cx.fillStyle="#fff";m.forEach((row,i)=>row.forEach((v,j)=>{if(v)cx.fillRect((j-n/2)*cs,(i-n/2)*cs,cs,cs)}));cx.globalAlpha=1}
+      cx.restore()}
     flash.forEach(f=>{cx.fillStyle=`rgba(255,255,255,${Math.min(1,f.l*2.5)})`;cx.fillRect(0,(f.y-2)*cs,cs*10,cs)});
     fx.forEach(p=>{cx.globalAlpha=Math.max(0,p.l);cx.fillStyle=p.c;cx.fillRect(p.x,p.y,4,4)});cx.globalAlpha=1;
+    if(dz<=6&&!g.dead){cx.fillStyle=`rgba(255,40,80,${.1+.07*Math.sin(performance.now()/110)})`;cx.fillRect(0,0,cs*10,cs*4)}
+    if(gflash>0){cx.fillStyle=`rgba(255,61,129,${gflash*.35})`;cx.fillRect(0,0,cs*10,cs*20)}
+    if(tflash>0){cx.fillStyle=`rgba(255,230,120,${tflash*.5})`;cx.fillRect(0,0,cs*10,cs*20)}
     const op=o(),pend=Math.max(0,(op?op.sent||0:0)-g.applied-g.canc);
     if(pend){cx.fillStyle=pend>=4?"#ff3d81":"#ffb3c9";cx.fillRect(0,cs*20-pend*cs,5,pend*cs)}
     cx.textAlign="center";cx.lineWidth=3;cx.strokeStyle="#000";
@@ -853,12 +867,14 @@ function tRun(cfg){
     const big=(t,c)=>{cx.fillStyle="#000a";cx.fillRect(0,cs*7,cs*10,cs*5);cx.fillStyle=c;cx.font=`bold ${cs*1.6}px system-ui`;cx.fillText(t,cs*5,cs*10.2)};
     if(pre>0)big(Math.ceil(pre/1000),"#ffd23f");else if(pre>-700)big("GO!","#35e0d0");
     if(g.dead)big("TOPPED OUT","#ff3d81");else if(over&&left<=0)big("TIME!","#ffd23f");
-    hx.setTransform(dpr,0,0,dpr,0,0);hx.clearRect(0,0,56,44);if(g.hold)tPrev(hx,g.hold,0,8,56,14,g.can?1:.35);
-    nx.setTransform(dpr,0,0,dpr,0,0);nx.clearRect(0,0,56,106);for(let i=0;i<3;i++)tPrev(nx,g.nx[i],0,4+i*34,56,14);
-    ox.setTransform(dpr,0,0,dpr,0,0);ox.fillStyle="#0c0a16";ox.fillRect(0,0,60,120);
-    if(op&&op.b&&op.b.length===200)for(let i=0;i<200;i++){const v=+op.b[i];if(v)tCell(ox,(i%10)*6,Math.floor(i/10)*6,6,v)}
-    const ap=Math.max(0,g.sent-(op?op.ab||0:0));if(ap){ox.fillStyle="#ff3d81";ox.fillRect(0,120-ap*6,3,ap*6)}
-    if(op&&op.dead){ox.fillStyle="#000a";ox.fillRect(0,0,60,120);ox.fillStyle="#ff3d81";ox.font="bold 12px system-ui";ox.textAlign="center";ox.fillText("K.O.",30,64)}}
+    const hk=(g.hold||"-")+g.can+g.nx.slice(0,3).join("")+pv;
+    if(hk!==lastHK){lastHK=hk;hx.setTransform(dpr,0,0,dpr,0,0);hx.clearRect(0,0,pv*10,pv*3);if(g.hold)tPrev(hx,g.hold,0,pv*.4,pv*10,pv*1.1,g.can?1:.35);
+      nx.setTransform(dpr,0,0,dpr,0,0);nx.clearRect(0,0,pv*10,pv*9);for(let i=0;i<3;i++)tPrev(nx,g.nx[i],0,i*pv*3+pv*.4,pv*10,pv*1.1)}
+    const ap=Math.max(0,g.sent-(op?op.ab||0:0)),ok=(op?op.b+"|"+!!op.dead:"")+"|"+ap+"|"+pv;
+    if(ok!==lastOK){lastOK=ok;ox.setTransform(dpr,0,0,dpr,0,0);ox.fillStyle="#0c0a16";ox.fillRect(0,0,pv*10,pv*20);
+      if(op&&op.b&&op.b.length===200)for(let i=0;i<200;i++){const v=+op.b[i];if(v)tCell(ox,(i%10)*pv,Math.floor(i/10)*pv,pv,v)}
+      if(ap){ox.fillStyle="#ff3d81";ox.fillRect(0,pv*20-ap*pv,Math.max(3,pv*.3),ap*pv)}
+      if(op&&op.dead){ox.fillStyle="#000a";ox.fillRect(0,0,pv*10,pv*20);ox.fillStyle="#ff3d81";ox.font=`bold ${pv*2}px system-ui`;ox.textAlign="center";ox.fillText("K.O.",pv*5,pv*10.6)}}}
 
   function frame(ts){
     raf=requestAnimationFrame(frame);const dt=Math.min(.05,(ts-last)/1000);last=ts;
@@ -869,22 +885,28 @@ function tRun(cfg){
         const lvl=Math.min(12,1+Math.floor((TDUR-left)/30000)),gi=Math.max(.04,.8*Math.pow(.82,lvl-1));
         if(lvl!==lastLvl){lastLvl=lvl;$("tPot").textContent=pot+" · Speed "+lvl;if(lvl>1)pop("SPEED UP!","#ff9f43")}
         if(H.dir){H.t+=dt;while(H.t>=.14+H.n*.04){H.n++;act("m",H.dir)}}
-        if(!over&&!g.dead){const c=g.cur;c.fall+=dt;const gv=soft?Math.min(gi,.035):gi;
+        if(!over&&!g.dead){const c=g.cur;c.fall+=dt;const gv=soft?Math.min(gi,.035):gi;gvLast=gv;
           while(c.fall>=gv){c.fall-=gv;if(!tDown(g)){c.fall=0;break}if(soft){g.score++;dirty=true}}
           if(tGround(g)){c.lock+=dt;if(c.lock>=.5)doLock()}else c.lock=0}
         if(bot&&!bot.dead&&!over){bt+=dt;if(bt>=BL.d){bt=0;botMove()}botTalk-=dt;if(botTalk<=0){botTalk=14+Math.random()*10;hear(pick(BOT_IDLE))}}
       }
     }
     const p=o();if(p&&p.talk&&p.talk.n!==lastTalk){lastTalk=p.talk.n;hear(p.talk.t)}
+    /* smooth visuals: the falling piece glides between cells, rotation spins in, rows slide down after a clear */
+    if(!g.dead){const c=g.cur;if(c!==vcur){vcur=c;vx=c.x;vy=c.y;ra=0}
+      const ty=c.y+(tGround(g)?0:Math.min(.97,c.fall/gvLast));vx+=(c.x-vx)*(1-Math.exp(-dt*48));vy+=(ty-vy)*(1-Math.exp(-dt*(ty-vy>1.6?70:38)));ra*=Math.exp(-dt*26)}
+    const kd2=Math.exp(-dt*16);for(let i=0;i<TH;i++){coff[i]*=kd2;if(Math.abs(coff[i])<.01)coff[i]=0}
+    gflash=Math.max(0,gflash-dt*3);tflash=Math.max(0,tflash-dt*2.5);trail.forEach(t=>t.l-=dt);trail=trail.filter(t=>t.l>0);
     fx.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=500*dt;q.l-=dt});fx=fx.filter(q=>q.l>0);
     flash.forEach(f=>f.l-=dt);flash=flash.filter(f=>f.l>0);pops.forEach(q=>{q.l-=dt;q.y-=dt*cs*.6});pops=pops.filter(q=>q.l>0);
-    shake=Math.max(0,shake-dt*28);$("tShake").style.transform=shake>.3?`translate(${(Math.random()-.5)*shake}px,${(Math.random()-.5)*shake}px)`:"";
+    shake=Math.max(0,shake-dt*28);const tr=shake>.3?`translate(${((Math.random()-.5)*shake).toFixed(1)}px,${((Math.random()-.5)*shake).toFixed(1)}px)`:"";if(tr!==lastTr){lastTr=tr;$("tShake").style.transform=tr}
     const secs=Math.max(0,Math.ceil(Math.min(left,TDUR)/1000)),cl=Math.floor(secs/60)+":"+String(secs%60).padStart(2,"0");
     if(cl!==lastClock){lastClock=cl;$("tClock").textContent=cl;$("tClock").style.color=secs<=30?"#ff3d81":"#ffd23f"}
-    $("tYou").textContent=g.score.toLocaleString();$("tOppS").textContent=(p?p.score||0:0).toLocaleString();
+    if(g.score!==lastYou){lastYou=g.score;$("tYou").textContent=g.score.toLocaleString()}
+    const os=p?p.score||0:0;if(os!==lastOpS){lastOpS=os;$("tOppS").textContent=os.toLocaleString()}
     if(!over&&pre<=0)push();
     draw(pre,left)}
-  fit();tMusic(true);raf=requestAnimationFrame(frame);
+  fit();setTimeout(fit,250);tMusic(true);raf=requestAnimationFrame(frame);
   return{stop(){over=true;ended=true;cancelAnimationFrame(raf);removeEventListener("keydown",kd);removeEventListener("keyup",ku);removeEventListener("resize",fit);tMusic(false);if("speechSynthesis" in window)speechSynthesis.cancel();$("tShake").style.transform=""},g}
 }
 
@@ -906,7 +928,7 @@ function tPractice(){tDemo=true;show("tetris");paintT("play");
     onEnd:r=>{const t=r.draw?"Draw":r.win?"You win!":"You lose";tResult(t,r.win?"#35e0d0":"#ff3d81",`Practice vs bot (free). Your score ${r.you.toLocaleString()} · Bot ${r.opp.toLocaleString()} · Lines ${r.lines}. ${r.win?"Ready for real coins?":"Try again, you got this!"}`,null)}})}
 $("btnTPractice").onclick=tPractice;$("btnTDemoL").onclick=tPractice;
 $("tQuit").onclick=()=>{if(tDemo||confirm("Quit the match? You will lose your bet."))tLeave()};
-$("tMute").onclick=()=>{muted=!muted;$("tMute").textContent=muted?"Sound: Off":"Sound: On";if(muted&&"speechSynthesis" in window)speechSynthesis.cancel()};
+$("tMute").onclick=()=>{muted=!muted;$("tMute").textContent=muted?"🔇":"🔊";if(muted&&"speechSynthesis" in window)speechSynthesis.cancel()};
 $("btnTLeave").onclick=()=>tLeave();
 $("btnTStart").onclick=()=>rtUpdate(trRef(),{status:"playing",startAt:srvNow()+4500});
 
