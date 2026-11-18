@@ -40,3 +40,6 @@ Added inside `index.html` (search for `TETRIS BATTLE`). Players choose Gun Arena
 - Rooms live in the same Realtime Database `rooms/` path: friends rooms are `rooms/T####`, ranked queues are `rooms/QT<bet>`, and matches are `rooms/TM######`.
 - Both players get the same piece sequence (shared seed). Boards, scores and garbage are synced through the room; the lowest connected player acts as referee (top-out, disconnect, or higher score at 5:00).
 - Same security note as Gun Arena: results are decided in the browsers, so move payouts to a Cloud Function before taking real money.
+
+## Chess
+Search `CHESS` in `index.html`. Rooms: friends `rooms/C####`, ranked queue `rooms/QC<bet>_<timecontrol>`, matches `rooms/CM######`. Moves are stored in `rooms/<code>/moves/<n>` with the clocks after each move; every client replays them with the same rules engine. Time-outs, resignations and draws are written by the clients that detect them. No rules-file changes are needed. The generic `mkQ()` matchmaking helper can be reused for future games.
