@@ -28,11 +28,13 @@ Pick **Tetris Battle** in the lobby. Same coins, same bets, same payout as Gun A
 - **Controls:** drag on the board to move (smooth), drag down to soft drop, tap to rotate, flick down to hard drop. Buttons for rotate, hold and drop. PC: arrows or WASD, Space to drop, C to hold.
 - Practice vs bot is free (Easy, Normal, Hard). Ranked uses the same RP (+25 / -15). Friends room uses a 4-digit code.
 
-## ♞ NEW: Chess (1v1)
+## ♞ NEW: Chess (1v1, 3D board)
 Pick **Chess** in the lobby. Same coins, same bets, same payout: **win = 2x**, draw = bet returned.
-- **Standard time controls:** 1 min, 3 min, 5 min, 10 min, or 15 | 10 (10 seconds added after every move). **Your clock hits zero = you lose.**
-- Full chess rules: castling, en passant, promotion, check, checkmate, stalemate, draw by repetition.
-- Both player names, colors and clocks are always on screen. Tap a piece then a square, or drag the piece. You can resign or offer a draw.
+- **Time per move, not a total clock:** choose 15 sec, 30 sec, 1 min or 2 min. Each time it is your turn the timer starts. If it runs out, **your turn is passed to your opponent**. 3 timeouts in a row = you forfeit.
+- A real **3D wooden board** with 3D pieces. Pieces slide and jump, captured pieces fly off the board, and a checkmated king falls over.
+- **Trash talk:** capture a piece and a speech bubble pops up ("Delicious! Your knight is mine!"). You can also tap taunt buttons, and your opponent sees and hears them.
+- Full chess rules: castling, en passant, promotion, check, checkmate, stalemate, draw by repetition. Resign or offer a draw anytime.
+- Both player names and colors are always on screen. Tap a piece then a square, or drag the piece.
 - Practice vs bot is free (Easy, Normal, Hard). Ranked uses the same RP (+25 / -15). Friends room uses a 4-digit code.
 
 ## 🆓 Practice (free)
@@ -91,7 +93,7 @@ The bonus coins are added automatically. You do not need to claim anything.
 🔫 **GUN ARENA** 🔫
 Last team standing wins! 1v1, 2v2 and 4v4.
 🧱 NEW: Tetris Battle 1v1! Send garbage, trash talk, winner takes 2x!
-♞ NEW: Chess 1v1 with real chess clocks, winner takes 2x!
+♞ NEW: 3D Chess 1v1 with trash talk, winner takes 2x!
 ✅ Practice against bots: FREE
 ✅ Bet 5 to 100 coins, and a win pays **2x**
 ✅ Buy coins with GCash: bigger packages give bonus coins
