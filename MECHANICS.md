@@ -28,6 +28,13 @@ Pick **Tetris Battle** in the lobby. Same coins, same bets, same payout as Gun A
 - **Controls:** drag on the board to move (smooth), drag down to soft drop, tap to rotate, flick down to hard drop. Buttons for rotate, hold and drop. PC: arrows or WASD, Space to drop, C to hold.
 - Practice vs bot is free (Easy, Normal, Hard). Ranked uses the same RP (+25 / -15). Friends room uses a 4-digit code.
 
+## ♞ NEW: Chess (1v1)
+Pick **Chess** in the lobby. Same coins, same bets, same payout: **win = 2x**, draw = bet returned.
+- **Standard time controls:** 1 min, 3 min, 5 min, 10 min, or 15 | 10 (10 seconds added after every move). **Your clock hits zero = you lose.**
+- Full chess rules: castling, en passant, promotion, check, checkmate, stalemate, draw by repetition.
+- Both player names, colors and clocks are always on screen. Tap a piece then a square, or drag the piece. You can resign or offer a draw.
+- Practice vs bot is free (Easy, Normal, Hard). Ranked uses the same RP (+25 / -15). Friends room uses a 4-digit code.
+
 ## 🆓 Practice (free)
 No sign-in and no coins needed. Fight bots on Easy, Normal or Hard to learn the game before you bet.
 
@@ -84,6 +91,7 @@ The bonus coins are added automatically. You do not need to claim anything.
 🔫 **GUN ARENA** 🔫
 Last team standing wins! 1v1, 2v2 and 4v4.
 🧱 NEW: Tetris Battle 1v1! Send garbage, trash talk, winner takes 2x!
+♞ NEW: Chess 1v1 with real chess clocks, winner takes 2x!
 ✅ Practice against bots: FREE
 ✅ Bet 5 to 100 coins, and a win pays **2x**
 ✅ Buy coins with GCash: bigger packages give bonus coins
