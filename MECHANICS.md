@@ -82,7 +82,7 @@ The bonus coins are added automatically. You do not need to claim anything.
 3. Tap **I Have Paid**. The admin adds your coins after verifying the payment.
 
 ## 📈 Coin Market and withdrawing to GCash
-- The **Coin Market** chart in the lobby shows what one coin is worth when you withdraw. The price goes up and down over time, so you can choose the best moment to cash out.
+- The **Coin Market** chart in the lobby shows what one coin is worth when you withdraw. The price **updates automatically every 30 minutes** and goes up and down over time, so you can choose the best moment to cash out.
 - **Cash-out is only open every Sunday (Philippine time).** On other days the Withdraw button is locked.
 - The minimum withdrawal is **20 coins**.
 - You receive your coins at the current Coin Market price. For example, at 1 coin = ₱1.00, **100 coins = ₱100.00**.
