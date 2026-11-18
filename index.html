@@ -2352,8 +2352,7 @@ const mkNoise=s=>.55*Math.sin(s*.21+1.3)+.3*Math.sin(s*.57+.7)+.15*(mkHash(s)*2-
 function baseAt(t){const H=ECO_HIST.slice().sort((a,b)=>a.t-b.t);let v=null;for(const h of H)if(h.t<=t)v=h.v;return v!=null?v:(H.length?H[0].v:ECO_BASE)}   // admin base price in force at time t
 function priceAt(t){if(!ECO_AUTO)return baseAt(t);return Math.max(.01,Math.round(ECO_CENTER*(1+ECO_AMP/100*mkNoise(Math.floor(t/SLOT)))*100)/100)}
 function mktSeries(t0,now){const n=Math.ceil((now-t0)/SLOT),k=Math.max(1,Math.ceil(n/240)),p=[];for(let t=Math.floor(t0/SLOT)*SLOT;t<=now;t+=SLOT*k)p.push({t:Math.max(t,t0),v:priceAt(t)});p.push({t:now,v:COIN_PHP});return p}
-function mktNote(H){const now=srvNow(),cur=Math.floor(now/SLOT)*SLOT,nx=cur+SLOT,tm=t=>new Date(t).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
-  return ECO_AUTO?` <span class="opacity-60">· 🔄 Auto-updated ${tm(cur)} · next update ${tm(nx)} (in ${Math.max(1,Math.ceil((nx-now)/6e4))} min)</span>`:(H.length?` <span class="opacity-60">· Updated ${esc(new Date(H[H.length-1].t).toLocaleString())}</span>`:"")}
+function mktNote(H){return ECO_AUTO?"":(H.length?` <span class="opacity-60">· Updated ${esc(new Date(H[H.length-1].t).toLocaleString())}</span>`:"")}
 const RANGE_LABEL={1:"today",5:"past 5 days",30:"past month",182:"past 6 months",365:"past year",0:"all time"};
 function paintValue(){$("dValue").textContent=`≈ ${peso(coins*COIN_PHP)} at the Coin Market price (1 coin = ${peso(COIN_PHP)})`}
 
