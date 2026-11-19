@@ -1,0 +1,18 @@
+{
+  "id": "/gun-arena/",
+  "name": "Gun Arena",
+  "short_name": "Gun Arena",
+  "description": "Gun Arena: 1v1, 2v2 and 4v4 shooter, Tetris Battle, Chess and Billiards. Play and earn GameGold (GGD).",
+  "start_url": "/gun-arena/",
+  "scope": "/gun-arena/",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#14121f",
+  "theme_color": "#14121f",
+  "lang": "en",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
