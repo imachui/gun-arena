@@ -42,6 +42,7 @@ Pick **Billiards** in the lobby. Same coins, same bets, same payout: **win = 2x*
 - Pot all balls of your group (solids or stripes), then the **8-ball** to win. Fouls give the opponent ball-in-hand.
 - **30 seconds per shot.** If time runs out, the opponent gets ball-in-hand. 3 timeouts in a row = forfeit.
 - **Phone controls:** drag on the table to aim, or use the **FINE AIM** bar for tiny adjustments. Pull the **POWER** bar down and release to shoot. Tap the round pad to add spin.
+- **Know your target:** every ball has a big number, the top bar shows your balls (solids 1-7 or stripes 9-15, then the 8), and a **green ring** marks every ball you can hit. Tap **💡** for a hint.
 - The buttons are see-through so you can always see the balls. A bright guide shows where your cue ball hits, where the target ball goes (yellow) and where your cue ball deflects.
 - Trash talk buttons (💬), practice vs bot (free), ranked and friends room, just like the other games.
 
