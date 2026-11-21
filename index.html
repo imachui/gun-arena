@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Gun Arena</title>
 <meta name="theme-color" content="#14121f">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="apple-mobile-web-app-title" content="Gun Arena">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
@@ -51,8 +52,8 @@
   #bStage{position:relative;flex:1;min-height:0;overflow:hidden;margin-top:4px;border-radius:8px}
   .bb{background:rgba(20,12,8,.35);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:.3rem .7rem;font-size:1.05rem}
   #bBtns{display:flex;gap:8px;justify-content:center;margin-top:5px}
-  #bMsg{position:absolute;top:8px;left:50%;transform:translateX(-50%);opacity:0;transition:opacity .3s;background:rgba(20,12,8,.55);padding:3px 12px;border-radius:14px;font-size:.85rem;white-space:nowrap;z-index:3;pointer-events:none;max-width:92%;overflow:hidden;text-overflow:ellipsis}
-  #bSay{position:absolute;top:40px;left:50%;transform:translateX(-50%);opacity:0;transition:opacity .25s;border:2px solid;background:rgba(20,12,8,.7);padding:3px 12px;border-radius:12px;font-weight:700;font-size:.85rem;z-index:3;pointer-events:none;max-width:92%}
+  #bMsg{position:absolute;top:36px;left:50%;transform:translateX(-50%);opacity:0;transition:opacity .3s;background:rgba(20,12,8,.55);padding:3px 12px;border-radius:14px;font-size:.85rem;white-space:nowrap;z-index:3;pointer-events:none;max-width:92%;overflow:hidden;text-overflow:ellipsis}
+  #bSay{position:absolute;top:68px;left:50%;transform:translateX(-50%);opacity:0;transition:opacity .25s;border:2px solid;background:rgba(20,12,8,.7);padding:3px 12px;border-radius:12px;font-weight:700;font-size:.85rem;z-index:3;pointer-events:none;max-width:92%}
   #bCombo{position:absolute;top:30%;left:50%;transform:translateX(-50%);text-align:center;font-size:clamp(30px,8vw,64px);font-weight:700;color:#ff7a1a;text-shadow:0 2px 12px #000;opacity:0;pointer-events:none;z-index:3;white-space:nowrap}
   #bCombo.show{animation:bpop 1.2s ease-out}
   @keyframes bpop{0%{opacity:0;transform:translateX(-50%) scale(.6)}20%{opacity:1;transform:translateX(-50%) scale(1.1)}80%{opacity:1}100%{opacity:0}}
@@ -70,6 +71,48 @@
   #cSay{position:absolute;transform:translate(-50%,-100%);padding:4px 10px;border:2px solid;background:#14121ff0;font-size:.85rem;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;max-width:75%;text-align:center;z-index:2}
   #cPromo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:none;flex-wrap:wrap;gap:6px;justify-content:center;width:min(92%,18rem);padding:10px;background:#14121ff0;border:3px solid #ffd23f;z-index:3}
   .cclk.on{color:#fff;border-color:#35e0d0}.cclk.low{color:#ff3d81;border-color:#ff3d81}
+  /* ---- Billiards HUD: target chips, goal pill ---- */
+  #bGrp0,#bGrp1{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px;align-items:center}
+  .bc{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-style:normal;font-weight:800;font-size:10px;line-height:1;color:#fff;border:2px solid rgba(255,255,255,.6);text-shadow:0 0 2px #000;flex:none;box-sizing:border-box}
+  .bc.y{color:#111;text-shadow:none}
+  .bc.st{background:#fff!important;color:#111;text-shadow:none}
+  .bc.off{opacity:.2;filter:grayscale(1);text-decoration:line-through}
+  .bc.go{outline:2px solid #6dff9c;outline-offset:1px;animation:bgo 1s infinite}
+  .bopen{font-size:.68rem;color:#ffd23f;font-weight:700}
+  @keyframes bgo{50%{outline-color:transparent}}
+  #bGoal{position:absolute;top:6px;left:50%;transform:translateX(-50%);padding:3px 12px;border-radius:14px;font-weight:700;font-size:.8rem;background:rgba(10,30,20,.78);border:2px solid #35e0d0;color:#fff;z-index:3;pointer-events:none;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis}
+  #bGoal.opp{border-color:#ff3d81}
+  /* ---- rotate hint (when a landscape game is opened in portrait) ---- */
+  #rotHint{position:fixed;inset:0;z-index:90;background:#14121ff5;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}
+  #rotHint.hidden{display:none}
+  .rotIcon{font-size:3.2rem;display:inline-block;animation:rotp 1.8s ease-in-out infinite}
+  @keyframes rotp{0%,30%{transform:rotate(0)}70%,100%{transform:rotate(-90deg)}}
+  /* ---- phones / small landscape screens: use the WHOLE screen ---- */
+  @media (orientation:landscape) and (max-height:620px){
+    #bPlay{padding:0}
+    #bStage{position:absolute;inset:0;margin:0;border-radius:0}
+    #bTop{position:absolute;top:2px;left:6px;right:6px;z-index:6;pointer-events:none}
+    #bTop .bn{flex:0 1 auto;max-width:38%;padding:2px 6px;display:flex;align-items:center;gap:6px}
+    #bTop .bn b{display:block;max-width:76px;font-size:.72rem}
+    #bClk{font-size:1.1rem;background:rgba(20,12,8,.5);border-radius:8px;padding:0 6px;min-width:3rem}
+    #bBtns{position:absolute;left:6px;top:44px;z-index:6;flex-direction:column;gap:6px;margin:0}
+    #bBtns .bb{width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;font-size:1rem}
+    .bqt{display:none}
+    #bSpin{bottom:8px}
+    #bFine{bottom:4px;height:26px;line-height:24px;width:min(46%,240px)}
+    #bGoal{top:34px}
+    #bMsg{top:62px}
+    #bSay{top:92px}
+    #bTaunts{position:absolute;left:52px;right:60px;bottom:36px;z-index:6;margin:0}
+    /* chess: board in the middle, player panels on the sides */
+    #cPlay{display:grid;grid-template-columns:minmax(170px,26%) minmax(0,1fr) minmax(170px,26%);grid-template-rows:auto auto 1fr;gap:6px;padding:4px 8px}
+    #cPlay>:nth-child(1){grid-column:1;grid-row:1}
+    #cPlay>:nth-child(2){grid-column:1;grid-row:2}
+    #cPlay>:nth-child(3){grid-column:2;grid-row:1/4;min-width:0;min-height:0}
+    #cPlay>:nth-child(4){grid-column:1;grid-row:3;flex-wrap:wrap;overflow-y:auto;align-content:flex-start;min-height:0}
+    #cPlay>:nth-child(5){grid-column:3;grid-row:1}
+    #cPlay>:nth-child(6){grid-column:3;grid-row:2;grid-template-columns:1fr}
+  }
   body{overflow-x:hidden}
 </style>
 </head>
@@ -311,11 +354,11 @@
     </div>
     <div id="bPlay" class="hidden">
       <div id="bTop"><div id="bP0" class="bn"><b id="bName0"></b><span id="bGrp0"></span></div><div id="bClk"></div><div id="bP1" class="bn"><b id="bName1"></b><span id="bGrp1"></span></div></div>
-      <div id="bStage"><div id="bMsg"></div><div id="bSay"></div><div id="bCombo"></div>
+      <div id="bStage"><div id="bGoal"></div><div id="bMsg"></div><div id="bSay"></div><div id="bCombo"></div>
         <div id="bPow"><i id="bPowFill"></i><span>POWER</span></div>
         <div id="bSpin"><i id="bDot"></i></div>
         <div id="bFine">◀ FINE AIM ▶</div></div>
-      <div id="bBtns"><button id="bView" class="bb">🎥</button><button id="bGuide" class="bb">🎯</button><button id="bSnd" class="bb">🔊</button><button id="bTalk" class="bb">💬</button><button id="bQuit" class="bb">✕ Quit</button></div>
+      <div id="bBtns"><button id="bView" class="bb">🎥</button><button id="bGuide" class="bb" title="Aim guide">🎯</button><button id="bHint" class="bb" title="Hint">💡</button><button id="bSnd" class="bb">🔊</button><button id="bTalk" class="bb">💬</button><button id="bQuit" class="bb">✕<span class="bqt"> Quit</span></button></div>
       <div id="bTaunts" class="hidden"></div>
     </div>
   </section>
@@ -342,6 +385,8 @@
 </main>
 
 
+<div id="rotHint" class="hidden"><div><div class="rotIcon">📱</div><div class="px text-lg mt-3">Rotate your phone sideways</div><div class="text-sm opacity-80 mt-1">The game is bigger in landscape.<br>Ikot ang phone para mas malaki ang laro.</div><button id="rotOk" class="btn ghost mt-4">Continue anyway</button></div></div>
+
 <!-- How to play & earn -->
 <div id="mHelp" class="modal hidden"><div class="card space-y-3 text-sm">
   <h2 class="text-base text-[#ffd23f]">GUN ARENA: How to play and earn</h2>
@@ -352,7 +397,7 @@
   <div><b class="text-[#ffd23f]">5. How to earn</b><br>• <b>Win:</b> you receive <b>2x your bet</b>. For example, with a bet of 20 GGD you win 40 GGD (a profit of 20).<br>• <b>Draw:</b> your bet is returned.<br>• <b>Loss:</b> you lose your bet.<br>• In 2v2 and 4v4, every winner receives 2x their own bet.<br>• <b>Ranked:</b> +25 RP for a win and -15 RP for a loss. Ranks: Bronze, Silver (100 RP), Gold (300 RP), Platinum (600 RP) and Diamond (1000 RP).<br>• If you quit or disconnect during a match, you lose it.</div>
   <div><b class="text-[#35e0d0]">🧱 Tetris Battle (1v1)</b><br>Pick <b>Tetris Battle</b> in the lobby. Same bets (5 to 100 GGD), same payout: the winner gets <b>2x the bet</b>, a draw returns the bet. A match lasts <b>5 minutes</b> and the game gets faster every 30 seconds. Clear 2 or more lines to send garbage rows to your opponent (a Tetris sends 4). If you top out, you lose. When time runs out, the <b>higher score wins</b>. Use the taunt buttons to trash talk!<br><b>Phone:</b> drag on the board to move, drag down to soft drop, tap to rotate, flick down to hard drop, or use the buttons. <b>PC:</b> arrows or WASD, Space to drop, C to hold.</div>
   <div><b class="text-[#35e0d0]">♞ Chess (1v1)</b><br>Pick <b>Chess</b> in the lobby, choose the time per move (15 sec, 30 sec, 1 min or 2 min) and a bet. Winner gets <b>2x the bet</b>; draw returns the bet. It is a 3D board with full rules (castling, en passant, promotion, check, checkmate). <b>There is no total clock: if your time for a move runs out, your turn is passed to your opponent</b> (3 timeouts in a row = forfeit). Tap a piece then a square, or drag it. Capture pieces to trash talk!</div>
-  <div><b class="text-[#35e0d0]">🎱 Billiards (8-ball 1v1)</b><br>Pick <b>Billiards</b> in the lobby. Same bets, winner gets <b>2x</b>. Pot all balls of your group (solids or stripes), then the 8-ball. <b>Phone:</b> drag on the table to aim (or use the FINE AIM bar), pull the POWER bar down and release to shoot, tap the round pad to add spin. You have 30 seconds per shot; if time runs out the opponent gets ball-in-hand (3 timeouts in a row = forfeit).</div>
+  <div><b class="text-[#35e0d0]">🎱 Billiards (8-ball 1v1)</b><br>Pick <b>Billiards</b> in the lobby. Same bets, winner gets <b>2x</b>. Pot all balls of your group (solids or stripes), then the 8-ball. <b>Phone:</b> drag on the table to aim (or use the FINE AIM bar), pull the POWER bar down and release to shoot, tap the round pad to add spin. The top bar shows which balls are yours (solids 1-7 or stripes 9-15) and a green ring marks every ball you may hit; tap the 💡 button for a hint. You have 30 seconds per shot; if time runs out the opponent gets ball-in-hand (3 timeouts in a row = forfeit).</div>
   <div id="helpEco"></div>
   <div class="text-xs opacity-80">Winnings are not guaranteed. Only bet what you can afford to lose. For players aged 18 and over.</div>
   <button class="btn" data-close>Let's play!</button>
@@ -535,6 +580,25 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const SCREENS=["login","lobby","room","game","tetris","chess","billiards","admin"];
 const show=s=>{SCREENS.forEach(x=>$(x).classList.toggle("hidden",x!==s));document.querySelector("main").style.maxWidth=s==="game"?"none":""};
+
+/* ====== Mobile: full screen + landscape (all games) ====== */
+const COARSE=matchMedia("(pointer:coarse)").matches,IOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1),
+  STANDALONE=!!(navigator.standalone||matchMedia("(display-mode: standalone)").matches||matchMedia("(display-mode: fullscreen)").matches);
+let rotOff=false;
+const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
+const wantLand=()=>["bPlay","cPlay"].some(i=>!$(i).classList.contains("hidden"))||$("gameWrap").classList.contains("fs");
+function iosTip(){try{if(localStorage.getItem("ga_iostip"))return;localStorage.setItem("ga_iostip","1")}catch{}toast("Full screen on iPhone: tap Share, then Add to Home Screen, and open the game from its icon.")}
+function syncOrient(){if(!COARSE)return;const land=wantLand();
+  try{if(land){const p=screen.orientation&&screen.orientation.lock&&screen.orientation.lock("landscape");p&&p.catch&&p.catch(()=>{})}else if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock()}catch{}
+  if(!land)rotOff=false;
+  $("rotHint").classList.toggle("hidden",!(land&&!rotOff&&innerHeight>innerWidth))}
+function goFull(){if(!COARSE||STANDALONE||fsEl())return;const el=document.documentElement,f=el.requestFullscreen||el.webkitRequestFullscreen;
+  if(!f){if(IOS)iosTip();return}
+  try{const pr=f.call(el);pr&&pr.then&&pr.then(syncOrient,()=>{})}catch{}}
+document.addEventListener("pointerup",e=>{if(COARSE&&!fsEl()&&!(e.target.closest&&e.target.closest("#btnLogin")))goFull()},true);
+["bPlay","cPlay","gameWrap"].forEach(i=>new MutationObserver(syncOrient).observe($(i),{attributes:true,attributeFilter:["class"]}));
+["resize","orientationchange"].forEach(ev=>addEventListener(ev,syncOrient));["fullscreenchange","webkitfullscreenchange"].forEach(ev=>document.addEventListener(ev,syncOrient));
+$("rotOk").onclick=()=>{rotOff=true;syncOrient()};
 const toast=t=>{const e=$("toast");e.textContent=t;e.classList.remove("hidden");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add("hidden"),3200)};
 const open=id=>$(id).classList.remove("hidden"), close=id=>$(id).classList.add("hidden");
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>b.closest(".modal").classList.add("hidden"));
@@ -1512,12 +1576,19 @@ $("btnCFind").onclick=()=>cQ.find();
 /* ====================== BILLIARDS (8-ball, 1v1 play to earn) ====================== */
 let BR=null;const BTX={},BGT={};
 const BW=12.7,BH=6.35,BRD=.286,BPK=[[-BW,-BH,.95],[BW,-BH,.95],[-BW,BH,.95],[BW,BH,.95],[0,-BH-.1,.8],[0,BH+.1,.8]];
-const BCL=['#f5c400','#1550c8','#d62a20','#5a2a8c','#f27a10','#157a3a','#8c1c1c','#111'],bgp=n=>n<8?"s":n>8?"p":"e";
+const BCL=['#f5c400','#1550c8','#d62a20','#5a2a8c','#f27a10','#157a3a','#8c1c1c','#111'],bgp=n=>n===0?"c":n<8?"s":n>8?"p":"e";
 const B_POT=["Sink! Too easy! 🎱","Pocketed! Next!","Watch and learn!","Smooth shot! 😎"];
 function bTex(n){if(BTX[n])return BTX[n];const col=n?BCL[(n-1)%8]:"#f6f2e6",c=document.createElement("canvas");c.width=512;c.height=256;const g=c.getContext("2d");
   g.fillStyle=n>8?"#f4f1e8":col;g.fillRect(0,0,512,256);if(n>8){g.fillStyle=col;g.fillRect(0,64,512,128)}
   if(n)for(const x of[64,192,320,448]){g.fillStyle="#fff";g.beginPath();g.arc(x,128,46,0,7);g.fill();g.lineWidth=3;g.strokeStyle="#111";g.stroke();g.fillStyle="#000";g.font="bold 62px Arial,sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(n,x,132)}
   const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;return BTX[n]=t}
+const BBG={};
+function bBadge(n){if(BBG[n])return BBG[n];const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d"),col=BCL[(n-1)%8],st=n>8;
+  g.save();g.beginPath();g.arc(64,64,62,0,7);g.clip();g.fillStyle=st?"#f6f2e6":col;g.fillRect(0,0,128,128);if(st){g.fillStyle=col;g.fillRect(0,26,128,76)}g.restore();
+  g.lineWidth=4;g.strokeStyle="rgba(0,0,0,.7)";g.beginPath();g.arc(64,64,61,0,7);g.stroke();
+  g.fillStyle="#fff";g.beginPath();g.arc(64,64,37,0,7);g.fill();g.lineWidth=3;g.strokeStyle="#111";g.stroke();
+  g.fillStyle="#000";g.font="900 "+(n>9?46:56)+"px Arial,sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(n,64,68);
+  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;return BBG[n]=t}
 function bGlow(){if(BGT.t)return BGT.t;const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d"),r=g.createRadialGradient(32,32,0,32,32,32);r.addColorStop(0,"#fff");r.addColorStop(.4,"rgba(255,255,255,.55)");r.addColorStop(1,"rgba(255,255,255,0)");g.fillStyle=r;g.fillRect(0,0,64,64);return BGT.t=new THREE.CanvasTexture(c)}
 function bNoise(d,v,fc){const c=ac();if(!c||muted||vol<.01)return;const n=c.sampleRate*d|0,b=c.createBuffer(1,n,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<n;i++)a[i]=(Math.random()*2-1)*(1-i/n);
   const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();f.type="bandpass";f.frequency.value=fc;g.gain.value=v*vol;s.buffer=b;s.connect(f);f.connect(g);g.connect(c.destination);s.start()}
@@ -1537,7 +1608,8 @@ function bilRun(cfg){
   for(const p of BPK){const d=new THREE.Mesh(new THREE.CircleGeometry(.62,24),new THREE.MeshBasicMaterial({color:0x050302}));d.rotation.x=-Math.PI/2;d.position.set(p[0]*.99,.52,p[1]*.99);sc.add(d)}
   const bgeo=new THREE.SphereGeometry(BRD,32,24),shG=new THREE.CircleGeometry(BRD*1.1,20),shM=new THREE.MeshBasicMaterial({color:0,transparent:true,opacity:.3,depthWrite:false}),AX=new THREE.Vector3(),balls=[];
   for(let n=0;n<16;n++){const t=bTex(n),m=new THREE.Mesh(bgeo,new THREE.MeshStandardMaterial({roughness:.22,metalness:0,map:t,emissive:0xffffff,emissiveMap:t,emissiveIntensity:.22}));m.castShadow=!touch;sc.add(m);
-    const sh=new THREE.Mesh(shG,shM);sh.rotation.x=-Math.PI/2;sh.position.y=.025;sc.add(sh);balls.push({n,m,sh,x:0,z:0,vx:0,vz:0,on:true,fire:0,sy:0,sx:0,px:undefined,pz:0})}
+    const sh=new THREE.Mesh(shG,shM);sh.rotation.x=-Math.PI/2;sh.position.y=.025;sc.add(sh);let tag=null;if(n){tag=new THREE.Sprite(new THREE.SpriteMaterial({map:bBadge(n),transparent:true,depthWrite:false}));tag.scale.setScalar(BRD*2.35);tag.renderOrder=3;sc.add(tag)}
+    balls.push({n,m,sh,tag,x:0,z:0,vx:0,vz:0,on:true,fire:0,sy:0,sx:0,px:undefined,pz:0})}
   const cue=balls[0],rem=p=>balls.filter(b=>b.on&&bgp(b.n)===groups[p]).length;
   const PN=120,pr=[];let pi=0;for(let i=0;i<PN;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:bGlow(),blending:THREE.AdditiveBlending,depthWrite:false,transparent:true}));s.visible=false;sc.add(s);pr.push({s,l:0,d:1,sz:1,h:.1,vx:0,vy:0,vz:0})}
   const emit=(x,y,z,sz,life,vx,vy,vz,h)=>{const p=pr[pi++%PN];Object.assign(p,{l:life,d:life,sz,vx,vy,vz,h});p.s.position.set(x,y,z);p.s.visible=true};
@@ -1550,19 +1622,38 @@ function bilRun(cfg){
   const gh=new THREE.Mesh(new THREE.RingGeometry(BRD*.85,BRD*1.05,28),new THREE.MeshBasicMaterial({color:0xfff2c0,side:2,transparent:true,opacity:.95}));gh.rotation.x=-Math.PI/2;gh.position.y=.05;sc.add(gh);
   const tg=new THREE.Mesh(new THREE.RingGeometry(BRD*1.2,BRD*1.5,28),new THREE.MeshBasicMaterial({color:0xffd23f,side:2,transparent:true,opacity:.95}));tg.rotation.x=-Math.PI/2;tg.position.y=.05;tg.visible=false;sc.add(tg);
   const cgm=new THREE.CylinderGeometry(.05,.11,14,12);cgm.rotateZ(-Math.PI/2);const cm=new THREE.Mesh(cgm,new THREE.MeshStandardMaterial({color:0xd8a860,roughness:.4}));sc.add(cm);
+  /* target hints: green pulsing rings on the balls you may hit, and a hint marker */
+  let lastG="",hintUntil=0,hintPlan=null;
+  const trg=[];for(let i=0;i<8;i++){const r=new THREE.Mesh(new THREE.RingGeometry(BRD*1.3,BRD*1.7,32),new THREE.MeshBasicMaterial({color:0x6dff9c,transparent:true,opacity:.95,side:2,depthWrite:false}));r.rotation.x=-Math.PI/2;r.position.y=.06;r.visible=false;sc.add(r);trg.push(r)}
+  const hRing=new THREE.Mesh(new THREE.RingGeometry(BRD*1.8,BRD*2.3,32),new THREE.MeshBasicMaterial({color:0xffd23f,transparent:true,opacity:.95,side:2,depthWrite:false}));hRing.rotation.x=-Math.PI/2;hRing.visible=false;sc.add(hRing);
+  const hPk=new THREE.Mesh(new THREE.RingGeometry(.75,1.05,32),new THREE.MeshBasicMaterial({color:0x35e0d0,transparent:true,opacity:.95,side:2,depthWrite:false}));hPk.rotation.x=-Math.PI/2;hPk.visible=false;sc.add(hPk);
+  const rH=rib(0x6dff9c,.85);
+
 
   let state="aim",turn=0,groups=[null,null],shot=null,shotT=30,botAt=0,aim=0,power=0,spin={x:0,y:0},guide=true,view=0,ev=0,tc=[0,0],mine=false,over=false,acc=0,rm=null,raf=0,lt=performance.now(),msgT=0,tk=0,sayT=0,dcAt=0,cnt=-1,lastTalk=(gOpp()||{}).talk?.n||0,lastHud="",hitBall=null;
   const human=()=>!over&&turn===my&&(state==="aim"||state==="place")&&clk()>=cfg.startAt;
   const say=t=>{const m=$("bMsg");m.textContent=t;m.style.opacity=1;clearTimeout(msgT);msgT=setTimeout(()=>m.style.opacity=0,2800)};
   const bubble=(t,c)=>{const e=$("bSay");e.textContent=t;e.style.color=c;e.style.borderColor=c;e.style.opacity=1;clearTimeout(sayT);sayT=setTimeout(()=>e.style.opacity=0,2800)};
   const canTalk=()=>performance.now()-tk>2500,sayMe=t=>{tk=performance.now();bubble("YOU: "+t,"#35e0d0");cfg.talk&&cfg.talk(t)},hear=t=>{bubble(cfg.names[1-my]+": "+t,"#ff3d81");voice(t.replace(/[^\x00-\x7F]/g,"").trim(),false)};
-  function hud(){const n=g=>g==="s"?"Solids":g==="p"?"Stripes":"Open";for(let i=0;i<2;i++){const e=$("bP"+i);e.className="bn"+(turn===i&&!over?" on":"");$("bName"+i).textContent=cfg.names[i]+(i===my?" (you)":"");$("bGrp"+i).textContent=n(groups[i])}}
+  const chip=(n,on,go)=>{const c=BCL[(n-1)%8],st=n>8;return`<i class="bc${st?" st":""}${n===1?" y":""}${on?"":" off"}${go?" go":""}" style="${st?"border-color:"+c:"background:"+c}">${n}</i>`};
+  function goalTxt(){if(over)return"";const p=turn,g=groups[p],who=p===my;
+    if(state==="place")return who?"🎯 Place the cue ball anywhere, then aim":cfg.names[p]+" is placing the cue ball";
+    if(!who)return cfg.names[p]+" is shooting…";
+    if(!g)return"🎯 OPEN TABLE: hit any ball 1-7 or 9-15 (not the 8)";
+    if(rem(p)===0)return"🎯 POT THE 8-BALL TO WIN!";
+    return"🎯 YOUR BALLS: "+(g==="s"?"SOLIDS 1-7":"STRIPES 9-15")+" · "+rem(p)+" left"}
+  function hud(){for(let i=0;i<2;i++){const e=$("bP"+i),g=groups[i];e.className="bn"+(turn===i&&!over?" on":"");$("bName"+i).textContent=cfg.names[i]+(i===my?" (you)":"");
+      const al=n=>balls[n].on;let h;
+      if(!g)h='<span class="bopen">OPEN · any ball</span>';
+      else{const ids=g==="s"?[1,2,3,4,5,6,7]:[9,10,11,12,13,14,15];h=ids.map(n=>chip(n,al(n))).join("")+chip(8,al(8),al(8)&&ids.every(n=>!al(n)))}
+      $("bGrp"+i).innerHTML=h}
+    const gl=$("bGoal");gl.textContent=goalTxt();gl.className=turn===my?"":"opp"}
   function rack(){const rng=mul32(cfg.seed),ids=[1,2,3,4,5,6,7,9,10,11,12,13,14,15];for(let i=ids.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]]}
     balls.forEach(b=>{b.on=true;b.vx=b.vz=0;b.fire=0;b.m.visible=b.sh.visible=true;b.px=undefined;b.m.rotation.set(0,Math.random()*6.28,0);b.m.rotateOnWorldAxis(AX.set(1,0,0),Math.PI/2)});cue.x=-BW/2;cue.z=0;
     let k=0;for(let i=0;i<5;i++)for(let j=0;j<=i;j++){const b=balls[k===4?8:ids.shift()];k++;b.x=BW/2+i*BRD*1.75;b.z=(j-i/2)*BRD*2.02}}
   function pocket(b){b.on=false;b.m.visible=b.sh.visible=false;b.vx=b.vz=0;BS.pocket();burst(b.x,b.z,1);if(b===cue)shot.cue=true;else{shot.pk.push(b.n);
     if(shot.pk.length>1){const e=$("bCombo");e.textContent=["","","Double Pot","Triple Pot","Quad Pot"][Math.min(shot.pk.length,4)]||"Hot Streak";e.classList.remove("show");void e.offsetWidth;e.classList.add("show")}
-    if(mine&&turn===my&&canTalk()&&Math.random()<.7)sayMe(pick(B_POT));else if(cfg.bot&&turn!==my&&Math.random()<.6)hear(pick(BOT_ATK))}}
+    if(mine&&turn===my&&canTalk()&&Math.random()<.7)sayMe(pick(B_POT));else if(cfg.bot&&turn!==my&&Math.random()<.6)hear(pick(BOT_ATK))}hud()}
   function step(dt){const L=balls.filter(b=>b.on);
     for(const b of L){const s=Math.hypot(b.vx,b.vz);if(s>0){const d=Math.min(s,(3.2+s*.12)*dt);b.vx-=b.vx/s*d;b.vz-=b.vz/s*d}
       if(Math.hypot(b.vx,b.vz)<.06)b.vx=b.vz=0;b.x+=b.vx*dt;b.z+=b.vz*dt;
@@ -1603,12 +1694,14 @@ function bilRun(cfg){
   function doTimeout(){const t=turn;if(tc[t]>=2){finish(1-t,"3 timeouts in a row");return}tc[t]++;turn=1-t;autoPlace();state=cfg.bot&&turn!==my?"aim":"place";shotT=30;botAt=performance.now()+1100;
     const m="⏱ "+cfg.names[t]+" ran out of time. Ball-in-hand for "+cfg.names[turn];say(m);hud();BS.foul();cfg.sendSnap&&cfg.sendSnap(ev,{b:flat(),g:groups.map(x=>x||"-"),t:turn,st:"place",m,w:-1,tc,to:1});ev++}
   const seg=(ax,az,bx,bz,px,pz)=>{const dx=bx-ax,dz=bz-az,l=dx*dx+dz*dz||1,t=Math.max(0,Math.min(1,((px-ax)*dx+(pz-az)*dz)/l));return Math.hypot(ax+dx*t-px,az+dz*t-pz)};
-  function botShot(){const g=groups[turn],T=balls.filter(b=>b.on&&b.n&&(g?(rem(turn)===0?b.n===8:bgp(b.n)===g):b.n!==8));let best=null;
+  const tgtOf=p=>{const g=groups[p];return balls.filter(b=>b.on&&b.n&&(g?(rem(p)===0?b.n===8:bgp(b.n)===g):b.n!==8))};
+  function bestShot(){const T=tgtOf(turn);let best=null;
     for(const t of T)for(const p of BPK){const px=p[0]-t.x,pz=p[1]-t.z,pd=Math.hypot(px,pz),gx=t.x-px/pd*2*BRD,gz=t.z-pz/pd*2*BRD,cx=gx-cue.x,cz=gz-cue.z,cd=Math.hypot(cx,cz),cs=(cx*px+cz*pz)/(cd*pd||1);if(cs<.25)continue;
       if(balls.some(o=>o.on&&o!==cue&&o!==t&&(seg(cue.x,cue.z,gx,gz,o.x,o.z)<1.9*BRD||seg(t.x,t.z,p[0],p[1],o.x,o.z)<1.9*BRD)))continue;
-      const s=cd+pd*1.4-cs*6;if(!best||s<best.s)best={s,a:Math.atan2(cz,cx),pw:Math.min(.95,.3+(cd+pd)*.035)}}
-    if(!best){const t=T[0]||balls.find(b=>b.on&&b.n);best={a:Math.atan2(t.z-cue.z,t.x-cue.x),pw:.5}}
-    const er={easy:.12,normal:.05,hard:.02}[cfg.level]||.05;mine=true;shoot(best.a+(Math.random()-.5)*er,Math.min(1,best.pw*(1+(Math.random()-.5)*er*3)),0,0)}
+      const s=cd+pd*1.4-cs*6;if(!best||s<best.s)best={s,a:Math.atan2(cz,cx),pw:Math.min(.95,.3+(cd+pd)*.035),t,p}}
+    if(!best){const t=T[0]||balls.find(b=>b.on&&b.n);best={a:Math.atan2(t.z-cue.z,t.x-cue.x),pw:.5,t,p:null}}
+    return best}
+  function botShot(){const best=bestShot(),er={easy:.12,normal:.05,hard:.02}[cfg.level]||.05;mine=true;shoot(best.a+(Math.random()-.5)*er,Math.min(1,best.pw*(1+(Math.random()-.5)*er*3)),0,0)}
 
   function drawAim(){const dx=Math.cos(aim),dz=Math.sin(aim);let t=60,hit=null;
     for(const b of balls){if(!b.on||!b.n)continue;const px=b.x-cue.x,pz=b.z-cue.z,u=px*dx+pz*dz;if(u<=0)continue;const d2=px*px+pz*pz-u*u;if(d2<4*BRD*BRD){const tt=u-Math.sqrt(4*BRD*BRD-d2);if(tt<t){t=tt;hit=b}}}
@@ -1649,6 +1742,11 @@ function bilRun(cfg){
   const spinEl=$("bSpin"),setSpin=e=>{const r=spinEl.getBoundingClientRect();let x=(e.clientX-r.left-r.width/2)/(r.width/2*.8),y=-(e.clientY-r.top-r.height/2)/(r.height/2*.8);const l=Math.hypot(x,y);if(l>1){x/=l;y/=l}spin={x,y};$("bDot").style.left=50+x*40+"%";$("bDot").style.top=50-y*40+"%"};
   spinEl.onpointerdown=e=>{try{spinEl.setPointerCapture(e.pointerId)}catch{}spinEl.dr=1;setSpin(e)};spinEl.onpointermove=e=>{if(spinEl.dr)setSpin(e)};spinEl.onpointerup=()=>{spinEl.dr=0};
   $("bView").onclick=()=>{view=1-view;setCam()};$("bGuide").onclick=()=>{guide=!guide;$("bGuide").style.opacity=guide?1:.45};$("bGuide").style.opacity=1;
+  $("bHint").onclick=()=>{if(over)return;if(turn!==my)return say("💡 Wait for your turn");if(state==="place")return say("💡 Place the cue ball first, then tap 💡");if(state!=="aim")return;
+    const g=groups[my],nums=tgtOf(my).map(b=>b.n).sort((a,b)=>a-b).join(", ");
+    const what=!g?"Open table: hit any ball except the 8":rem(my)===0?"Only the 8-ball is left: pot it to win!":(g==="s"?"SOLIDS: ":"STRIPES: ")+nums;
+    if(cfg.bot){const p=bestShot();hintPlan=p;hintUntil=performance.now()+7000;if(p.t){aim=p.a;say("💡 Try ball #"+p.t.n+(p.p?" into the glowing pocket. ":" (no clean pocket, play safe). ")+what)}else say("💡 "+what)}
+    else{hintUntil=performance.now()+5000;say("💡 Your balls - "+what)}};
   $("bSnd").onclick=()=>{muted=!muted;$("bSnd").textContent=muted?"🔇":"🔊"};$("bTalk").onclick=()=>$("bTaunts").classList.toggle("hidden");$("bTaunts").classList.add("hidden");
   $("bTaunts").innerHTML=TAUNTS.map((t,i)=>`<button class="bb text-xs whitespace-nowrap" data-ti="${i}">${t}</button>`).join("");
   $("bTaunts").onclick=e=>{const b=e.target.closest("[data-ti]");if(b&&!over&&canTalk())sayMe(TAUNTS[b.dataset.ti])};
@@ -1657,7 +1755,7 @@ function bilRun(cfg){
     if(pre>0){const c=Math.ceil(pre/1000);if(c!==cnt){cnt=c;tb("square",c>1?440:660,c>1?440:660,.1,.12);say("Starting in "+c+"...")}}
     if(state==="moving"){acc+=dt;while(acc>1/120){step(1/120);acc-=1/120}if(!balls.some(b=>b.on&&(b.vx||b.vz))){acc=0;settle()}}
     let hot=null;
-    for(const b of balls){b.m.position.set(b.x,BRD,b.z);b.sh.position.x=b.x;b.sh.position.z=b.z;const s=Math.hypot(b.vx,b.vz);
+    for(const b of balls){b.m.position.set(b.x,BRD,b.z);if(b.tag){b.tag.visible=b.on;if(b.on){const cx=cam.position.x-b.x,cy=cam.position.y-BRD,cz=cam.position.z-b.z,cl=Math.hypot(cx,cy,cz)||1;b.tag.position.set(b.x+cx/cl*BRD*1.04,BRD+cy/cl*BRD*1.04,b.z+cz/cl*BRD*1.04)}}b.sh.position.x=b.x;b.sh.position.z=b.z;const s=Math.hypot(b.vx,b.vz);
       const dx=b.x-(b.px??b.x),dz=b.z-(b.pz??b.z),L=Math.hypot(dx,dz);b.px=b.x;b.pz=b.z;if(L>1e-5&&L<1.5)b.m.rotateOnWorldAxis(AX.set(dz,0,-dx).normalize(),L/BRD);
       if(b.on&&s>12&&b.fire){hot=b;emit(b.x+(Math.random()-.5)*.15,BRD+.1,b.z+(Math.random()-.5)*.15,BRD*3.4,.45,-b.vx*.04+Math.random()-.5,1.5+Math.random()*2,-b.vz*.04+Math.random()-.5,.12)}}
     fxs(dt);pump();
@@ -1668,6 +1766,14 @@ function bilRun(cfg){
     if(!over&&state==="aim"&&cfg.bot&&turn!==my&&now>botAt&&pre<=0)botShot();
     const o=gOpp();if(!over&&o&&o.connected===false){if(!dcAt)dcAt=now;else if(now-dcAt>20000)finish(my,"opponent left")}else dcAt=0;
     if(o&&o.talk&&o.talk.n!==lastTalk){lastTalk=o.talk.n;hear(o.talk.t)}
+    const gk=turn+"|"+state+"|"+groups.join()+"|"+over;if(gk!==lastG){lastG=gk;hud()}
+    {const pn=performance.now(),showT=!over&&turn===my&&state==="aim"&&pre<=0,tl=showT?tgtOf(my):[];
+      if(hintPlan&&(pn>=hintUntil||state!=="aim"||turn!==my))hintPlan=null;
+      trg.forEach((r,i)=>{const b=tl[i];r.visible=!!b;if(b){r.position.x=b.x;r.position.z=b.z;r.scale.setScalar(1+.12*Math.sin(pn/160+i))}});
+      balls.forEach(b=>{if(b.tag)b.tag.material.opacity=showT&&!tl.includes(b)?.45:1});
+      const hp=hintPlan;if(hp&&hp.t){hRing.visible=true;hRing.position.set(hp.t.x,.07,hp.t.z);hRing.scale.setScalar(1+.15*Math.sin(pn/110));
+        if(hp.p){hPk.visible=true;hPk.position.set(hp.p[0],.55,hp.p[1]);hPk.scale.setScalar(1+.2*Math.sin(pn/110));setRib(rH,hp.t.x,hp.t.z,hp.p[0],hp.p[1],.1)}else{hPk.visible=false;rH.visible=false}}
+      else hRing.visible=hPk.visible=rH.visible=false}
     R.render(sc,cam)}
   addEventListener("resize",setCam);rack();hud();setCam();setTimeout(setCam,250);botAt=performance.now()+(cfg.bot?Math.max(0,cfg.startAt-clk())+1200:0);
   if(cfg.bot&&my===1){turn=0;state="aim"}
