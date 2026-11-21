@@ -52,3 +52,17 @@ Withdrawals are only allowed on Sundays in Philippine time (UTC+8). The Withdraw
 
 ## Auto GameGold (GGD) Market
 The GameGold (GGD) Market price now updates itself every 30 minutes (no admin action needed). It moves smoothly up and down around the **auto market center** you set on the Admin screen (default **₱0.50 per coin**), by up to the **swing %** you choose (default ±20%, so about ₱0.40 to ₱0.60). Every phone computes the same price from the clock, so everyone sees the same number and the chart has a point for every 30 minutes. In Admin you can: change the center price, change the swing %, or turn **Auto market** off to use the fixed value instead. Withdrawals use the live price at the moment the player requests them (it is saved on the request).
+
+## Full screen and landscape (phones)
+- Android (Chrome and other browsers): the first tap anywhere puts the game in full screen. Gun Arena, Chess and Billiards then lock the screen to landscape; the lock is released when you leave those games. Tetris Battle stays full screen but follows the phone's rotation (its board is taller than wide, so portrait gives the biggest board).
+- Chess in landscape uses a side-by-side layout (players left and right, board in the middle) so the board is as tall as the screen. Billiards in landscape uses the whole screen with the buttons floating over the rails.
+- iPhone Safari does not allow web pages to force full screen or lock rotation. Players see a "Rotate your phone" screen (with "Continue anyway") and a one-time tip to use Share > Add to Home Screen; the installed icon opens in true full screen (`apple-mobile-web-app-capable` is set).
+- Code: search `Mobile: full screen + landscape` in `index.html`.
+
+## Billiards: target hints
+- Each ball has a big number sticker that always faces the camera.
+- The top bar shows each player's group as number chips (solids 1-7 or stripes 9-15, then the 8). Chips turn grey when potted; the 8 glows when it is the last ball.
+- A goal line says what to pot ("YOUR BALLS: SOLIDS 1-7 - 5 left", "OPEN TABLE...", "POT THE 8-BALL TO WIN!").
+- During your aim, a green ring marks every ball you may hit and the other balls are dimmed.
+- The 💡 button repeats the rule in words. In practice vs bot it also suggests a ball, highlights the pocket and turns the cue toward it. In bet matches it gives no aim help (fairness).
+- Bug fixed: the cue ball used to count as a "solid", so a solids player could never legally pocket the 8-ball.
